@@ -1,6 +1,7 @@
 package tw.realtime.project.rtbaseframework.widgets;
 
-import tw.com.kingshield.baseframework.interfaces.ShapeTouchDetector;
+
+import tw.realtime.project.rtbaseframework.interfaces.ShapeTouchDetector;
 
 /**
  * Created by vexonelite on 2017/7/5.

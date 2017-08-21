@@ -11,7 +11,7 @@ import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Response;
-import tw.com.kingshield.baseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.LogWrapper;
 
 
 /**

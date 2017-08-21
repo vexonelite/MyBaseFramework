@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Response;
-import tw.com.kingshield.baseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.LogWrapper;
 
 
 /**

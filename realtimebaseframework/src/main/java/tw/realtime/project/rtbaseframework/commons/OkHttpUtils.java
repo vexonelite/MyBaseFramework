@@ -10,7 +10,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
-import tw.com.kingshield.baseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.LogWrapper;
+
 
 /**
  * 取得 OkHttpClient 的工具物件，且可以產生 OkHttp 的 Request Call

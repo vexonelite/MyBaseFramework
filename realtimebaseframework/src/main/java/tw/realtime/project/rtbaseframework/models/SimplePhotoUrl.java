@@ -2,7 +2,8 @@ package tw.realtime.project.rtbaseframework.models;
 
 import android.net.Uri;
 
-import tw.com.kingshield.baseframework.interfaces.PhotoUrl;
+import tw.realtime.project.rtbaseframework.interfaces.PhotoUrl;
+
 
 /**
  * Created by vexonelite on 2017/7/14.

@@ -4,7 +4,8 @@ import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
 
-import tw.com.kingshield.baseframework.interfaces.ShapeTouchDetector;
+import tw.realtime.project.rtbaseframework.interfaces.ShapeTouchDetector;
+
 
 /**
  * Created by vexonelite on 2017/7/6.

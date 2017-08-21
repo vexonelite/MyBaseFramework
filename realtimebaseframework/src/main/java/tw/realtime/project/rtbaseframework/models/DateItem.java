@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import tw.com.kingshield.baseframework.LogWrapper;
-import tw.com.kingshield.baseframework.api.commons.ApiDataBuilder;
-import tw.com.kingshield.baseframework.api.commons.BaseApiData;
-import tw.com.kingshield.baseframework.interfaces.CalendarEvent;
+import tw.realtime.project.rtbaseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.commons.ApiDataBuilder;
+import tw.realtime.project.rtbaseframework.commons.BaseApiData;
+import tw.realtime.project.rtbaseframework.interfaces.CalendarEvent;
 
 
 public class DateItem extends BaseApiData {

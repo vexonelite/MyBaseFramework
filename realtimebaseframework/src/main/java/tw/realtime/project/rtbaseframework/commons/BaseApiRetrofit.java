@@ -7,7 +7,7 @@ import android.util.Log;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
-import tw.com.kingshield.baseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.LogWrapper;
 
 
 /**

@@ -6,7 +6,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import tw.com.kingshield.baseframework.R;
+import tw.realtime.project.rtbaseframework.R;
 
 
 /**

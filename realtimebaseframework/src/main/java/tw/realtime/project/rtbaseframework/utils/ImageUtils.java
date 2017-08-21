@@ -20,7 +20,8 @@ import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 
-import tw.com.kingshield.baseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.LogWrapper;
+
 
 public class ImageUtils {
 

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import tw.com.kingshield.baseframework.R;
+import tw.realtime.project.rtbaseframework.R;
 
 
 /**

@@ -13,7 +13,8 @@ import android.util.Log;
 
 import java.util.List;
 
-import tw.com.kingshield.baseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.LogWrapper;
+
 
 /**
  * Created by vexonelite on 2017/8/3.

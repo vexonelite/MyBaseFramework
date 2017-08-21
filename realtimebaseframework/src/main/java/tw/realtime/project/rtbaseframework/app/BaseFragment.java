@@ -9,8 +9,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import tw.com.kingshield.baseframework.LogWrapper;
-import tw.com.kingshield.baseframework.dialogs.ProgressDialog;
+import tw.realtime.project.rtbaseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.dialogs.ProgressDialog;
 
 
 public abstract class BaseFragment extends Fragment {
