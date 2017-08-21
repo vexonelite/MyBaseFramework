@@ -1,0 +1,242 @@
+package tw.realtime.project.rtbaseframework.app;
+
+import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.content.DialogInterface;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+
+import tw.com.kingshield.baseframework.LogWrapper;
+import tw.com.kingshield.baseframework.dialogs.ProgressDialog;
+
+
+public abstract class BaseFragment extends Fragment {
+
+    private boolean hasBeenShroudedByChild;
+
+    private ProgressDialog mProgressDialog;
+
+    private onViewDestroyListener mCallback;
+
+
+    public interface onViewDestroyListener {
+        /**
+         * 通知目前 Fragment 的 onDestroyView 已被執行
+         */
+        void onDestroyViewGetCalled();
+    }
+
+
+    /**
+     * 設定目前 Fragment 是否被接下來的 Fragment 給蓋頁
+     * @param flag
+     */
+    protected void setHasBeenShroudedByChildFlag (boolean flag) {
+        hasBeenShroudedByChild = flag;
+    }
+
+    /**
+     * 取得目前 Fragment 是否被其它的 Fragment 蓋頁
+     */
+    protected boolean getHasBeenShroudedByChildFlag () {
+        return hasBeenShroudedByChild;
+    }
+
+    public void setonViewDestroyListener (onViewDestroyListener callback) {
+        mCallback = callback;
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        try {
+            if (null != mCallback) {
+                mCallback.onDestroyViewGetCalled();
+            }
+        } catch (Exception e) {
+            // 防止閃退；當 mCallback 中做了某些會閃退的事情
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "onDestroyView", e);
+        }
+    }
+
+    public String getLogTag() {
+        return this.getClass().getSimpleName();
+    }
+
+
+    /**
+     * 顯示正在處理某事件之對話框
+     */
+    protected void showProgressDialog (String title) {
+        mProgressDialog = new ProgressDialog(getActivity(), title);
+        mProgressDialog.show();
+    }
+
+    /**
+     * 隱藏正在處理某事件之對話框
+     */
+    protected void dismissProgressDialog () {
+        if (null != mProgressDialog) {
+            mProgressDialog.cancel();
+            mProgressDialog = null;
+        }
+    }
+
+    protected void showAlertDialog (boolean isSingleOption,
+                                    String title,
+                                    String message,
+                                    String positiveText,
+                                    String negativeText,
+                                    DialogInterface.OnClickListener positiveCallback,
+                                    DialogInterface.OnClickListener negativeCallback) {
+        if (!isAdded()) {
+            return;
+        }
+        BaseActivity activity = (BaseActivity) getActivity();
+        if (null == activity) {
+            return;
+        }
+        activity.showAlertDialog(
+                isSingleOption,
+                title,
+                message,
+                positiveText,
+                negativeText,
+                positiveCallback,
+                negativeCallback);
+    }
+
+    /**
+     * 設定 ActionBar 的標題，並決定Icon 是 "<" 或 App Icon
+     * @param title
+     * @param homeButtonEnabledFlag
+     * @param homeAsUpEnabledFlag
+     */
+    protected void setUpActionBar (String title, boolean homeButtonEnabledFlag, boolean homeAsUpEnabledFlag) {
+        if ( (null == title) || (title.isEmpty()) || (!isAdded()) || (hasBeenShroudedByChild) ) {
+            return;
+        }
+        //LogWrapper.showLog(Log.INFO, getLogTag(), "setUpActionBar");
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (null == activity) {
+            return;
+        }
+        ActionBar actionBar = activity.getSupportActionBar();
+        boolean isTargetActivity = isTargetActivity();
+        if (null != actionBar) {
+            actionBar.setTitle(title);
+            if (!isTargetActivity) {
+                actionBar.setHomeButtonEnabled(homeButtonEnabledFlag);
+                actionBar.setDisplayHomeAsUpEnabled(homeAsUpEnabledFlag);
+            }
+            else {
+                actionBar.setDisplayHomeAsUpEnabled(homeAsUpEnabledFlag);
+            }
+        }
+    }
+
+    /**
+     * 讓 Subclass的 Fragment 有機會決定這件事
+     * @return 是不是 Fragment attached 的 Activity
+     */
+    protected boolean isTargetActivity() {
+        return false;
+    }
+
+    /**
+     * 將軟鍵盤隱藏
+     */
+    protected void hideSoftKeyboard () {
+        if (!isAdded()) {
+            return;
+        }
+        BaseActivity activity = (BaseActivity) getActivity();
+        if (null == activity) {
+            return;
+        }
+        activity.hideSoftKeyboard();
+    }
+
+    protected boolean isAllowedToCommitFragmentTransaction () {
+        if (!isAdded()) {
+            return false;
+        }
+        if (null == getActivity()) {
+            return false;
+        }
+        BaseActivity activity = (BaseActivity) getActivity();
+        return activity.isAllowedToCommitFragmentTransaction();
+    }
+
+    protected void showDialogFragment (DialogFragment dialogFragment) {
+        if (null == dialogFragment) {
+            return;
+        }
+        if (!isAllowedToCommitFragmentTransaction()) {
+            return;
+        }
+        // DialogFragment.show() will take care of adding the fragment in a transaction.
+        // We also want to remove any currently showing dialog,
+        // so make our own transaction and take care of that here.
+        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+        Fragment prev = getChildFragmentManager().findFragmentByTag(dialogFragment.getClass().getSimpleName());
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        dialogFragment.show(ft, dialogFragment.getClass().getSimpleName());
+    }
+
+
+    /**
+     * 預設實作好，給確定或取消選項之 Callback，點下會令目前 Fragment 被 Pop
+     */
+    public class BackPressedCallback implements DialogInterface.OnClickListener {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+            dialogInterface.dismiss();
+            backToPrevious();
+        }
+    }
+
+    /**
+     * 預設實作好，給確定或取消選項之 Callback，點下會令目前 Fragment 被 Pop
+     */
+    public class BackPressedCallback2 implements BaseDialogFragment.OnDecisionMadeListener {
+        @Override
+        public void onNotification(DialogFragment dialogFrag, BaseDialogFragment.DialogAction dialogAction) {
+            dialogFrag.dismiss();
+            backToPrevious();
+        }
+    }
+
+    /**
+     * 預設實作好，給確定或取消選項之 Callback，點下會令目前 Fragment 被 Pop
+     */
+    public class DefaultDismissCallback implements BaseDialogFragment.OnDecisionMadeListener {
+        @Override
+        public void onNotification(DialogFragment dialogFrag, BaseDialogFragment.DialogAction dialogAction) {
+            dialogFrag.dismiss();
+        }
+    }
+
+
+    /**
+     * 呼叫 Attached Activity 的 onBackPressed 方法
+     */
+    protected void backToPrevious () {
+        if (isAdded()) {
+            Activity activity = getActivity();
+            if (null != activity) {
+                activity.onBackPressed();
+            }
+        }
+    }
+
+}

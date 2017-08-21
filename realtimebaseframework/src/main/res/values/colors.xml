@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Background color of Progress Dialog -->
+    <color name="base_progress_dialog_background">#333333</color>
+    <!-- Text color of title for the Progress Dialog -->
+    <color name="base_progress_dialog_text">#FFFFFF</color>
+    <!-- Tint color of Progress Dialog -->
+    <color name="base_progress_dialog_tint">#FFFFFF</color>
+
+    <color name="base_alpha_point_2_black">#33000000</color>
+    <color name="base_alpha_point_6_black">#99000000</color>
+
+    <color name="base_gray_sixty">#999999</color>
+    <color name="base_description_text">#747474</color>
+</resources>

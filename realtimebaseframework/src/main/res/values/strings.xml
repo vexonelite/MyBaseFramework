@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">RtBaseFramework</string>
+    <string name="base_empty_string"/>
+    <string name="base_data_been_loading">資料載入中&#8230;</string>
+    <string name="base_been_processing">處理中&#8230;</string>
+    <string name="base_hint_to_quit_app">再按一次返回鍵離開 APP</string>
+</resources>
