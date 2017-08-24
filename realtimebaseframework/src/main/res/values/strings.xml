@@ -4,6 +4,11 @@
     <string name="base_data_been_loading">資料載入中&#8230;</string>
     <string name="base_been_processing">處理中&#8230;</string>
 
+    <string name="base_action_submit">送出</string>
+    <string name="base_action_confirm">確定</string>
+    <string name="base_action_cancel">取消</string>
+    <string name="base_action_done">完成</string>
+
     <string name="base_sign_in">登入</string>
     <string name="base_been_signing_in">登入中&#8230;</string>
     <string name="base_hint_to_quit_app">再按一次返回鍵離開 APP</string>
