@@ -30,6 +30,8 @@ public class OptionPickerDialog extends BaseDialogFragment {
 	private OptionPickerListener mCallback;
 	private List<OptionDelegate> mDataSet = new ArrayList<>();
 
+	private String mTitle;
+
 	private int mSelectedColor;
 	private int mNormalColor;
 
@@ -41,6 +43,14 @@ public class OptionPickerDialog extends BaseDialogFragment {
 
 	public interface OptionPickerListener extends OnDecisionMadeListener {
 		void onSubmitButtonPressed(OptionDelegate result);
+	}
+
+
+	public OptionPickerDialog setTitle (String title) {
+		if ( (null != title) && (!title.isEmpty()) ) {
+			mTitle = title;
+		}
+		return this;
 	}
 
 	public OptionPickerDialog setOptionPickerListener (OptionPickerListener listener) {
@@ -95,7 +105,10 @@ public class OptionPickerDialog extends BaseDialogFragment {
 	public void onViewCreated(View rootView, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(rootView, savedInstanceState);
 
-		setupRecyclerView((RecyclerView) rootView.findViewById(R.id.recyclerView));
+		TextView titleView = (TextView) rootView.findViewById(R.id.dialogTitle);
+		if ( (null != titleView) && (null != mTitle) ) {
+			titleView.setText(mTitle);
+		}
 
 		View view = rootView.findViewById(R.id.doneButton);
 		if (null != view) {
@@ -108,6 +121,8 @@ public class OptionPickerDialog extends BaseDialogFragment {
 				}
 			});
 		}
+
+		setupRecyclerView((RecyclerView) rootView.findViewById(R.id.recyclerView));
 	}
 
 	private void setupRecyclerView (RecyclerView recyclerView) {
@@ -158,15 +173,15 @@ public class OptionPickerDialog extends BaseDialogFragment {
 				return;
 			}
 
-			final int color = ((null != mSelectedOption) && (item.isSelected(mSelectedOption.getTitle())) )
-					? mSelectedColor : mNormalColor;
 			String text = "";
 			if (null != item.getTitle()) {
 				text = text + item.getTitle();
 			}
 			mTitleView.setText(text);
-			mTitleView.setBackgroundColor(color);
 
+			final int color = ((null != mSelectedOption) && (item.isSelected(mSelectedOption.getTitle())) )
+					? mSelectedColor : mNormalColor;
+			mTitleView.setBackgroundColor(color);
 			mContainer.setOnClickListener(
 					new BaseItemClicker<OptionDelegate>(item, position) {
 						@Override
