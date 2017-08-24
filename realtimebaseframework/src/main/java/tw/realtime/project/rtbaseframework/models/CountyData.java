@@ -9,9 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.interfaces.OptionDelegate;
 
 
-public class CountyData {
+public class CountyData implements OptionDelegate {
 
     private String countyName;
     private List<DistrictData> districtList;
@@ -23,6 +24,17 @@ public class CountyData {
 
     public List<DistrictData> getDistrictList () {
         return districtList;
+    }
+
+
+    @Override
+    public String getTitle() {
+        return countyName;
+    }
+
+    @Override
+    public boolean isSelected(String title) {
+        return (null != countyName) && (null != title) && (countyName.equals(title));
     }
 
 

@@ -6,9 +6,10 @@ import android.util.Log;
 import org.json.JSONObject;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.interfaces.OptionDelegate;
 
 
-public class DistrictData {
+public class DistrictData implements OptionDelegate {
 
     private String districtName;
     private String zipCode;
@@ -18,6 +19,7 @@ public class DistrictData {
         zipCode = code;
     }
 
+
     public String getDistrictName () {
         return districtName;
     }
@@ -25,6 +27,18 @@ public class DistrictData {
     public String getDistrictZipCode () {
         return zipCode;
     }
+
+
+    @Override
+    public String getTitle() {
+        return districtName;
+    }
+
+    @Override
+    public boolean isSelected(String title) {
+        return (null != districtName) && (null != title) && (districtName.equals(title));
+    }
+
 
     public static class Builder {
         private String bName;
