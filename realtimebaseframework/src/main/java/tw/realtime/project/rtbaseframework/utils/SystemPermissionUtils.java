@@ -172,11 +172,31 @@ public class SystemPermissionUtils {
         }
     }
 
+    /** appeal user for the permission CAMERA. */
+    public static void requestCameraPermission (final Fragment fragment) {
+        if (null != fragment) {
+            FragmentCompat.requestPermissions(
+                    fragment,
+                    new String[]{Manifest.permission.CAMERA},
+                    REQUEST_CODE_CAMERA_PERMISSION);
+        }
+    }
+
     /** appeal for the permission RECORD_AUDIO */
     public static void requestMicrophonePermission (final Activity activity) {
         if (null != activity) {
             ActivityCompat.requestPermissions(
                     activity,
+                    new String[]{Manifest.permission.RECORD_AUDIO},
+                    REQUEST_CODE_MICROPHONE_PERMISSION);
+        }
+    }
+
+    /** appeal for the permission RECORD_AUDIO */
+    public static void requestMicrophonePermission (final Fragment fragment) {
+        if (null != fragment) {
+            FragmentCompat.requestPermissions(
+                    fragment,
                     new String[]{Manifest.permission.RECORD_AUDIO},
                     REQUEST_CODE_MICROPHONE_PERMISSION);
         }
@@ -192,6 +212,7 @@ public class SystemPermissionUtils {
         }
     }
 
+    /** appeal user for the permission READ_EXTERNAL_STORAGE. */
     public static void requestReadExternalStoragePermission (final Fragment fragment) {
         if (null != fragment) {
             FragmentCompat.requestPermissions(
@@ -211,11 +232,31 @@ public class SystemPermissionUtils {
         }
     }
 
+    /** appeal user for the permission WRITE_EXTERNAL_STORAGE. */
+    public static void requestWriteExternalStoragePermission (final Fragment fragment) {
+        if (null != fragment) {
+            FragmentCompat.requestPermissions(
+                    fragment,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
+        }
+    }
+
     /** appeal user for the permission ACCESS_COARSE_LOCATION. */
     public static void requestCoarseLocationPermission (final Activity activity) {
         if (null != activity) {
             ActivityCompat.requestPermissions(
                     activity,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    REQUEST_CODE_COARSE_LOCATION_PERMISSION);
+        }
+    }
+
+    /** appeal user for the permission ACCESS_COARSE_LOCATION. */
+    public static void requestCoarseLocationPermission (final Fragment fragment) {
+        if (null != fragment) {
+            FragmentCompat.requestPermissions(
+                    fragment,
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                     REQUEST_CODE_COARSE_LOCATION_PERMISSION);
         }
@@ -243,6 +284,16 @@ public class SystemPermissionUtils {
         }
     }
 
+    /** appeal user for the permission ACCESS_FINE_LOCATION. */
+    public static void requestFineLocationPermission (final Fragment fragment) {
+        if (null != fragment) {
+            FragmentCompat.requestPermissions(
+                    fragment,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_CODE_FINE_LOCATION_PERMISSION);
+        }
+    }
+
     /** appeal user for the permissions CAMERA and WRITE_EXTERNAL_STORAGE. */
     public static void requestTakeShotPermissions (final Activity activity) {
         if (null != activity) {
@@ -257,11 +308,40 @@ public class SystemPermissionUtils {
         }
     }
 
+    /** appeal user for the permissions CAMERA and WRITE_EXTERNAL_STORAGE. */
+    public static void requestTakeShotPermissions (final Fragment fragment) {
+        if (null != fragment) {
+            FragmentCompat.requestPermissions(
+                    fragment,
+                    new String[]{
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    },
+                    REQUEST_CODE_TAKE_SHOT_PERMISSIONS);
+        }
+    }
+
     /** appeal user for the permissions CAMERA, RECORD_AUDIO, and WRITE_EXTERNAL_STORAGE. */
     public static void requestVideoRecPermissions (final Activity activity) {
         if (null != activity) {
             ActivityCompat.requestPermissions(
                     activity,
+                    new String[]{
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.RECORD_AUDIO,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    },
+                    REQUEST_CODE_VIDEO_REC_PERMISSIONS);
+        }
+    }
+
+    /** appeal user for the permissions CAMERA, RECORD_AUDIO, and WRITE_EXTERNAL_STORAGE. */
+    public static void requestVideoRecPermissions (final Fragment fragment) {
+        if (null != fragment) {
+            FragmentCompat.requestPermissions(
+                    fragment,
                     new String[]{
                             Manifest.permission.CAMERA,
                             Manifest.permission.RECORD_AUDIO,
