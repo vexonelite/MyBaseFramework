@@ -91,8 +91,8 @@ public class CodeUtils {
             return fmt.format(fPrice);
         }
         catch (Exception e) {
-            e.printStackTrace();
-            return "";
+            LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on getDecimalFormatString", e);
+            return null;
         }
     }
 
