@@ -17,6 +17,8 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.EnumMap;
@@ -74,6 +76,23 @@ public class CodeUtils {
         catch (Exception e) {
             LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on convertDateToString", e);
             return null;
+        }
+    }
+
+    public static String getDecimalFormatString (String inputPrice) {
+        DecimalFormat fmt = new DecimalFormat();
+        DecimalFormatSymbols fmts = new DecimalFormatSymbols();
+        fmts.setGroupingSeparator(',');
+        fmt.setGroupingSize(3);
+        fmt.setGroupingUsed(true);
+        fmt.setDecimalFormatSymbols(fmts);
+        try {
+            float fPrice = Float.parseFloat(inputPrice);
+            return fmt.format(fPrice);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return "";
         }
     }
 
