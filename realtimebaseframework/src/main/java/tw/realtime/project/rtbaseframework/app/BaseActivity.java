@@ -235,7 +235,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         if (!isSingleOption) {
             if ( (null != negativeText) && (!negativeText.isEmpty()) ) {
-                builder.setPositiveButton(negativeText, negativeCallback);
+                builder.setNegativeButton(negativeText, negativeCallback);
             }
             else {
                 builder.setNegativeButton(android.R.string.no, negativeCallback);
