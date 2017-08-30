@@ -1,10 +1,12 @@
 package tw.realtime.project.rtbaseframework.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
@@ -189,6 +191,45 @@ public class CodeUtils {
         } catch (Exception e) {
             LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on generateQrCode", e);
             return null;
+        }
+    }
+
+    public static void sendEmailByIntent (Context context, String emailAddress) {
+        if ( (null == context) || (null == emailAddress) ) {
+            return;
+        }
+        try {
+            Intent emailIntent = new Intent(Intent.ACTION_SENDTO,
+                    Uri.fromParts("mailto", emailAddress, null));
+            context.startActivity(Intent.createChooser(emailIntent, null));
+            //emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
+            //emailIntent.putExtra(Intent.EXTRA_TEXT, "Body");
+            //context.startActivity(Intent.createChooser(emailIntent, "Send email..."));
+
+//            Intent intent = new Intent(Intent.ACTION_SEND);
+//            intent.setType("text/plain");
+//            intent.putExtra(Intent.EXTRA_EMAIL, "emailaddress@emailaddress.com");
+//            intent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
+//            intent.putExtra(Intent.EXTRA_TEXT, "I'm email body.");
+//            context.startActivity(Intent.createChooser(intent, "Send Email"));
+        }
+        catch (Exception e) {
+            LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on sendEmailByIntent", e);
+        }
+    }
+
+    public static void makePhoneCallByIntent (Context context, String phoneNumber) {
+        if ( (null == context) || (null == phoneNumber) ) {
+            return;
+        }
+        try {
+            String phoneNum = "tel:" + phoneNumber;
+            Uri uri = Uri.parse(phoneNum);
+            Intent intent = new Intent(Intent.ACTION_DIAL, uri);
+            context.startActivity(intent);
+        }
+        catch (Exception e) {
+            LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on makePhoneCallByIntent", e);
         }
     }
 }
