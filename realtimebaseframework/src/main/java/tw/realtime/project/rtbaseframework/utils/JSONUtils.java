@@ -7,8 +7,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
-import tw.realtime.project.rtbaseframework.commons.ApiConstants;
-import tw.realtime.project.rtbaseframework.commons.AsyncApiException;
+import tw.realtime.project.rtbaseframework.api.commons.ApiConstants;
+import tw.realtime.project.rtbaseframework.api.commons.AsyncApiException;
 
 
 /**

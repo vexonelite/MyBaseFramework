@@ -1,4 +1,4 @@
-package tw.realtime.project.rtbaseframework.commons;
+package tw.realtime.project.rtbaseframework.api.commons;
 
 import org.json.JSONObject;
 

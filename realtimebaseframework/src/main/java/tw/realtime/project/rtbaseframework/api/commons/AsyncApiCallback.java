@@ -1,4 +1,4 @@
-package tw.realtime.project.rtbaseframework.commons;
+package tw.realtime.project.rtbaseframework.api.commons;
 
 /**
  * 定義 執行 Api 過程中的介面

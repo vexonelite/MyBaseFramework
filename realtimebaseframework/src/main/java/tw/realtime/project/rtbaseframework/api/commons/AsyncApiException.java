@@ -1,4 +1,4 @@
-package tw.realtime.project.rtbaseframework.commons;
+package tw.realtime.project.rtbaseframework.api.commons;
 
 /**
  * 執行 Api 過程中會丟出的例外
