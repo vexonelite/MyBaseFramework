@@ -23,11 +23,11 @@ public class OkHttpUtils {
     /**
      * 取得 OkHttpClient 實體
      */
-    public static OkHttpClient getInstance() {
+    public static OkHttpClient getInstance(boolean enableHttpLoggingInterceptor) {
         if (instance == null) {
             synchronized (OkHttpClient.class) {
                 if (instance == null) {
-                    instance = getOkHttpClient();
+                    instance = getOkHttpClient(enableHttpLoggingInterceptor);
                 }
             }
         }
@@ -38,18 +38,21 @@ public class OkHttpUtils {
      * 初始化一個 OkHttpClient
      * @return
      */
-    private static OkHttpClient getOkHttpClient () {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+    private static OkHttpClient getOkHttpClient (boolean enableHttpLoggingInterceptor) {
 
-        return new OkHttpClient.Builder()
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(ApiConstants.OkHttpSetting.CONNECTION_TIME, TimeUnit.MILLISECONDS)
                 .readTimeout(ApiConstants.OkHttpSetting.READ_TIMEOUT, TimeUnit.MILLISECONDS)
                 .writeTimeout(ApiConstants.OkHttpSetting.WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
                 .followRedirects(true)
-                .followSslRedirects(true)
-                .addInterceptor(interceptor)
-                .build();
+                .followSslRedirects(true);
+
+        if (enableHttpLoggingInterceptor) {
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            builder.addInterceptor(interceptor);
+        }
+        return builder.build();
     }
 
     /*
@@ -70,7 +73,9 @@ public class OkHttpUtils {
      * @param apiUrl        Request 的網址
      * @return
      */
-    public static okhttp3.Call generateRequestCall (RequestBody requestBody, String apiUrl) {
+    public static okhttp3.Call generateRequestCall (RequestBody requestBody,
+                                                    String apiUrl,
+                                                    boolean enableHttpLoggingInterceptor) {
         Request request = new Request.Builder()
                 //.header("Authorization", "Client-ID " + IMGUR_CLIENT_ID)
                 .url(apiUrl)
@@ -78,7 +83,7 @@ public class OkHttpUtils {
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .build();
         LogWrapper.showLog(Log.INFO, "okHttpUtils", "generateRequestCall - apiUrl: " + apiUrl);
-        return getInstance().newCall(request);
+        return getInstance(enableHttpLoggingInterceptor).newCall(request);
     }
 
     public static FormBody.Builder getFormBodyBuilder (String key, String outString) {
