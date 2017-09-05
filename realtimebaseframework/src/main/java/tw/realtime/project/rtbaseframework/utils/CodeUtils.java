@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
@@ -19,6 +21,8 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -232,4 +236,57 @@ public class CodeUtils {
             LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on makePhoneCallByIntent", e);
         }
     }
+
+    public static void openBrowser(Context context, String url) {
+        LogWrapper.showLog(Log.INFO, "CodeUtils", "openBrowser - given url: " + url);
+        if ( (!url.startsWith("http://")) && (!url.startsWith("https://")) ) {
+            url = "http://" + url;
+            Log.i("", "openBrowser - append 'http': " + url);
+        }
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        context.startActivity(browserIntent);
+    }
+
+    public static boolean hasInterNet (Context context) {
+        ConnectivityManager connMgr =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        boolean hasInterNet = false;
+        if ( (null != networkInfo) && (networkInfo.isConnected()) ) {
+            try {
+                //make a URL to a known source
+                URL url = new URL("https://www.google.com");
+                //open a connection to that source
+                HttpURLConnection urlConnect = (HttpURLConnection)url.openConnection();
+                //trying to retrieve data from the source. If there
+                //is no connection, this line will fail
+                Object objData = urlConnect.getContent();
+                hasInterNet = true;
+            }
+            catch (Exception e) {
+                LogWrapper.showLog(Log.ERROR, "CodeUtils", "Exception on hasInterNet", e);
+                //return false;
+            }
+        }
+        //LogWrapper.showLog(Log.INFO, "CodeUtils", "hasInterNet: " + hasInterNet);
+        return hasInterNet;
+    }
+
+    public static String getNetworkAccessType (Context context) {
+        ConnectivityManager connMgr =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        String ret = "u";
+        if ( (null != networkInfo) && (networkInfo.isConnected()) ) {
+            if (ConnectivityManager.TYPE_WIFI == networkInfo.getType()) {
+                ret = "wifi";
+            }
+            else if (ConnectivityManager.TYPE_MOBILE == networkInfo.getType()) {
+                ret = "cell";
+            }
+        }
+        return ret;
+    }
+
 }
