@@ -359,9 +359,10 @@ public class WebviewFragment extends BaseFragment {
                 }
                 onReceivedError(webView, errorCode, errorDescription, url);
             }
-//            else {
-//
-//            }
+            else {
+                resetSwipeRefresh();
+                dismissProgressDialog();
+            }
         }
     }
 
