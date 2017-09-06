@@ -4,6 +4,8 @@ import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -20,8 +22,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import tw.realtime.project.rtbaseframework.R;
 import tw.realtime.project.rtbaseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.R;
 
 
 public class WebviewFragment extends BaseFragment {
@@ -34,8 +36,11 @@ public class WebviewFragment extends BaseFragment {
     private boolean mHomeButtonEnabledFlag = false;
     private boolean isLocalContent = false;
     private boolean mDefaultWebViewClientEnabledFlag = false;
+    private boolean mAutoDismissProgressDialogEnabledFlag = false;
     private boolean isWebViewLoading = false;
     private boolean canWebViewBeTouched = true;
+
+    private int mAutoDismissProgressDialogSecond = 10;
 
     private String mCustomizedUserAgent;
     private String mTargetUrl;
@@ -43,7 +48,8 @@ public class WebviewFragment extends BaseFragment {
 
     private int mSwipeRefreshColorSchemeResourceId = android.R.color.holo_blue_light;
 
-    private WebViewClient mWebViewClient;
+    @Deprecated
+    //private WebViewClient mWebViewClient;
 
 
     public WebviewFragment setDefaultWebViewClientFlag (boolean flag) {
@@ -66,6 +72,11 @@ public class WebviewFragment extends BaseFragment {
         return this;
     }
 
+    public WebviewFragment setAutoDismissProgressDialogEnabledFlag (boolean flag) {
+        mAutoDismissProgressDialogEnabledFlag = flag;
+        return this;
+    }
+
     public WebviewFragment setTargetUrl (String url) {
         mTargetUrl = url;
         return this;
@@ -81,15 +92,24 @@ public class WebviewFragment extends BaseFragment {
         return this;
     }
 
-    public WebviewFragment setCustomizedWebViewClient (WebViewClient webViewClient) {
-        mWebViewClient = webViewClient;
-        return this;
-    }
+//    @Deprecated
+//    public WebviewFragment setCustomizedWebViewClient (WebViewClient webViewClient) {
+//        mWebViewClient = webViewClient;
+//        return this;
+//    }
 
     public WebviewFragment setSwipeRefreshColorSchemeResourceId (int resourceId) {
         mSwipeRefreshColorSchemeResourceId = resourceId;
         return this;
     }
+
+    public WebviewFragment setAutoDismissProgressDialogSecond (int second) {
+        if (second > 0) {
+            mAutoDismissProgressDialogSecond = second;
+        }
+        return this;
+    }
+
 
 
 
@@ -200,10 +220,11 @@ public class WebviewFragment extends BaseFragment {
             onAddJavascriptInterface(mWebView);
         }
 
-        if (null != mWebViewClient) {
-            mWebView.setWebViewClient(mWebViewClient);
-        }
-        else if (mDefaultWebViewClientEnabledFlag) {
+//        if (null != mWebViewClient) {
+//            mWebView.setWebViewClient(mWebViewClient);
+//        }
+//        else
+        if (mDefaultWebViewClientEnabledFlag) {
             mWebView.setWebViewClient(new DefaultWebViewClient());
         }
         mWebView.setVerticalScrollBarEnabled(false);
@@ -283,6 +304,16 @@ public class WebviewFragment extends BaseFragment {
             isWebViewLoading = true;
             canWebViewBeTouched = false;
             showProgressDialog(getString(R.string.base_data_been_loading));
+
+            if (mAutoDismissProgressDialogEnabledFlag) {
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        resetSwipeRefresh();
+                        dismissProgressDialog();
+                    }
+                }, mAutoDismissProgressDialogSecond * 1000L);
+            }
         }
 
         // As the host application if the browser should resend data as the requested page was a result of a POST.
