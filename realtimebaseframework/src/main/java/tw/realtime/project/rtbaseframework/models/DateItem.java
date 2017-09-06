@@ -24,6 +24,7 @@ public class DateItem extends BaseApiData {
 
     /** (calendar_uuid, CalendarEvent) */
     private Map<String, CalendarEvent> mEventMap;
+    private List<CalendarEvent> mEventList;
 
     private Mode mMode;
     private int mDayOfWeek;
@@ -48,7 +49,7 @@ public class DateItem extends BaseApiData {
         return DateItem.class.getSimpleName();
     }
 
-    public List<CalendarEvent> getCalendarEventList () {
+    public List<CalendarEvent> getCalendarEventListFromMap () {
         List<CalendarEvent> calendarEventList = new ArrayList<>();
         Set<String> keySet = mEventMap.keySet();
         for (String key : keySet) {
@@ -57,25 +58,47 @@ public class DateItem extends BaseApiData {
         return calendarEventList;
     }
 
-    public void addCalendarEvent (CalendarEvent calendarEvent) {
+    public void putCalendarEventIntoMap (CalendarEvent calendarEvent) {
         if (null == calendarEvent) {
             return;
         }
         String calendarEventUUID = calendarEvent.getUUID();
         if (null == calendarEventUUID) {
-            LogWrapper.showLog(Log.WARN, getLogTag(), "addCalendarEvent - calendarEventUUID is null!");
+            LogWrapper.showLog(Log.WARN, getLogTag(), "putCalendarEventIntoMap - calendarEventUUID is null!");
             return;
         }
         if (!mEventMap.containsKey(calendarEventUUID)) {
             mEventMap.put(calendarEventUUID, calendarEvent);
-            LogWrapper.showLog(Log.INFO, getLogTag(), "addCalendarEvent - add event for calendarEventUUID: " + calendarEventUUID);
+            LogWrapper.showLog(Log.INFO, getLogTag(), "putCalendarEventIntoMap - add event for calendarEventUUID: " + calendarEventUUID);
         }
         else {
-            LogWrapper.showLog(Log.WARN, getLogTag(), "addCalendarEvent - calendarEventUUID has existed!");
+            LogWrapper.showLog(Log.WARN, getLogTag(), "putCalendarEventIntoMap - calendarEventUUID has existed!");
             mEventMap.remove(calendarEventUUID);
-            LogWrapper.showLog(Log.INFO, getLogTag(), "addCalendarEvent - remove calendarEventUUID!");
+            LogWrapper.showLog(Log.INFO, getLogTag(), "putCalendarEventIntoMap - remove calendarEventUUID!");
             mEventMap.put(calendarEventUUID, calendarEvent);
-            LogWrapper.showLog(Log.INFO, getLogTag(), "addCalendarEvent - add event for calendarEventUUID: " + calendarEventUUID);
+            LogWrapper.showLog(Log.INFO, getLogTag(), "putCalendarEventIntoMap - put event for calendarEventUUID: " + calendarEventUUID);
+        }
+    }
+
+    public List<CalendarEvent> getCalendarEventListFromList () {
+        return mEventList;
+    }
+
+    public void addCalendarEventIntoList (CalendarEvent calendarEvent) {
+        if (null == calendarEvent) {
+            return;
+        }
+        String calendarEventUUID = calendarEvent.getUUID();
+        if (null == calendarEventUUID) {
+            LogWrapper.showLog(Log.WARN, getLogTag(), "addCalendarEventIntoList - calendarEventUUID is null!");
+            return;
+        }
+        if (mEventList.contains(calendarEvent)) {
+            LogWrapper.showLog(Log.WARN, getLogTag(), "addCalendarEventIntoList - calendarEvent has existed!");
+        }
+        else {
+            mEventList.add(calendarEvent);
+            LogWrapper.showLog(Log.INFO, getLogTag(), "addCalendarEventIntoList - add event for calendarEventUUID: " + calendarEventUUID);
         }
     }
 
@@ -174,6 +197,7 @@ public class DateItem extends BaseApiData {
 
         /** (calendar_uuid, CalendarEvent) */
         private Map<String, CalendarEvent> bEventMap;
+        private List<CalendarEvent> bEventList;
         private int bDayOfWeek = Integer.MAX_VALUE;
         private int bYear;
         private int bMonth;
@@ -183,6 +207,7 @@ public class DateItem extends BaseApiData {
         public Builder () {
             super();
             bEventMap = new HashMap<>();
+            bEventList = new ArrayList<>();
         }
 
         public Builder setItemId (String itemId) {
@@ -244,6 +269,7 @@ public class DateItem extends BaseApiData {
     private DateItem(Builder builder) {
         super(builder.getDataMap());
         mEventMap = builder.bEventMap;
+        mEventList = builder.bEventList;
         mDayOfWeek = builder.bDayOfWeek;
         mYear = builder.bYear;
         mMonth = builder.bMonth;
