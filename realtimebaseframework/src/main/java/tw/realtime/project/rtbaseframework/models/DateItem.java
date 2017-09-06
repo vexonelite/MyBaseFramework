@@ -102,6 +102,16 @@ public class DateItem extends BaseApiData {
         }
     }
 
+    public void addCalendarEventListIntoList (List<CalendarEvent> calendarEventList) {
+        if ( (null != calendarEventList) && (!calendarEventList.isEmpty()) ) {
+            mEventList.addAll(calendarEventList);
+        }
+    }
+
+    public void clearCalendarEventList () {
+        mEventList.clear();
+    }
+
     public String getItemId () {
         return retrieveData(Keys.ITEM_ID);
     }
