@@ -72,6 +72,10 @@ public class DateItem extends BaseApiData {
         }
         else {
             LogWrapper.showLog(Log.WARN, getLogTag(), "addCalendarEvent - calendarEventUUID has existed!");
+            mEventMap.remove(calendarEventUUID);
+            LogWrapper.showLog(Log.INFO, getLogTag(), "addCalendarEvent - remove calendarEventUUID!");
+            mEventMap.put(calendarEventUUID, calendarEvent);
+            LogWrapper.showLog(Log.INFO, getLogTag(), "addCalendarEvent - add event for calendarEventUUID: " + calendarEventUUID);
         }
     }
 
