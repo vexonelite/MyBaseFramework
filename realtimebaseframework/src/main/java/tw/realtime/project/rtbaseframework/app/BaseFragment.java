@@ -64,6 +64,13 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        dismissProgressDialog();
+    }
+    
+
     public String getLogTag() {
         return this.getClass().getSimpleName();
     }
