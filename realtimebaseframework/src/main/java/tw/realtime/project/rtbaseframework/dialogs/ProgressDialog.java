@@ -2,6 +2,7 @@ package tw.realtime.project.rtbaseframework.dialogs;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import tw.realtime.project.rtbaseframework.R;
 public class ProgressDialog extends android.app.ProgressDialog {
 
 	private String mTitle;
+	private TextView mDescription;
 
 	/**
 	 *
@@ -32,14 +34,31 @@ public class ProgressDialog extends android.app.ProgressDialog {
 		super(context, theme);
 	}
 
+
+	public void setTitle (String title) {
+		this.mTitle = title;
+		if (null != mDescription) {
+			if (null != title) {
+				mDescription.setText(title);
+			}
+			else {
+				Log.d("ProgressDialog", "setTitle - title is null!");
+			}
+		}
+		else {
+			Log.d("ProgressDialog", "setTitle - mDescription is null!");
+		}
+	}
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.base_dialog_progress);
 
-		TextView description = (TextView) findViewById(R.id.description);
+		mDescription = (TextView) findViewById(R.id.description);
 		if (null != mTitle) {
-			description.setText(mTitle);
+			mDescription.setText(mTitle);
 		}
 	}
 
