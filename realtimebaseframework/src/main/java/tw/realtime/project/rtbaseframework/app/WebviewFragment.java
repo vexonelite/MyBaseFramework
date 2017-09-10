@@ -40,7 +40,7 @@ public class WebviewFragment extends BaseFragment {
     private boolean isWebViewLoading = false;
     private boolean canWebViewBeTouched = true;
 
-    private int mAutoDismissProgressDialogSecond = 10;
+    private long mAutoDismissProgressDialogSecond = 10L;
 
     private String mCustomizedUserAgent;
     private String mTargetUrl;
@@ -103,7 +103,7 @@ public class WebviewFragment extends BaseFragment {
         return this;
     }
 
-    public WebviewFragment setAutoDismissProgressDialogSecond (int second) {
+    public WebviewFragment setAutoDismissProgressDialogSecond (long second) {
         if (second > 0) {
             mAutoDismissProgressDialogSecond = second;
         }
@@ -312,7 +312,7 @@ public class WebviewFragment extends BaseFragment {
                         resetSwipeRefresh();
                         dismissProgressDialog();
                     }
-                }, mAutoDismissProgressDialogSecond * 1000L);
+                }, (mAutoDismissProgressDialogSecond * 1000L));
             }
         }
 
