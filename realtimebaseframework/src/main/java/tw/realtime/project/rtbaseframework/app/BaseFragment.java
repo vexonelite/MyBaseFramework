@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -68,11 +69,23 @@ public abstract class BaseFragment extends Fragment {
     }
 
 
+    @Deprecated
+    protected void setProgressDialog(Context context, String title) {
+        ProgressDialog.show(context, null, title, true, false);
+    }
+
     /**
      * 顯示正在處理某事件之對話框
      */
     protected void showProgressDialog (String title) {
-        mProgressDialog = new ProgressDialog(getActivity(), title);
+        if (null == mProgressDialog) {
+            mProgressDialog = new ProgressDialog(getActivity(), title);
+        }
+        else {
+            mProgressDialog.cancel();
+            //mProgressDialog.dismiss();
+            mProgressDialog.setTitle(title);
+        }
         mProgressDialog.show();
     }
 
@@ -82,7 +95,7 @@ public abstract class BaseFragment extends Fragment {
     protected void dismissProgressDialog () {
         if (null != mProgressDialog) {
             mProgressDialog.cancel();
-            mProgressDialog = null;
+            //mProgressDialog = null;
         }
     }
 
