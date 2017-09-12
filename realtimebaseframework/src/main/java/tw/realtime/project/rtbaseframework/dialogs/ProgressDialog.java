@@ -7,6 +7,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.R;
 
 
@@ -42,11 +43,11 @@ public class ProgressDialog extends android.app.ProgressDialog {
 				mDescription.setText(title);
 			}
 			else {
-				Log.d("ProgressDialog", "setTitle - title is null!");
+				LogWrapper.showLog(Log.INFO, "ProgressDialog", "setTitle - title is null!");
 			}
 		}
 		else {
-			Log.d("ProgressDialog", "setTitle - mDescription is null!");
+			LogWrapper.showLog(Log.INFO, "ProgressDialog", "setTitle - mDescription is null!");
 		}
 	}
 

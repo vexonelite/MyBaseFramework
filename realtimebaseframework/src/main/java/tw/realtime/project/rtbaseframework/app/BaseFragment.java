@@ -85,15 +85,17 @@ public abstract class BaseFragment extends Fragment {
      * 顯示正在處理某事件之對話框
      */
     protected void showProgressDialog (String title) {
-        if (null == mProgressDialog) {
-            mProgressDialog = new ProgressDialog(getActivity(), title);
+        if (isAdded() && (null != getActivity()) ) {
+            if (null == mProgressDialog) {
+                mProgressDialog = new ProgressDialog(getActivity(), title);
+            }
+            else {
+                mProgressDialog.cancel();
+                //mProgressDialog.dismiss();
+                mProgressDialog.setTitle(title);
+            }
+            mProgressDialog.show();
         }
-        else {
-            mProgressDialog.cancel();
-            //mProgressDialog.dismiss();
-            mProgressDialog.setTitle(title);
-        }
-        mProgressDialog.show();
     }
 
     /**
