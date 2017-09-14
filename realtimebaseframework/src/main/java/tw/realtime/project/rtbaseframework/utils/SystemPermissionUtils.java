@@ -242,6 +242,26 @@ public class SystemPermissionUtils {
         }
     }
 
+    /** appeal user for the permission ACCESS_FINE_LOCATION. */
+    public static void requestFineLocationPermission (final Activity activity) {
+        if (null != activity) {
+            ActivityCompat.requestPermissions(
+                    activity,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_CODE_FINE_LOCATION_PERMISSION);
+        }
+    }
+
+    /** appeal user for the permission ACCESS_FINE_LOCATION. */
+    public static void requestFineLocationPermission (final Fragment fragment) {
+        if (null != fragment) {
+            FragmentCompat.requestPermissions(
+                    fragment,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_CODE_FINE_LOCATION_PERMISSION);
+        }
+    }
+
     /** appeal user for the permission ACCESS_COARSE_LOCATION. */
     public static void requestCoarseLocationPermission (final Activity activity) {
         if (null != activity) {
@@ -262,16 +282,6 @@ public class SystemPermissionUtils {
         }
     }
 
-    /** appeal user for the permission ACCESS_FINE_LOCATION. */
-    public static void requestFineLocationPermission (final Activity activity) {
-        if (null != activity) {
-            ActivityCompat.requestPermissions(
-                    activity,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_CODE_FINE_LOCATION_PERMISSION);
-        }
-    }
-
     /** appeal user for the permission ACCESS_FINE_LOCATION and ACCESS_COARSE_LOCATION. */
     public static void requestLocationPermissions (final Activity activity) {
         if (null != activity) {
@@ -284,13 +294,15 @@ public class SystemPermissionUtils {
         }
     }
 
-    /** appeal user for the permission ACCESS_FINE_LOCATION. */
-    public static void requestFineLocationPermission (final Fragment fragment) {
+    /** appeal user for the permission ACCESS_FINE_LOCATION and ACCESS_COARSE_LOCATION. */
+    public static void requestLocationPermissions (final Fragment fragment) {
         if (null != fragment) {
             FragmentCompat.requestPermissions(
                     fragment,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_CODE_FINE_LOCATION_PERMISSION);
+                    new String[]{
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_CODE_LOCATION_PERMISSIONS);
         }
     }
 
