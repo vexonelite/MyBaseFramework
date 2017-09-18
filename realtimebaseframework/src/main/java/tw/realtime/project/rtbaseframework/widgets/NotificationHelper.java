@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
@@ -32,8 +33,6 @@ public class NotificationHelper {
     private boolean nOngoing = false;
     private boolean nAutoCancel = true;
     private boolean nGroupSummary = false;
-
-    private Uri nSoundUri;
 
     private PendingIntent nPendingIntent;
 
@@ -156,10 +155,6 @@ public class NotificationHelper {
         return this;
     }
 
-    public NotificationHelper setSoundUri (Uri soundUri) {
-        nSoundUri = soundUri;
-        return this;
-    }
 
 
     public Notification generate() {
@@ -169,7 +164,13 @@ public class NotificationHelper {
         }
 
         try {
-            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            if (null == defaultSoundUri) {
+                defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+                if (null == defaultSoundUri) {
+                    defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                }
+            }
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(nContext)
                     .setContentTitle(nTitle)
@@ -180,7 +181,7 @@ public class NotificationHelper {
                     .setAutoCancel(nAutoCancel)
                     .setOngoing(nOngoing)
                     .setGroupSummary(nGroupSummary)
-                    .setSound( (null != nSoundUri) ? nSoundUri : defaultSoundUri);
+                    .setSound(defaultSoundUri);
 
             Bitmap icon = generateLargeIconBitmap();
             if (null != icon) {
@@ -274,5 +275,10 @@ public class NotificationHelper {
         }
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.cancelAll();
+    }
+
+    public static void playCustomizedSoundIfNeeded (Context context, Uri soundUri) throws RuntimeException {
+        Ringtone ringtone = RingtoneManager.getRingtone(context, soundUri);
+        ringtone.play();
     }
 }
