@@ -175,20 +175,17 @@ public class NotificationHelper {
                     .setContentTitle(nTitle)
                     .setTicker(nTitle)
                     .setContentText(nBody)
-                    .setSound(defaultSoundUri)
                     .setDefaults(Notification.DEFAULT_ALL) // requires VIBRATE permission
                     .setSmallIcon(nSmallIconResourceId)
                     .setAutoCancel(nAutoCancel)
                     .setOngoing(nOngoing)
-                    .setGroupSummary(nGroupSummary);
+                    .setGroupSummary(nGroupSummary)
+                    .setSound( (null != nSoundUri) ? nSoundUri : defaultSoundUri);
 
             Bitmap icon = generateLargeIconBitmap();
             if (null != icon) {
                 builder.setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(nBody));
-            }
-            if (null != nSoundUri) {
-                builder.setSound(nSoundUri);
             }
             if (null != nPendingIntent) {
                 builder.setContentIntent(nPendingIntent);
