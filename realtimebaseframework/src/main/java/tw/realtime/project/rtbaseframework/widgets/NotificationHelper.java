@@ -33,6 +33,8 @@ public class NotificationHelper {
     private boolean nAutoCancel = true;
     private boolean nGroupSummary = false;
 
+    private Uri nSoundUri;
+
     private PendingIntent nPendingIntent;
 
     private String nActionTitle;
@@ -154,6 +156,12 @@ public class NotificationHelper {
         return this;
     }
 
+    public NotificationHelper setSoundUri (Uri soundUri) {
+        nSoundUri = soundUri;
+        return this;
+    }
+
+
     public Notification generate() {
 
         if ( (null == nContext) || (null == nTitle) || (null == nBody)) {
@@ -178,6 +186,9 @@ public class NotificationHelper {
             if (null != icon) {
                 builder.setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(nBody));
+            }
+            if (null != nSoundUri) {
+                builder.setSound(nSoundUri);
             }
             if (null != nPendingIntent) {
                 builder.setContentIntent(nPendingIntent);
