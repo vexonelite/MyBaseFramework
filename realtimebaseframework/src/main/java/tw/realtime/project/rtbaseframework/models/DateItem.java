@@ -22,8 +22,10 @@ public class DateItem extends BaseApiData {
     public static final int TYPE_ITEM = 1002;
     public static final int TYPE_DIVIDER = 1003;
 
+    @Deprecated
     /** (calendar_uuid, CalendarEvent) */
     private Map<String, CalendarEvent> mEventMap;
+    @Deprecated
     private List<CalendarEvent> mEventList;
 
     private Mode mMode;
@@ -49,6 +51,7 @@ public class DateItem extends BaseApiData {
         return DateItem.class.getSimpleName();
     }
 
+    @Deprecated
     public List<CalendarEvent> getCalendarEventListFromMap () {
         List<CalendarEvent> calendarEventList = new ArrayList<>();
         Set<String> keySet = mEventMap.keySet();
@@ -58,6 +61,7 @@ public class DateItem extends BaseApiData {
         return calendarEventList;
     }
 
+    @Deprecated
     public void putCalendarEventIntoMap (CalendarEvent calendarEvent) {
         if (null == calendarEvent) {
             return;
@@ -80,10 +84,12 @@ public class DateItem extends BaseApiData {
         }
     }
 
+    @Deprecated
     public List<CalendarEvent> getCalendarEventListFromList () {
         return mEventList;
     }
 
+    @Deprecated
     public void addCalendarEventIntoList (CalendarEvent calendarEvent) {
         if (null == calendarEvent) {
             return;
@@ -102,12 +108,14 @@ public class DateItem extends BaseApiData {
         }
     }
 
+    @Deprecated
     public void addCalendarEventListIntoList (List<CalendarEvent> calendarEventList) {
         if ( (null != calendarEventList) && (!calendarEventList.isEmpty()) ) {
             mEventList.addAll(calendarEventList);
         }
     }
 
+    @Deprecated
     public void clearCalendarEventList () {
         mEventList.clear();
     }
