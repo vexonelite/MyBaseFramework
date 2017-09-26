@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -85,21 +84,7 @@ public class DateItemGenerator {
         return this;
     }
 
-    public void resetAllDateItemEvent () {
-        try {
-            this.mDataUpdateLock.writeLock().lock();
-
-            Set<String> keySet = mDateMap.keySet();
-            for (String key: keySet) {
-                DateItem dateItem = mDateMap.get(key);
-                dateItem.clearCalendarEventList();
-            }
-        }
-        finally {
-            this.mDataUpdateLock.writeLock().unlock();
-        }
-    }
-
+    
     protected void addDateItem (DateItem dateItem) {
         if (null == dateItem) {
             LogWrapper.showLog(Log.ERROR, getLogTag(), "addDateItem - invalid dateItem!");
