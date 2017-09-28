@@ -84,7 +84,7 @@ public class DateItemGenerator {
         return this;
     }
 
-    
+
     protected void addDateItem (DateItem dateItem) {
         if (null == dateItem) {
             LogWrapper.showLog(Log.ERROR, getLogTag(), "addDateItem - invalid dateItem!");
