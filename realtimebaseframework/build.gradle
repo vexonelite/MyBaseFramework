@@ -35,11 +35,13 @@ dependencies {
     compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'
     compile 'com.squareup.okhttp3:okhttp-urlconnection:3.8.1'
 
-    //compile'com.squareup.retrofit2:retrofit:2.3.0'
+    compile'com.squareup.retrofit2:retrofit:2.3.0'
     //compile'com.squareup.retrofit2:converter-scalars:2.3.0'
     //compile'com.squareup.retrofit2:converter-gson:2.3.0'
-    //compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
-    //compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    // for using RxJava 1.x
+    //compile 'com.squareup.retrofit2:adapter-rxjava:2.3.0'
+    // for using RxJava 2.x
+    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
 
     // 產生 QrCode 影像
     compile 'com.google.zxing:core:3.2.1'
