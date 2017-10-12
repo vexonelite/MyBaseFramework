@@ -21,4 +21,6 @@
     <string name="base_logging_out">登出中&#8230;</string>
     <string name="base_would_you_like_to_logout">是否確定登出?</string>
 
+    <string name="base_network_is_unavailable">請檢查網路連線</string>
+
 </resources>
