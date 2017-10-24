@@ -8,6 +8,7 @@ import java.util.Map;
  * <p>
  * Created by vexonelite on 2017/5/25.
  */
+@Deprecated
 public class ApiDataBuilder {
 
     private Map<String, String> bDataMap;

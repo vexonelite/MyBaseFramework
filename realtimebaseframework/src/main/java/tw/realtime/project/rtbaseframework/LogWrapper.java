@@ -9,7 +9,7 @@ import android.util.Log;
  */
 public class LogWrapper {
 
-    public static final boolean HAS_ENABLE = false;
+    public static final boolean HAS_ENABLE = true;
 
     /**
      * 呼叫 Log.mode(tag, message) 方法
