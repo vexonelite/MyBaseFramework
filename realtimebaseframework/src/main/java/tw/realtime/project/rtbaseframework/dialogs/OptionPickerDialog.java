@@ -42,11 +42,8 @@ public class OptionPickerDialog extends BaseDialogFragment {
 	private int mNormalColor;
 
 
-	private final int mDefaultLayoutResId = tw.realtime.project.rtbaseframework.R.layout.base_dialog_option_picker;
-	private int mLayoutResId = mDefaultLayoutResId;
+	private final int mDefaultLayoutResId = tw.realtime.project.rtbaseframework.R.layout.base_dialog_option_picker_fixed_height;
 	private final int mItemLayoutResId = tw.realtime.project.rtbaseframework.R.layout.base_dialog_option_picker_item;
-
-	private LayoutInflater mInflater;
 
 
 	public interface OptionPickerListener extends OnDecisionMadeListener {
@@ -88,11 +85,6 @@ public class OptionPickerDialog extends BaseDialogFragment {
 		return this;
 	}
 
-	public OptionPickerDialog setLayoutResourceId (int resourceId) {
-		mLayoutResId = resourceId;
-		return this;
-	}
-
 	public OptionPickerDialog setAllowMultipleSelectionFlag (boolean flag) {
 		doesAllowMultipleSelection = flag;
 		return this;
@@ -112,8 +104,7 @@ public class OptionPickerDialog extends BaseDialogFragment {
     public View onCreateView(LayoutInflater inflater,
 							 ViewGroup container,
 							 Bundle savedInstanceState) {
-		mInflater = inflater;
-		return inflater.inflate(mLayoutResId, container);
+		return inflater.inflate(mDefaultLayoutResId, container);
     }
 
 	@Override
@@ -143,13 +134,21 @@ public class OptionPickerDialog extends BaseDialogFragment {
 		setupRecyclerView((RecyclerView) rootView.findViewById(tw.realtime.project.rtbaseframework.R.id.recyclerView));
 	}
 
+	@Override
+	public void onResume () {
+		super.onResume();
+		if (null != mAdapter) {
+			mAdapter.notifyDataSetChanged();
+		}
+	}
+
 	private void setupRecyclerView (RecyclerView recyclerView) {
 		if (null == recyclerView) {
 			return;
 		}
 
 		mAdapter = getOptionPickerAdapter();
-		mAdapter.appendNewDataSet(mDataSet, true);
+		mAdapter.appendNewDataSet(mDataSet, false);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 		recyclerView.setItemAnimator(null);
 		recyclerView.setAdapter(mAdapter);
@@ -163,14 +162,11 @@ public class OptionPickerDialog extends BaseDialogFragment {
 		return new OptionPickerAdapter();
 	}
 
-	public class OptionPickerAdapter extends BaseRecyclerViewAdapter<OptionDelegate, RecyclerView.ViewHolder> {
+	protected class OptionPickerAdapter extends BaseRecyclerViewAdapter<OptionDelegate, RecyclerView.ViewHolder> {
 
 		@Override
 		public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//			LayoutInflater inflater = LayoutInflater.from(
-//					MainApplication.getInstance().getApplicationContext());
 			return getOptionPickerItem(parent);
-
 		}
 
 		@Override
@@ -185,13 +181,14 @@ public class OptionPickerDialog extends BaseDialogFragment {
 	 * You can override the method and return a subclass of OptionPickerItem
 	 */
 	protected OptionPickerItem getOptionPickerItem (ViewGroup parent) {
-		return new DefaultOptionPickerItem( mInflater.inflate(mItemLayoutResId, parent, false) );
+		LayoutInflater inflater = LayoutInflater.from(getActivity());
+		return new DefaultOptionPickerItem( inflater.inflate(mItemLayoutResId, parent, false) );
 	}
 
 
-	public class OptionPickerItem extends RecyclerView.ViewHolder {
+	protected class OptionPickerItem extends RecyclerView.ViewHolder {
 
-		public OptionPickerItem(View itemView) {
+		protected OptionPickerItem(View itemView) {
 			super(itemView);
 		}
 
@@ -226,7 +223,7 @@ public class OptionPickerDialog extends BaseDialogFragment {
 			}
 			mTitleView.setText(text);
 
-			final int color = (mSelectedList.contains(item)) ? mSelectedColor : mNormalColor;
+			final int color = (isInSelectedList(item)) ? mSelectedColor : mNormalColor;
 			mTitleView.setBackgroundColor(color);
 			mContainer.setOnClickListener(
 					new BaseItemClicker<OptionDelegate>(item, position) {
@@ -245,6 +242,14 @@ public class OptionPickerDialog extends BaseDialogFragment {
 		}
 	}
 
+	protected boolean isInSelectedList (OptionDelegate delegate) {
+		if (null == delegate) {
+			return false;
+		}
+		else {
+			return mSelectedList.contains(delegate);
+		}
+	}
 
 	private void handleStateSwitch (int position) {
 
