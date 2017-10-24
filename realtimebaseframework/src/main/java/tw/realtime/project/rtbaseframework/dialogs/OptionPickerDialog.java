@@ -3,9 +3,11 @@ package tw.realtime.project.rtbaseframework.dialogs;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +16,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import tw.realtime.project.rtbaseframework.R;
+import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.adapters.BaseRecyclerViewAdapter;
 import tw.realtime.project.rtbaseframework.app.BaseDialogFragment;
 import tw.realtime.project.rtbaseframework.interfaces.OptionDelegate;
@@ -24,31 +26,43 @@ import tw.realtime.project.rtbaseframework.widgets.BaseItemClicker;
 
 public class OptionPickerDialog extends BaseDialogFragment {
 
-	private OptionDelegate mSelectedOption;
 	private OptionPickerAdapter mAdapter;
 
-	private OptionPickerListener mCallback;
 	private List<OptionDelegate> mDataSet = new ArrayList<>();
+	private List<OptionDelegate> mSelectedList = new ArrayList<>();
 
-	private String mTitle;
+	private boolean doesAllowMultipleSelection = false;
+
+	private OptionPickerListener mCallback;
+
+	private String mDialogTitle;
+	private String mDoneButtonTitle;
 
 	private int mSelectedColor;
 	private int mNormalColor;
 
-	private int mLayoutResId = R.layout.base_dialog_option_picker;
-	private int mItemLayoutResId = R.layout.base_dialog_option_picker_item;
+
+	private final int mDefaultLayoutResId = tw.realtime.project.rtbaseframework.R.layout.base_dialog_option_picker;
+	private int mLayoutResId = mDefaultLayoutResId;
+	private final int mItemLayoutResId = tw.realtime.project.rtbaseframework.R.layout.base_dialog_option_picker_item;
 
 	private LayoutInflater mInflater;
 
 
 	public interface OptionPickerListener extends OnDecisionMadeListener {
-		void onSubmitButtonPressed(OptionDelegate result);
+		void onSubmitButtonPressed(List<OptionDelegate> resultList);
 	}
 
-
-	public OptionPickerDialog setTitle (String title) {
+	public OptionPickerDialog setDialogTitle (String title) {
 		if ( (null != title) && (!title.isEmpty()) ) {
-			mTitle = title;
+			mDialogTitle = title;
+		}
+		return this;
+	}
+
+	public OptionPickerDialog setDoneTitle (String title) {
+		if ( (null != title) && (!title.isEmpty()) ) {
+			mDoneButtonTitle = title;
 		}
 		return this;
 	}
@@ -66,9 +80,10 @@ public class OptionPickerDialog extends BaseDialogFragment {
 		return this;
 	}
 
-	public OptionPickerDialog setSelectedOption (OptionDelegate selectedOption) {
-		if (null != selectedOption) {
-			mSelectedOption = selectedOption;
+	public OptionPickerDialog setSelectedList (List<OptionDelegate> selectedList) {
+		if ( (null != selectedList) && (!selectedList.isEmpty()) ) {
+			mSelectedList.clear();
+			mSelectedList.addAll(selectedList);
 		}
 		return this;
 	}
@@ -78,8 +93,8 @@ public class OptionPickerDialog extends BaseDialogFragment {
 		return this;
 	}
 
-	public OptionPickerDialog setItemLayoutResourceId (int resourceId) {
-		mItemLayoutResId = resourceId;
+	public OptionPickerDialog setAllowMultipleSelectionFlag (boolean flag) {
+		doesAllowMultipleSelection = flag;
 		return this;
 	}
 
@@ -105,14 +120,17 @@ public class OptionPickerDialog extends BaseDialogFragment {
 	public void onViewCreated(View rootView, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(rootView, savedInstanceState);
 
-		TextView titleView = (TextView) rootView.findViewById(R.id.dialogTitle);
-		if ( (null != titleView) && (null != mTitle) ) {
-			titleView.setText(mTitle);
+		TextView titleView = rootView.findViewById(tw.realtime.project.rtbaseframework.R.id.dialogTitle);
+		if ( (null != titleView) && (null != mDialogTitle) ) {
+			titleView.setText(mDialogTitle);
 		}
 
-		View view = rootView.findViewById(R.id.doneButton);
-		if (null != view) {
-			view.setOnClickListener(new View.OnClickListener() {
+		View doneButton = rootView.findViewById(tw.realtime.project.rtbaseframework.R.id.doneButton);
+		if (null != doneButton) {
+			if ( (doneButton instanceof TextView) && (null != mDoneButtonTitle) ) {
+				((TextView) doneButton).setText(mDoneButtonTitle);
+			}
+			doneButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
 					view.setEnabled(false);
@@ -122,7 +140,7 @@ public class OptionPickerDialog extends BaseDialogFragment {
 			});
 		}
 
-		setupRecyclerView((RecyclerView) rootView.findViewById(R.id.recyclerView));
+		setupRecyclerView((RecyclerView) rootView.findViewById(tw.realtime.project.rtbaseframework.R.id.recyclerView));
 	}
 
 	private void setupRecyclerView (RecyclerView recyclerView) {
@@ -130,21 +148,29 @@ public class OptionPickerDialog extends BaseDialogFragment {
 			return;
 		}
 
-		mAdapter = new OptionPickerAdapter();
-		mAdapter.appendNewDataSet(mDataSet, false);
+		mAdapter = getOptionPickerAdapter();
+		mAdapter.appendNewDataSet(mDataSet, true);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 		recyclerView.setItemAnimator(null);
 		recyclerView.setAdapter(mAdapter);
 		recyclerView.setHasFixedSize(true);
 	}
 
-	private class OptionPickerAdapter extends BaseRecyclerViewAdapter<OptionDelegate, RecyclerView.ViewHolder> {
+	/**
+	 * You can override the method and return a subclass of OptionPickerAdapter
+	 */
+	protected OptionPickerAdapter getOptionPickerAdapter () {
+		return new OptionPickerAdapter();
+	}
+
+	public class OptionPickerAdapter extends BaseRecyclerViewAdapter<OptionDelegate, RecyclerView.ViewHolder> {
 
 		@Override
 		public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 //			LayoutInflater inflater = LayoutInflater.from(
 //					MainApplication.getInstance().getApplicationContext());
-			return new OptionPickerItem( mInflater.inflate(mItemLayoutResId, parent, false) );
+			return getOptionPickerItem(parent);
+
 		}
 
 		@Override
@@ -154,19 +180,40 @@ public class OptionPickerDialog extends BaseDialogFragment {
 			}
 		}
 	}
-	
-	private class OptionPickerItem extends RecyclerView.ViewHolder {
+
+	/**
+	 * You can override the method and return a subclass of OptionPickerItem
+	 */
+	protected OptionPickerItem getOptionPickerItem (ViewGroup parent) {
+		return new DefaultOptionPickerItem( mInflater.inflate(mItemLayoutResId, parent, false) );
+	}
+
+
+	public class OptionPickerItem extends RecyclerView.ViewHolder {
+
+		public OptionPickerItem(View itemView) {
+			super(itemView);
+		}
+
+		public void onBind (final OptionDelegate item, int position) {
+
+		}
+	}
+
+	private class DefaultOptionPickerItem extends OptionPickerItem {
 
 		private TextView mTitleView;
 		private View mContainer;
 
-		private OptionPickerItem(View itemView) {
+		private DefaultOptionPickerItem(View itemView) {
 			super(itemView);
 			mContainer = itemView;
-			mTitleView = (TextView) itemView.findViewById(R.id.itemDescription);
+			mTitleView = itemView.findViewById(tw.realtime.project.rtbaseframework.R.id.itemDescription);
 		}
 
-		private void onBind (final OptionDelegate item, int position) {
+		@Override
+		public void onBind (final OptionDelegate item, int position) {
+			LogWrapper.showLog(Log.INFO, getLogTag(), "DefaultOptionPickerItem - onBind: " + position);
 
 			if (null == item) {
 				resetItemViewLooks();
@@ -174,13 +221,12 @@ public class OptionPickerDialog extends BaseDialogFragment {
 			}
 
 			String text = "";
-			if (null != item.getTitle()) {
-				text = text + item.getTitle();
+			if (null != item.getOptionTitle()) {
+				text = text + item.getOptionTitle();
 			}
 			mTitleView.setText(text);
 
-			final int color = ((null != mSelectedOption) && (item.isSelected(mSelectedOption.getTitle())) )
-					? mSelectedColor : mNormalColor;
+			final int color = (mSelectedList.contains(item)) ? mSelectedColor : mNormalColor;
 			mTitleView.setBackgroundColor(color);
 			mContainer.setOnClickListener(
 					new BaseItemClicker<OptionDelegate>(item, position) {
@@ -199,44 +245,54 @@ public class OptionPickerDialog extends BaseDialogFragment {
 		}
 	}
 
+
 	private void handleStateSwitch (int position) {
 
 		if ( (position < 0) || (position >= mAdapter.getItemCount()) ) {
 			return;
 		}
 
-		int prePosition = -1;
-		if (null != mSelectedOption) {
-			prePosition = mAdapter.getIndexOfObject(mSelectedOption);
-		}
+		OptionDelegate selectedDelegate = mAdapter.getObjectAtPosition(position);
 
-		mSelectedOption = mAdapter.getObjectAtPosition(position);
-		new Handler().post(new NotifyRunnable(prePosition, position));
+		if (doesAllowMultipleSelection) {
+			if (!mSelectedList.contains(selectedDelegate)) {
+				mSelectedList.add(selectedDelegate);
+			}
+			else {
+				mSelectedList.remove(selectedDelegate);
+			}
+			new Handler(Looper.getMainLooper()).post(new NotifyRunnable(position));
+		}
+		else {
+			if (!mSelectedList.isEmpty()) {
+				OptionDelegate preSelectedDelegate = mSelectedList.get(0);
+				int prePosition = mAdapter.getIndexOfObject(preSelectedDelegate);
+				new Handler(Looper.getMainLooper()).post(new NotifyRunnable(prePosition));
+			}
+			mSelectedList.clear();
+			mSelectedList.add(selectedDelegate);
+			new Handler(Looper.getMainLooper()).post(new NotifyRunnable(position));
+		}
 	}
 
 	private class NotifyRunnable implements Runnable {
-		private int nPrePosition;
-		private int nPostPosition;
+		private int nPosition;
 
-		private NotifyRunnable (int prePosition, int postPosition) {
-			nPrePosition = prePosition;
-			nPostPosition = postPosition;
+		private NotifyRunnable (int position) {
+			nPosition = position;
 		}
 
 		@Override
 		public void run() {
-			if ( (nPrePosition >= 0) && (nPrePosition < mAdapter.getItemCount()) ) {
-				mAdapter.notifyItemChanged(nPrePosition);
-			}
-			if ( (nPostPosition >= 0) && (nPostPosition < mAdapter.getItemCount()) ) {
-				mAdapter.notifyItemChanged(nPostPosition);
+			if ( (nPosition >= 0) && (nPosition < mAdapter.getItemCount()) ) {
+				mAdapter.notifyItemChanged(nPosition);
 			}
 		}
 	}
 
 	private void notifyCallbackIfNeeded () {
 		if (null != mCallback) {
-			mCallback.onSubmitButtonPressed(mSelectedOption);
+			mCallback.onSubmitButtonPressed(mSelectedList);
 			mCallback.onNotification(OptionPickerDialog.this, DialogAction.CONFIRM);
 		}
 	}
