@@ -19,25 +19,32 @@ import java.util.Calendar;
 public class DefaultDatePicker extends DialogFragment
                         implements DatePickerDialog.OnDateSetListener {
 
-    private OnDecisionMadeListener mCallback = null;
+    private Listener mCallback = null;
+    private Calendar mGivenCalendar;
 
 
-    public void setDecisionMadeListener (OnDecisionMadeListener listener) {
+    public DefaultDatePicker setListener (Listener listener) {
         mCallback = listener;
+        return this;
+    }
+
+    public DefaultDatePicker setCalendar (Calendar given) {
+        mGivenCalendar = given;
+        return this;
     }
 
 
-    public interface OnDecisionMadeListener {
+    public interface Listener {
         void onNotification (DialogFragment dialogFrag, int year, int month, int day);
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         //Use the current date as the default date in the picker
-        final Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
+        final Calendar calendar = (null != mGivenCalendar) ? mGivenCalendar : Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
         //Create a new instance of DatePickerDialog and return it
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 getActivity(),
