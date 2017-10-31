@@ -12,11 +12,13 @@ import android.view.View;
 public class SimpleDecoration extends RecyclerView.ItemDecoration {
 
     private int verticalMargin;
+    private int horizontalMargin;
 
     public static class Builder {
 
         private Context bContext;
         private float bVerticalMargin = 8f;
+        private float bHorizontalMargin = 8f;
 
         public Builder (Context context) {
             bContext = context;
@@ -28,8 +30,20 @@ public class SimpleDecoration extends RecyclerView.ItemDecoration {
          * @return
          */
         public Builder setVerticalMargin (float verticalMargin) {
-            if (verticalMargin > 0f) {
+            if (verticalMargin >= 0f) {
                 bVerticalMargin = verticalMargin;
+            }
+            return this;
+        }
+
+        /**
+         *
+         * @param horizontalMargin Unit DP
+         * @return
+         */
+        public Builder setHorizontalMargin (float horizontalMargin) {
+            if (horizontalMargin >= 0f) {
+                bHorizontalMargin = horizontalMargin;
             }
             return this;
         }
@@ -42,6 +56,7 @@ public class SimpleDecoration extends RecyclerView.ItemDecoration {
     private SimpleDecoration(Builder builder) {
         float density = builder.bContext.getResources().getDisplayMetrics().density;
         verticalMargin = (int)(density * builder.bVerticalMargin);
+        horizontalMargin = (int)(density * builder.bHorizontalMargin);
     }
 
 
@@ -49,10 +64,10 @@ public class SimpleDecoration extends RecyclerView.ItemDecoration {
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
 
         if (parent.getChildLayoutPosition(view) == 0) {
-            outRect.set(0, 0, 0, 0);
+            outRect.set(horizontalMargin, 0, horizontalMargin, 0);
         }
         else {
-            outRect.set(0, verticalMargin, 0, 0);
+            outRect.set(horizontalMargin, verticalMargin, horizontalMargin, 0);
         }
     }
 }
