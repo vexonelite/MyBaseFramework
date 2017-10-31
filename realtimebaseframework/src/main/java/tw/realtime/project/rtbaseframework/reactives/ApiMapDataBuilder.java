@@ -9,16 +9,16 @@ import java.util.Map;
  * Created by vexonelite on 2017/10/3.
  */
 
-public class ApiDataBuilder implements ApiDataDelegate {
+public class ApiMapDataBuilder implements ApiHashMapDelegate {
 
     private Map<String, String> bDataMap;
 
-    public ApiDataBuilder () {
+    public ApiMapDataBuilder() {
         bDataMap = new HashMap<>();
     }
 
     @Override
-    public ApiDataDelegate setData (String key, String value) {
+    public ApiHashMapDelegate setData (String key, String value) {
         if ( (null != key) && (!key.isEmpty()) && (null != value) ){
             bDataMap.put(key, value);
         }
