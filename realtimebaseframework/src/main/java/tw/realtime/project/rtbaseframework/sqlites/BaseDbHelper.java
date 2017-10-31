@@ -544,6 +544,44 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
                 + ", tableName: " + tableName + ", whereClause: " + whereClause + " TID: " + Thread.currentThread().getId());
     }
 
+    public void deleteMultipleTables (List<String> tableNameList) throws Exception {
+
+        try {
+            this.mDataUpdateLock.writeLock().lock();
+
+            if (null == mSQLiteDb) {
+                mSQLiteDb = getWritableDatabase();
+                LogWrapper.showLog(Log.INFO, getLogTag(), "deleteMultipleTables - Open Database, TID: " + Thread.currentThread().getId());
+            }
+
+            mSQLiteDb.beginTransaction();
+            try {
+                for (String tableName : tableNameList) {
+                    String sql = getDeleteAllFromTableSQL(tableName);
+                    mSQLiteDb.execSQL(sql);
+                    LogWrapper.showLog(Log.INFO, getLogTag(), "deleteMultipleTables - SQL: " + sql);
+                }
+
+                mSQLiteDb.setTransactionSuccessful();
+            }
+            finally {
+                mSQLiteDb.endTransaction();
+                LogWrapper.showLog(Log.INFO, getLogTag(), "deleteMultipleTables - endTransaction, TID: " + Thread.currentThread().getId());
+            }
+        }
+        finally {
+            if (null != mSQLiteDb) {
+                mSQLiteDb.close();
+                mSQLiteDb = null;
+                LogWrapper.showLog(Log.INFO, getLogTag(), "deleteMultipleTables - Close Database, TID: " + Thread.currentThread().getId());
+            }
+
+            if (null != this.mDataUpdateLock) {
+                this.mDataUpdateLock.writeLock().unlock();
+            }
+        }
+    }
+
     public void findObjectFromTableOrderByWithCondition (String querySQL,
                                                          boolean hasWhereCondition,
                                                          String[] selectionArgs,
