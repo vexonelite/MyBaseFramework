@@ -6,6 +6,8 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -223,7 +225,12 @@ public abstract class BaseFragment extends Fragment {
         @Override
         public void onClick(DialogInterface dialogInterface, int i) {
             dialogInterface.dismiss();
-            backToPrevious();
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    backToPrevious();
+                }
+            });
         }
     }
 
@@ -234,7 +241,12 @@ public abstract class BaseFragment extends Fragment {
         @Override
         public void onNotification(DialogFragment dialogFrag, BaseDialogFragment.DialogAction dialogAction) {
             dialogFrag.dismiss();
-            backToPrevious();
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    backToPrevious();
+                }
+            });
         }
     }
 
