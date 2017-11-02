@@ -12,7 +12,7 @@ import tw.realtime.project.rtbaseframework.api.commons.SQLQueryCallback;
  * Created by vexonelite on 2017/10/16.
  */
 
-abstract class BaseSQLQueryCallable<T> implements Callable<List<T>>, SQLQueryCallback {
+public abstract class BaseSQLQueryCallable<T> implements Callable<List<T>>, SQLQueryCallback {
 
     private List<T> mResultList;
 
