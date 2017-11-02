@@ -12,7 +12,7 @@ import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.interfaces.OptionDelegate;
 
 
-public class CountyData implements OptionDelegate {
+public class CountyData implements OptionDelegate<CountyData> {
 
     private String countyName;
     private List<DistrictData> districtList;
@@ -26,15 +26,18 @@ public class CountyData implements OptionDelegate {
         return districtList;
     }
 
+    public boolean isSelected(String title) {
+        return (null != countyName) && (null != title) && (countyName.equals(title));
+    }
 
     @Override
-    public String getTitle() {
+    public String getOptionTitle() {
         return countyName;
     }
 
     @Override
-    public boolean isSelected(String title) {
-        return (null != countyName) && (null != title) && (countyName.equals(title));
+    public CountyData getHeldObject() {
+        return this;
     }
 
 

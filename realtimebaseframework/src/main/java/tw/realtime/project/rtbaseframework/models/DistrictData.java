@@ -1,6 +1,5 @@
 package tw.realtime.project.rtbaseframework.models;
 
-
 import android.util.Log;
 
 import org.json.JSONObject;
@@ -8,8 +7,7 @@ import org.json.JSONObject;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.interfaces.OptionDelegate;
 
-
-public class DistrictData implements OptionDelegate {
+public class DistrictData implements OptionDelegate<DistrictData> {
 
     private String districtName;
     private String zipCode;
@@ -29,14 +27,18 @@ public class DistrictData implements OptionDelegate {
     }
 
 
+    public boolean isSelected(String title) {
+        return (null != districtName) && (null != title) && (districtName.equals(title));
+    }
+
     @Override
-    public String getTitle() {
+    public String getOptionTitle() {
         return districtName;
     }
 
     @Override
-    public boolean isSelected(String title) {
-        return (null != districtName) && (null != title) && (districtName.equals(title));
+    public DistrictData getHeldObject() {
+        return this;
     }
 
 
