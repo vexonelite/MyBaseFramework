@@ -18,7 +18,8 @@ public class ImageFileWrapper {
     }
 
     public byte[] getImageByteArray () {
-        return mImgByteArray;
+        //return mImgByteArray;
+        return mImgByteArray.clone();
     }
 
     public int getOrientation () {
@@ -47,7 +48,10 @@ public class ImageFileWrapper {
         }
 
         public Builder setImageByteArray (byte[] imgByteArray) {
-            bImgByteArray = imgByteArray;
+            if (null != imgByteArray) {
+                bImgByteArray = imgByteArray.clone();
+            }
+            //bImgByteArray = imgByteArray;
             return this;
         }
 

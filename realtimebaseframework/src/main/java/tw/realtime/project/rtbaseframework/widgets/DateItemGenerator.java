@@ -234,7 +234,8 @@ public class DateItemGenerator {
 
         public DateItemListWrapper(List<String> dateItemIdList, Date date) {
             mDateItemIdList = dateItemIdList;
-            mDate = date;
+            //mDate = date;
+            mDate = new Date(date.getTime());
         }
 
         private List<String> getDateItemIdList () {
