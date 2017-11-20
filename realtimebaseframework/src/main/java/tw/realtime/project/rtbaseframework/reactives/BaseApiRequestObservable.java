@@ -6,6 +6,8 @@ import okhttp3.Response;
 
 public abstract class BaseApiRequestObservable implements ApiParameterDelegate, ObservableOnSubscribe<Response> {
 
+    private boolean mAesEncodingEnable = false;
+    private boolean mHttpLogEnable = true;
     private String mApiUrl;
     private String mAccessToken;
     private String mDeviceToken;
@@ -13,12 +15,12 @@ public abstract class BaseApiRequestObservable implements ApiParameterDelegate, 
 
     @Override
     public boolean doesEnableAesEncoding () {
-        return false;
+        return mAesEncodingEnable;
     }
 
     @Override
     public boolean doesEnableHttpLog() {
-        return true;
+        return mHttpLogEnable;
     }
 
     @Override
@@ -43,6 +45,8 @@ public abstract class BaseApiRequestObservable implements ApiParameterDelegate, 
 
     protected BaseApiRequestObservable(ApiParameterSetDelegate delegate) {
         if (null != delegate) {
+            mAesEncodingEnable = delegate.doesEnableAesEncoding();
+            mHttpLogEnable = delegate.doesEnableHttpLog();
             mApiUrl = delegate.getApiUrl();
             mAccessToken = (null != delegate.getAccessToken()) ? delegate.getAccessToken() : "";
             mDeviceToken = (null != delegate.getDeviceToken()) ? delegate.getDeviceToken() : "";
