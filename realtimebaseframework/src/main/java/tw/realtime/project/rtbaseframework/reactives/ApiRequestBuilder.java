@@ -7,10 +7,26 @@ package tw.realtime.project.rtbaseframework.reactives;
 
 public class ApiRequestBuilder implements ApiParameterSetDelegate {
 
+    private boolean bAesEncodingEnable = false;
+    private boolean bHttpLogEnable = true;
+    private boolean bCacheEnable = false;
+    private long bTimeGap = 0L;
     private String bApiUrl;
     private String bAccessToken;
     private String bDeviceToken;
     private ApiDataDelegate bApiDataDelegate;
+
+    @Override
+    public ApiParameterSetDelegate setAesEncodingEnableFlag(boolean flag) {
+        bAesEncodingEnable = flag;
+        return this;
+    }
+
+    @Override
+    public ApiParameterSetDelegate setHttpLogEnableFlag(boolean flag) {
+        bHttpLogEnable = flag;
+        return null;
+    }
 
     @Override
     public ApiParameterSetDelegate setApiUrl (String apiUrl) {
@@ -37,13 +53,27 @@ public class ApiRequestBuilder implements ApiParameterSetDelegate {
     }
 
     @Override
+    public ApiParameterSetDelegate setTimeGap(long timeGap) {
+        if (timeGap > 0L) {
+            bTimeGap = timeGap;
+        }
+        return this;
+    }
+
+    @Override
+    public ApiParameterSetDelegate setCacheEnableFlag(boolean flag) {
+        bCacheEnable = flag;
+        return this;
+    }
+
+    @Override
     public boolean doesEnableAesEncoding () {
-        return false;
+        return bAesEncodingEnable;
     }
 
     @Override
     public boolean doesEnableHttpLog() {
-        return false;
+        return bHttpLogEnable;
     }
 
     @Override
@@ -64,5 +94,15 @@ public class ApiRequestBuilder implements ApiParameterSetDelegate {
     @Override
     public ApiDataDelegate getApiDataDelegate() {
         return bApiDataDelegate;
+    }
+
+    @Override
+    public boolean doesEnableCache() {
+        return bCacheEnable;
+    }
+
+    @Override
+    public long getTimeGap() {
+        return bTimeGap;
     }
 }

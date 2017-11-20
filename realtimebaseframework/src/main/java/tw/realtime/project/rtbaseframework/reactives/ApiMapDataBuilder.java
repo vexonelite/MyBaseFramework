@@ -18,18 +18,13 @@ public class ApiMapDataBuilder implements ApiHashMapDelegate {
     }
 
     @Override
-    public ApiHashMapDelegate setData (String key, String value) {
+    public ApiDataDelegate setData (String key, String value) {
         if ( (null != key) && (!key.isEmpty()) && (null != value) ){
             bDataMap.put(key, value);
         }
         return this;
     }
 
-    /**
-     * 取出 key 值所對應的字串
-     * @param key 指定的 key 值
-     * @return key 值所對應的字串
-     */
     @Override
     public String retrieveData (String key) {
         String result = "";

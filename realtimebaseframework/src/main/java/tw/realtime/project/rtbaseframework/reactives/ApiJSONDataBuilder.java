@@ -7,6 +7,7 @@ import tw.realtime.project.rtbaseframework.api.commons.ApiConstants;
 import tw.realtime.project.rtbaseframework.api.commons.AsyncApiException;
 import tw.realtime.project.rtbaseframework.utils.JSONUtils;
 
+
 /**
  * Created by vexonelite on 2017/10/3.
  */
