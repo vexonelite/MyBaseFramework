@@ -7,7 +7,6 @@ import android.util.Log;
 import org.json.JSONObject;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -15,6 +14,8 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Call;
 import okhttp3.Response;
 import tw.realtime.project.rtbaseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.reactives.ApiDataDelegate;
+import tw.realtime.project.rtbaseframework.reactives.ApiParameterSetDelegate;
 
 
 /**
@@ -23,7 +24,7 @@ import tw.realtime.project.rtbaseframework.LogWrapper;
  * <p>
  * Created by vexonelite on 2017/5/25.
  */
-public abstract class BaseCacheApiCaller<T> extends BaseApiData implements AsyncApiCallback<T>{
+public abstract class BaseCacheApiCaller<T> implements AsyncApiCallback<T> {
 
     private ExecutorService mExecutorService;
 
@@ -32,67 +33,26 @@ public abstract class BaseCacheApiCaller<T> extends BaseApiData implements Async
     private boolean doesNotNotifyCallback = false;
 
     private AsyncApiCallback<T> mCallback;
+
+    private boolean mCacheEnable = false;
+    private long mTimeGap = 0L;
+
     private String mApiUrl;
     private String mAccessToken;
     private String mDeviceToken;
-    private long mTimeGap;
-    private boolean mCacheEnable;
+    private ApiDataDelegate mApiDataDelegate;
 
+    protected BaseCacheApiCaller(ApiParameterSetDelegate apiParameter, AsyncApiCallback<T> callback) {
 
-    private BaseCacheApiCaller(Map<String, String> dataMap) {
-        super(dataMap);
-    }
-
-    protected BaseCacheApiCaller(BaseBuilder<T> builder) {
-        this(builder.getDataMap());
-        mApiUrl = builder.bApiUrl;
-        mAccessToken = builder.bAccessToken;
-        mDeviceToken = builder.bDeviceToken;
-        mCallback = builder.bCallback;
-        mTimeGap = builder.bTimeGap;
-        mCacheEnable = builder.bCacheEnable;
-    }
-
-    public static class BaseBuilder<T> extends ApiDataBuilder {
-
-        private AsyncApiCallback<T> bCallback;
-        private String bApiUrl;
-        private String bAccessToken;
-        private String bDeviceToken;
-        private long bTimeGap = 0L;
-        private boolean bCacheEnable = false;
-
-        public BaseBuilder<T> setAsyncApiCallback (AsyncApiCallback<T> callback) {
-            bCallback = callback;
-            return this;
+        if (null != apiParameter) {
+            mCacheEnable = apiParameter.doesEnableCache();
+            mTimeGap = apiParameter.getTimeGap();
+            mApiUrl = apiParameter.getApiUrl();
+            mAccessToken = (null != apiParameter.getAccessToken()) ? apiParameter.getAccessToken() : "";
+            mDeviceToken = (null != apiParameter.getDeviceToken()) ? apiParameter.getDeviceToken() : "";
+            mApiDataDelegate = apiParameter.getApiDataDelegate();
         }
-
-        public BaseBuilder<T> setApiUrl (String apiUrl) {
-            bApiUrl = apiUrl;
-            return this;
-        }
-
-        public BaseBuilder<T> setAccessToken (String accessToken) {
-            bAccessToken = accessToken;
-            return this;
-        }
-
-        public BaseBuilder<T> setDeviceToken (String deviceToken) {
-            bDeviceToken = deviceToken;
-            return this;
-        }
-
-        public BaseBuilder<T> setTimeGap (long timeGap) {
-            if (timeGap > 0L) {
-                bTimeGap = timeGap;
-            }
-            return this;
-        }
-
-        public BaseBuilder<T> setCacheEnableFlag (boolean flag) {
-            bCacheEnable = flag;
-            return this;
-        }
+        mCallback = callback;
     }
 
     /**
@@ -200,7 +160,7 @@ public abstract class BaseCacheApiCaller<T> extends BaseApiData implements Async
      * 檢查呼叫 Api 的參數是否合法
      * @throws IllegalArgumentException
      */
-    protected void verifyEssentialParameters () throws IllegalArgumentException {
+    protected void verifyEssentialParameters (ApiDataDelegate delegate) throws IllegalArgumentException {
 
     }
 
@@ -208,7 +168,11 @@ public abstract class BaseCacheApiCaller<T> extends BaseApiData implements Async
      * 發送 Api
      */
     public void issueApiRequest ()  {
-        verifyEssentialParameters();
+        if (null == mApiDataDelegate) {
+            throw new IllegalArgumentException("verifyEssentialParameters - delegate is invalid!");
+        }
+
+        verifyEssentialParameters(mApiDataDelegate);
 
         if (null == mExecutorService) {
             mExecutorService = Executors.newFixedThreadPool(1);
@@ -273,7 +237,7 @@ public abstract class BaseCacheApiCaller<T> extends BaseApiData implements Async
             cancelRequestCall();
             String accessToken = ((null != mAccessToken) && (!mAccessToken.isEmpty())) ? mAccessToken : "";
             String deviceToken = ((null != mDeviceToken) && (!mDeviceToken.isEmpty())) ? mDeviceToken : "";
-            mCurrentCall = getOkHttpRequestCall(convertJSON(), mApiUrl, accessToken, deviceToken);
+            mCurrentCall = getOkHttpRequestCall(mApiDataDelegate.convertIntoJSON(), mApiUrl, accessToken, deviceToken);
             return mCurrentCall.execute();
         }
         catch (Exception e) {
