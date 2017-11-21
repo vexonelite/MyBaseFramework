@@ -584,33 +584,33 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void performCrossTableOperations (List<CrossTableOperation> operationList) throws Exception {
+    public void performCompoundOperations (List<SqlOperationSpec> operationList) throws Exception {
 
         try {
             this.mDataUpdateLock.writeLock().lock();
 
             if (null == mSQLiteDb) {
                 mSQLiteDb = getWritableDatabase();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "performCrossTableOperations - Open Database, TID: " + Thread.currentThread().getId());
+                LogWrapper.showLog(Log.INFO, getLogTag(), "performCompoundOperations - Open Database, TID: " + Thread.currentThread().getId());
             }
 
             mSQLiteDb.beginTransaction();
             try {
-                for (CrossTableOperation xtOperation : operationList) {
+                for (SqlOperationSpec xtOperation : operationList) {
                     performSingleOperation(xtOperation);
                 }
                 mSQLiteDb.setTransactionSuccessful();
             }
             finally {
                 mSQLiteDb.endTransaction();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "performCrossTableOperations - endTransaction, TID: " + Thread.currentThread().getId());
+                LogWrapper.showLog(Log.INFO, getLogTag(), "performCompoundOperations - endTransaction, TID: " + Thread.currentThread().getId());
             }
         }
         finally {
             if (null != mSQLiteDb) {
                 mSQLiteDb.close();
                 mSQLiteDb = null;
-                LogWrapper.showLog(Log.INFO, getLogTag(), "performCrossTableOperations - Close Database, TID: " + Thread.currentThread().getId());
+                LogWrapper.showLog(Log.INFO, getLogTag(), "performCompoundOperations - Close Database, TID: " + Thread.currentThread().getId());
             }
             if (null != this.mDataUpdateLock) {
                 this.mDataUpdateLock.writeLock().unlock();
@@ -618,7 +618,7 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
         }
     }
 
-    private void performSingleOperation (CrossTableOperation xtOperation) throws Exception {
+    private void performSingleOperation (SqlOperationSpec xtOperation) throws Exception {
 
         SqlOperation operation = xtOperation.getSqlOperation();
         if (null == operation) {
