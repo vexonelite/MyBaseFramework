@@ -8,7 +8,7 @@ import java.util.List;
  * Created by vexonelite on 2017/11/21.
  */
 
-public class CrossTableOperation {
+public class SqlOperationSpec {
     private SqlOperation mOperation;
     private ContentValues mContentValues;
     private String mTableName;
@@ -72,12 +72,12 @@ public class CrossTableOperation {
             return this;
         }
 
-        public CrossTableOperation build() {
-            return new CrossTableOperation(this);
+        public SqlOperationSpec build() {
+            return new SqlOperationSpec(this);
         }
     }
 
-    private CrossTableOperation (Builder builder) {
+    private SqlOperationSpec(Builder builder) {
         mOperation = builder.bOperation;
         mContentValues = builder.bContentValues;
         mTableName = builder.bTableName;
