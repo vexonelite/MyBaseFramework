@@ -16,6 +16,7 @@ import okhttp3.Response;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 
 
+@Deprecated
 /**
  * 利用 OkHttp 來呼叫 Rest Api。
  * 提供 Builder 來設定網址, AccessToken, DeviceToken。
