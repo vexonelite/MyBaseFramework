@@ -34,24 +34,10 @@ public abstract class BaseCacheApiCaller<T> implements AsyncApiCallback<T> {
 
     private AsyncApiCallback<T> mCallback;
 
-    private boolean mCacheEnable = false;
-    private long mTimeGap = 0L;
-
-    private String mApiUrl;
-    private String mAccessToken;
-    private String mDeviceToken;
-    private ApiDataDelegate mApiDataDelegate;
+    private ApiParameterSetDelegate mApiParameter;
 
     protected BaseCacheApiCaller(ApiParameterSetDelegate apiParameter, AsyncApiCallback<T> callback) {
-
-        if (null != apiParameter) {
-            mCacheEnable = apiParameter.doesEnableCache();
-            mTimeGap = apiParameter.getTimeGap();
-            mApiUrl = apiParameter.getApiUrl();
-            mAccessToken = (null != apiParameter.getAccessToken()) ? apiParameter.getAccessToken() : "";
-            mDeviceToken = (null != apiParameter.getDeviceToken()) ? apiParameter.getDeviceToken() : "";
-            mApiDataDelegate = apiParameter.getApiDataDelegate();
-        }
+        mApiParameter = apiParameter;
         mCallback = callback;
     }
 
@@ -168,17 +154,17 @@ public abstract class BaseCacheApiCaller<T> implements AsyncApiCallback<T> {
      * 發送 Api
      */
     public void issueApiRequest ()  {
-        if (null == mApiDataDelegate) {
+        if ((null == mApiParameter) || (null == mApiParameter.getApiDataDelegate())) {
             throw new IllegalArgumentException("verifyEssentialParameters - delegate is invalid!");
         }
 
-        verifyEssentialParameters(mApiDataDelegate);
+        verifyEssentialParameters(mApiParameter.getApiDataDelegate());
 
         if (null == mExecutorService) {
             mExecutorService = Executors.newFixedThreadPool(1);
         }
         onStart();
-        Runnable task = mCacheEnable ? (new CallApiWithCacheTask()) : (new CallApiWithoutCacheTask());
+        Runnable task = mApiParameter.doesEnableCache() ? (new CallApiWithCacheTask()) : (new CallApiWithoutCacheTask());
         mExecutorService.submit(task);
     }
 
@@ -235,9 +221,16 @@ public abstract class BaseCacheApiCaller<T> implements AsyncApiCallback<T> {
     private Response executeRequestCall () throws AsyncApiException {
         try {
             cancelRequestCall();
-            String accessToken = ((null != mAccessToken) && (!mAccessToken.isEmpty())) ? mAccessToken : "";
-            String deviceToken = ((null != mDeviceToken) && (!mDeviceToken.isEmpty())) ? mDeviceToken : "";
-            mCurrentCall = getOkHttpRequestCall(mApiDataDelegate.convertIntoJSON(), mApiUrl, accessToken, deviceToken);
+            String srcAccessToken = mApiParameter.getAccessToken();
+            String srcDeviceToken = mApiParameter.getDeviceToken();
+            String accessToken = ((null != srcAccessToken) && (!srcAccessToken.isEmpty())) ? srcAccessToken : "";
+            String deviceToken = ((null != srcDeviceToken) && (!srcDeviceToken.isEmpty())) ? srcDeviceToken : "";
+            mCurrentCall = getOkHttpRequestCall(
+                    mApiParameter.getApiDataDelegate().convertIntoJSON(),
+                    mApiParameter.getApiUrl(),
+                    accessToken,
+                    deviceToken,
+                    mApiParameter.doesEnableHttpLog());
             return mCurrentCall.execute();
         }
         catch (Exception e) {
@@ -272,7 +265,8 @@ public abstract class BaseCacheApiCaller<T> implements AsyncApiCallback<T> {
     protected abstract Call getOkHttpRequestCall (JSONObject dataObject,
                                                   String apiUrl,
                                                   String accessToken,
-                                                  String deviceToken);
+                                                  String deviceToken,
+                                                  boolean httpLogEnable);
 
     /**
      * 判定 Api Response 是否為 200 OK，若是就取得 Response String
@@ -350,14 +344,15 @@ public abstract class BaseCacheApiCaller<T> implements AsyncApiCallback<T> {
         @Override
         public void run() {
 
-            LogWrapper.showLog(Log.WARN, getLogTag(), "CallApiWithCacheTask - Phase1 - findDataFromDb with timeGap: " + mTimeGap);
+            LogWrapper.showLog(Log.WARN, getLogTag(), "CallApiWithCacheTask - Phase1 - " +
+                    "findDataFromDb with timeGap: " + mApiParameter.getTimeGap());
             T cachedResult = null;
             //AsyncApiException cachedException = null;
             try {
-                cachedResult = findDataFromDb(false, mTimeGap);
+                cachedResult = findDataFromDb(false, mApiParameter.getTimeGap());
             }
             catch (AsyncApiException e) {
-                LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on findDataFromDb(false, " + mTimeGap +")", e);
+                LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on findDataFromDb(false, " + mApiParameter.getTimeGap() +")", e);
             }
 
             if ( !doesNeedToCallApi(cachedResult) ) {
@@ -410,7 +405,7 @@ public abstract class BaseCacheApiCaller<T> implements AsyncApiCallback<T> {
             saveDataToDb(responseResult);
 
             try {
-                T cachedResult = findDataFromDb(true, mTimeGap);
+                T cachedResult = findDataFromDb(true, mApiParameter.getTimeGap());
                 onEnd();
                 onSuccess(cachedResult);
             }
