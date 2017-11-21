@@ -12,6 +12,8 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.api.commons.ApiConstants;
+import tw.realtime.project.rtbaseframework.api.commons.AsyncApiException;
 import tw.realtime.project.rtbaseframework.api.commons.SQLInsertCallback;
 import tw.realtime.project.rtbaseframework.api.commons.SQLQueryCallback;
 
@@ -578,6 +580,85 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
 
             if (null != this.mDataUpdateLock) {
                 this.mDataUpdateLock.writeLock().unlock();
+            }
+        }
+    }
+
+    public void performCrossTableOperations (List<CrossTableOperation> operationList) throws Exception {
+
+        try {
+            this.mDataUpdateLock.writeLock().lock();
+
+            if (null == mSQLiteDb) {
+                mSQLiteDb = getWritableDatabase();
+                LogWrapper.showLog(Log.INFO, getLogTag(), "performCrossTableOperations - Open Database, TID: " + Thread.currentThread().getId());
+            }
+
+            mSQLiteDb.beginTransaction();
+            try {
+                for (CrossTableOperation xtOperation : operationList) {
+                    performSingleOperation(xtOperation);
+                }
+                mSQLiteDb.setTransactionSuccessful();
+            }
+            finally {
+                mSQLiteDb.endTransaction();
+                LogWrapper.showLog(Log.INFO, getLogTag(), "performCrossTableOperations - endTransaction, TID: " + Thread.currentThread().getId());
+            }
+        }
+        finally {
+            if (null != mSQLiteDb) {
+                mSQLiteDb.close();
+                mSQLiteDb = null;
+                LogWrapper.showLog(Log.INFO, getLogTag(), "performCrossTableOperations - Close Database, TID: " + Thread.currentThread().getId());
+            }
+            if (null != this.mDataUpdateLock) {
+                this.mDataUpdateLock.writeLock().unlock();
+            }
+        }
+    }
+
+    private void performSingleOperation (CrossTableOperation xtOperation) throws Exception {
+
+        SqlOperation operation = xtOperation.getSqlOperation();
+        if (null == operation) {
+            throw new IllegalArgumentException("performSingleOperation - SqlOperation is null");
+        }
+        String tableName = xtOperation.setTableName();
+        if ( (null == tableName) || (tableName.isEmpty()) ) {
+            throw new IllegalArgumentException("performSingleOperation - TableName is null or empty");
+        }
+
+        switch (operation) {
+            case DELETE: {
+                String sql = getDeleteAllFromTableSQL(tableName);
+                mSQLiteDb.execSQL(sql);
+                LogWrapper.showLog(Log.INFO, getLogTag(), "performSingleOperation - SQL: " + sql);
+                break;
+            }
+            case DELETE_WITH_CONDITION: {
+                String whereClause = xtOperation.setWhereClauseSql();
+                String[] whereArgs = xtOperation.getWhereArgs();
+                if ( (null == whereClause) || (whereClause.isEmpty()) || (null == whereArgs) ) {
+                    throw new IllegalArgumentException("performSingleOperation - whereClause or whereArgs is valid");
+                }
+                int tmp = mSQLiteDb.delete(tableName, whereClause, whereArgs);
+                LogWrapper.showLog(Log.INFO, getLogTag(), "performSingleOperation - deleteWithCondition - tmp : " + tmp
+                        + ", tableName: " + tableName + ", whereClause: " + whereClause);
+                break;
+            }
+            case INSERT: {
+                ContentValues contentValues = xtOperation.getContentValues();
+                if (null == contentValues) {
+                    throw new IllegalArgumentException("performSingleOperation - contentValues is valid");
+                }
+                long tmp = mSQLiteDb.insert(tableName, null, contentValues);
+                if (tmp < 0) {
+                    throw new AsyncApiException(ApiConstants.ExceptionCode.SQLITE_INSERT_FAILURE, "cannot insert item for table: " + tableName);
+                }
+                LogWrapper.showLog(Log.INFO, getLogTag(), "performSingleOperation - insert into table: " +
+                        tableName + " at row: " + tmp + ", TID: " + Thread.currentThread().getId());
+                break;
             }
         }
     }
