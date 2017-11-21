@@ -341,6 +341,7 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
         }
     }
 
+    @Deprecated
     /**
      * 為了對多張Table 的多筆資料進行刪除，再新增資料而開的介面
      * @param callback
