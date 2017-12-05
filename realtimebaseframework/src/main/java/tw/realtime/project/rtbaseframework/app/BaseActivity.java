@@ -243,10 +243,15 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         }
 
-        if (isAllowedToCommitFragmentTransaction() ) {
-            ConfirmDialog dialog = new ConfirmDialog();
-            dialog.setAlertDialogBuilder(builder);
-            dialog.show(getFragmentManager(), "error_dialog");
+        try {
+            if (isAllowedToCommitFragmentTransaction() ) {
+                ConfirmDialog dialog = new ConfirmDialog();
+                dialog.setAlertDialogBuilder(builder);
+                dialog.show(getFragmentManager(), dialog.getClass().getSimpleName());
+            }
+        }
+        catch (Exception e) {
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on showAlertDialog", e);
         }
     }
 
@@ -270,7 +275,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         ft.addToBackStack(null);
 
-        dialogFragment.show(ft, dialogFragment.getClass().getSimpleName());
+        try {
+            dialogFragment.show(ft, dialogFragment.getClass().getSimpleName());
+        }
+        catch (Exception e) {
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on showDialogFragment", e);
+        }
     }
 
     /**
