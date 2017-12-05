@@ -3,6 +3,7 @@ package tw.realtime.project.rtbaseframework.utils;
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -193,4 +194,20 @@ public class FileUtils {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
+    /**
+     * Make the newly saved file visible by other apps.
+     * @see <a href="http://stackoverflow.com/questions/2170214/image-saved-to-sdcard-doesnt-appear-in-androids-gallery-app">The reference</a>
+     */
+    public static void makeImageFileVisibleByOthers (Context context, Uri mediaFileUri) {
+        if (Build.VERSION.SDK_INT >= 19) {
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            mediaScanIntent.setData(mediaFileUri);
+            context.sendBroadcast(mediaScanIntent);
+        }
+        else {
+            context.sendBroadcast(new Intent(
+                    Intent.ACTION_MEDIA_MOUNTED,
+                    Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+        }
+    }
 }
