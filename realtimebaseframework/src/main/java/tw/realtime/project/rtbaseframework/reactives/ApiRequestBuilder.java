@@ -14,11 +14,25 @@ public class ApiRequestBuilder implements ApiParameterSetDelegate {
     private String bApiUrl;
     private String bAccessToken;
     private String bDeviceToken;
+    private String bAesKey;
+    private String bAesIv;
     private ApiDataDelegate bApiDataDelegate;
 
     @Override
     public ApiParameterSetDelegate setAesEncodingEnableFlag(boolean flag) {
         bAesEncodingEnable = flag;
+        return this;
+    }
+
+    @Override
+    public ApiParameterSetDelegate setAesKey(String aesKey) {
+        bAesKey = aesKey;
+        return this;
+    }
+
+    @Override
+    public ApiParameterSetDelegate setAesIv(String aesIv) {
+        bAesIv = aesIv;
         return this;
     }
 
@@ -69,6 +83,16 @@ public class ApiRequestBuilder implements ApiParameterSetDelegate {
     @Override
     public boolean doesEnableAesEncoding () {
         return bAesEncodingEnable;
+    }
+
+    @Override
+    public String getAesKey() {
+        return bAesKey;
+    }
+
+    @Override
+    public String getAesIv() {
+        return bAesIv;
     }
 
     @Override

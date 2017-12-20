@@ -17,6 +17,16 @@ public interface ApiParameterSetDelegate extends ApiParameterDelegate {
      */
     ApiParameterSetDelegate setAesEncodingEnableFlag(boolean flag);
     /**
+     * @param aesKey
+     * @return
+     */
+    ApiParameterSetDelegate setAesKey(String aesKey);
+    /**
+     * @param aesIv
+     * @return
+     */
+    ApiParameterSetDelegate setAesIv(String aesIv);
+    /**
      * @param flag the flag of enabling HTTP Log
      * @return
      */

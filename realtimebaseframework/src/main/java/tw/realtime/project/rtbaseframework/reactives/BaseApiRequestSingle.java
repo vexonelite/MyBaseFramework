@@ -11,11 +11,23 @@ public abstract class BaseApiRequestSingle implements ApiParameterDelegate, Sing
     private String mApiUrl;
     private String mAccessToken;
     private String mDeviceToken;
+    private String mAesKey;
+    private String mAesIv;
     private ApiDataDelegate mApiDataDelegate;
 
     @Override
     public boolean doesEnableAesEncoding () {
         return mAesEncodingEnable;
+    }
+
+    @Override
+    public String getAesKey () {
+        return mAesKey;
+    }
+
+    @Override
+    public String getAesIv () {
+        return mAesIv;
     }
 
     @Override
@@ -50,6 +62,8 @@ public abstract class BaseApiRequestSingle implements ApiParameterDelegate, Sing
             mApiUrl = delegate.getApiUrl();
             mAccessToken = (null != delegate.getAccessToken()) ? delegate.getAccessToken() : "";
             mDeviceToken = (null != delegate.getDeviceToken()) ? delegate.getDeviceToken() : "";
+            mAesKey = delegate.getAesKey();
+            mAesIv = delegate.getAesIv();
             mApiDataDelegate = delegate.getApiDataDelegate();
         }
     }

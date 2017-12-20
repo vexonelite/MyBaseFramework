@@ -38,6 +38,14 @@ public interface ApiParameterDelegate {
      */
     boolean doesEnableCache();
     /**
+     * @return AES encryption Key
+     */
+    String getAesKey();
+    /**
+     * @return AES IV
+     */
+    String getAesIv();
+    /**
      * @return the cache expiry time
      */
     long getTimeGap();
