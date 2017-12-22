@@ -20,15 +20,16 @@ public class JSONUtils {
     /**
      * 將 JSON 字串轉換為 JSONObject
      * @param jsonString JSON 字串
+     * @param logTag 印出 Log 時的 Class Tag
      * @return JSONObject
      * @throws AsyncApiException 例外物件
      */
-    public static JSONObject jsonStringToJsonObject (String jsonString) throws AsyncApiException {
+    public static JSONObject jsonStringToJsonObject (String jsonString, String logTag) throws AsyncApiException {
         try {
             return new JSONObject(jsonString);
         }
         catch (JSONException e) {
-            LogWrapper.showLog(Log.ERROR, "BaseApiCaller", "Exception on jsonStringToJsonObject");
+            LogWrapper.showLog(Log.ERROR, logTag, "Exception on jsonStringToJsonObject");
             throw new AsyncApiException(ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, e);
         }
     }
@@ -36,15 +37,16 @@ public class JSONUtils {
     /**
      * 將 JSON 字串轉換為 JSONArray
      * @param jsonString JSON 字串
+     * @param logTag 印出 Log 時的 Class Tag
      * @return JSONArray
      * @throws AsyncApiException 例外物件
      */
-    public static JSONArray jsonStringToJsonArray (String jsonString) throws AsyncApiException {
+    public static JSONArray jsonStringToJsonArray (String jsonString, String logTag) throws AsyncApiException {
         try {
             return new JSONArray(jsonString);
         }
         catch (JSONException e) {
-            LogWrapper.showLog(Log.ERROR, "BaseApiCaller", "Exception on jsonStringToJsonArray");
+            LogWrapper.showLog(Log.ERROR, logTag, "Exception on jsonStringToJsonArray");
             throw new AsyncApiException(ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, e);
         }
     }
@@ -222,16 +224,18 @@ public class JSONUtils {
      * 從 JSON 物件中依 key 值取得對應的 JSON 物件
      * @param jsonArray Input JSONArray
      * @param index 指定的 index
+     * @param logTag 印出 Log 時的 Class Tag
      * @return index 值對應的 JSON 物件
      * @throws AsyncApiException 例外物件
      */
     public static JSONObject getJSONObjectFromJSONArray (JSONArray jsonArray,
-                                                         int index) throws AsyncApiException {
+                                                         int index,
+                                                         String logTag) throws AsyncApiException {
         try {
             return jsonArray.getJSONObject(index);
         }
         catch (JSONException e) {
-            LogWrapper.showLog(Log.ERROR, "BaseApiCaller", "Exception on getJSONObjectFromJSONArray - " +
+            LogWrapper.showLog(Log.ERROR, logTag, "Exception on getJSONObjectFromJSONArray - " +
                     "cannot getJSONObject at index: " + index);
             throw new AsyncApiException(ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, e);
         }
