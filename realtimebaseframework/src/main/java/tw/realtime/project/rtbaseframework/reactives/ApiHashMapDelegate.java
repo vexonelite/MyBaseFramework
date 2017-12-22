@@ -16,7 +16,7 @@ public interface ApiHashMapDelegate extends ApiDataDelegate {
      * @param value
      * @return
      */
-    ApiDataDelegate setData(String key, String value);
+    ApiHashMapDelegate setData(String key, String value);
 
     /**
      * Retrieve the key-value parameter via a given key

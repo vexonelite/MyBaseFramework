@@ -18,7 +18,7 @@ public class ApiMapDataBuilder implements ApiHashMapDelegate {
     }
 
     @Override
-    public ApiDataDelegate setData (String key, String value) {
+    public ApiHashMapDelegate setData (String key, String value) {
         if ( (null != key) && (!key.isEmpty()) && (null != value) ){
             bDataMap.put(key, value);
         }
