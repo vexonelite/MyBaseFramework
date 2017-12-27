@@ -117,14 +117,14 @@ public class RxHttpOperators {
     public static class JsonStringToJsonObject implements Function<String, JSONObject> {
         @Override
         public JSONObject apply(@NonNull String jsonString) throws Exception {
-            return JSONUtils.jsonStringToJsonObject(jsonString);
+            return JSONUtils.jsonStringToJsonObject(jsonString, getLogTag());
         }
     }
 
     public static class JsonStringToJsonArray implements Function<String, JSONArray> {
         @Override
         public JSONArray apply(@NonNull String jsonString) throws Exception {
-            return JSONUtils.jsonStringToJsonArray(jsonString);
+            return JSONUtils.jsonStringToJsonArray(jsonString, getLogTag());
         }
     }
 
