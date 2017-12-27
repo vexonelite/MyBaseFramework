@@ -1,6 +1,6 @@
 package tw.realtime.project.rtbaseframework.app;
 
-import android.app.DialogFragment;
+import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
