@@ -2,10 +2,9 @@ package tw.realtime.project.rtbaseframework.utils;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.support.v13.app.FragmentCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -175,8 +174,7 @@ public class SystemPermissionUtils {
     /** appeal user for the permission CAMERA. */
     public static void requestCameraPermission (final Fragment fragment) {
         if (null != fragment) {
-            FragmentCompat.requestPermissions(
-                    fragment,
+            fragment.requestPermissions(
                     new String[]{Manifest.permission.CAMERA},
                     REQUEST_CODE_CAMERA_PERMISSION);
         }
@@ -195,8 +193,7 @@ public class SystemPermissionUtils {
     /** appeal for the permission RECORD_AUDIO */
     public static void requestMicrophonePermission (final Fragment fragment) {
         if (null != fragment) {
-            FragmentCompat.requestPermissions(
-                    fragment,
+            fragment.requestPermissions(
                     new String[]{Manifest.permission.RECORD_AUDIO},
                     REQUEST_CODE_MICROPHONE_PERMISSION);
         }
@@ -215,8 +212,7 @@ public class SystemPermissionUtils {
     /** appeal user for the permission READ_EXTERNAL_STORAGE. */
     public static void requestReadExternalStoragePermission (final Fragment fragment) {
         if (null != fragment) {
-            FragmentCompat.requestPermissions(
-                    fragment,
+            fragment.requestPermissions(
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSION);
         }
@@ -235,8 +231,7 @@ public class SystemPermissionUtils {
     /** appeal user for the permission WRITE_EXTERNAL_STORAGE. */
     public static void requestWriteExternalStoragePermission (final Fragment fragment) {
         if (null != fragment) {
-            FragmentCompat.requestPermissions(
-                    fragment,
+            fragment.requestPermissions(
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
         }
@@ -255,8 +250,7 @@ public class SystemPermissionUtils {
     /** appeal user for the permission ACCESS_FINE_LOCATION. */
     public static void requestFineLocationPermission (final Fragment fragment) {
         if (null != fragment) {
-            FragmentCompat.requestPermissions(
-                    fragment,
+            fragment.requestPermissions(
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_CODE_FINE_LOCATION_PERMISSION);
         }
@@ -275,8 +269,7 @@ public class SystemPermissionUtils {
     /** appeal user for the permission ACCESS_COARSE_LOCATION. */
     public static void requestCoarseLocationPermission (final Fragment fragment) {
         if (null != fragment) {
-            FragmentCompat.requestPermissions(
-                    fragment,
+            fragment.requestPermissions(
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                     REQUEST_CODE_COARSE_LOCATION_PERMISSION);
         }
@@ -297,8 +290,7 @@ public class SystemPermissionUtils {
     /** appeal user for the permission ACCESS_FINE_LOCATION and ACCESS_COARSE_LOCATION. */
     public static void requestLocationPermissions (final Fragment fragment) {
         if (null != fragment) {
-            FragmentCompat.requestPermissions(
-                    fragment,
+            fragment.requestPermissions(
                     new String[]{
                             Manifest.permission.ACCESS_COARSE_LOCATION,
                             Manifest.permission.ACCESS_FINE_LOCATION},
@@ -323,8 +315,7 @@ public class SystemPermissionUtils {
     /** appeal user for the permissions CAMERA and WRITE_EXTERNAL_STORAGE. */
     public static void requestTakeShotPermissions (final Fragment fragment) {
         if (null != fragment) {
-            FragmentCompat.requestPermissions(
-                    fragment,
+            fragment.requestPermissions(
                     new String[]{
                             Manifest.permission.CAMERA,
                             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -352,8 +343,7 @@ public class SystemPermissionUtils {
     /** appeal user for the permissions CAMERA, RECORD_AUDIO, and WRITE_EXTERNAL_STORAGE. */
     public static void requestVideoRecPermissions (final Fragment fragment) {
         if (null != fragment) {
-            FragmentCompat.requestPermissions(
-                    fragment,
+            fragment.requestPermissions(
                     new String[]{
                             Manifest.permission.CAMERA,
                             Manifest.permission.RECORD_AUDIO,

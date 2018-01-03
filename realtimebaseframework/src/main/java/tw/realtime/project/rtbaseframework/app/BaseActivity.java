@@ -1,10 +1,10 @@
 package tw.realtime.project.rtbaseframework.app;
 
 import android.app.AlertDialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
@@ -154,7 +154,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             popAllFragmentsIfNeeded();
         }
 
-        FragmentManager fragManager = getFragmentManager();
+        FragmentManager fragManager = getSupportFragmentManager();
         FragmentTransaction fragTransaction = fragManager.beginTransaction();
         fragTransaction.setTransition(FragmentTransaction.TRANSIT_NONE);
 
@@ -176,7 +176,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void popAllFragmentsIfNeeded () {
-        FragmentManager fragManager = getFragmentManager();
+        FragmentManager fragManager = getSupportFragmentManager();
         try {
             int len = fragManager.getBackStackEntryCount();
             if (len > 0) {
@@ -195,7 +195,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * Pop 目前畫面中的 Fragment
      */
     public void popFragment () {
-        FragmentManager fragManager = getFragmentManager();
+        FragmentManager fragManager = getSupportFragmentManager();
         if (fragManager.getBackStackEntryCount() <= 0) {
             return;
         }
@@ -247,7 +247,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             if (isAllowedToCommitFragmentTransaction() ) {
                 ConfirmDialog dialog = new ConfirmDialog();
                 dialog.setAlertDialogBuilder(builder);
-                dialog.show(getFragmentManager(), dialog.getClass().getSimpleName());
+                dialog.show(getSupportFragmentManager(), dialog.getClass().getSimpleName());
             }
         }
         catch (Exception e) {
@@ -267,7 +267,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         // DialogFragment.show() will take care of adding the fragment in a transaction.
         // We also want to remove any currently showing dialog,
         // so make our own transaction and take care of that here.
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         Fragment prev = fragmentManager.findFragmentByTag(dialogFragment.getClass().getSimpleName());
         if (prev != null) {
