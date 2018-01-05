@@ -83,9 +83,8 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
         String QR_CODE = "qrcode";
     }
 
-    private SQLiteDatabase mSQLiteDb;
+    private static SQLiteDatabase mSQLiteDb;
 
-    private final ReadWriteLock mDataUpdateLock;
 
     protected BaseDbHelper(Context context,
                          String databaseName,
@@ -95,7 +94,6 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
                 databaseName,
                 factory,
                 databaseVersion);
-        mDataUpdateLock = new ReentrantReadWriteLock();
     }
 
     protected String getLogTag () {
@@ -107,27 +105,13 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
      */
     public void insertSingleItem (String tableName, ContentValues contentValues) throws Exception {
         long tmp = -1;
-        try {
-            this.mDataUpdateLock.writeLock().lock();
 
-            if (null == mSQLiteDb) {
-                mSQLiteDb = getWritableDatabase();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "insertSingleItem - Open Database, TID: " + Thread.currentThread().getId());
-            }
-            tmp = mSQLiteDb.insert(tableName, null, contentValues);
-            LogWrapper.showLog(Log.INFO, getLogTag(), "insertSingleItem - insert, TID: " + Thread.currentThread().getId());
+        if (null == mSQLiteDb) {
+            mSQLiteDb = getWritableDatabase();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "insertSingleItem - Open Database, TID: " + Thread.currentThread().getId());
         }
-        finally {
-            if (null != mSQLiteDb) {
-                mSQLiteDb.close();
-                mSQLiteDb = null;
-                LogWrapper.showLog(Log.INFO, getLogTag(), "insertSingleItem - Close Database, TID: " + Thread.currentThread().getId());
-            }
-
-            if (null != this.mDataUpdateLock) {
-                this.mDataUpdateLock.writeLock().unlock();
-            }
-        }
+        tmp = mSQLiteDb.insert(tableName, null, contentValues);
+        LogWrapper.showLog(Log.INFO, getLogTag(), "insertSingleItem - insert, TID: " + Thread.currentThread().getId());
 
         if (tmp < 0) {
             throw new Exception("insertSingleItem is fail!!");
@@ -143,41 +127,26 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
                                             String whereClause,
                                             String[] whereArgs,
                                             ContentValues contentValues) throws Exception {
+        if (null == mSQLiteDb) {
+            mSQLiteDb = getWritableDatabase();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "deletedAndInsertSingleItem - Open Database, TID: " + Thread.currentThread().getId());
+        }
+
+        mSQLiteDb.beginTransaction();
         try {
-            this.mDataUpdateLock.writeLock().lock();
+            int deleteIndex = mSQLiteDb.delete(tableName, whereClause, whereArgs);
+            LogWrapper.showLog(Log.INFO, getLogTag(), "deletedAndInsertSingleItem - TID: "
+                    + Thread.currentThread().getId() + ", deleted index: " + deleteIndex);
 
-            if (null == mSQLiteDb) {
-                mSQLiteDb = getWritableDatabase();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "deletedAndInsertSingleItem - Open Database, TID: " + Thread.currentThread().getId());
-            }
+            long insertedIndex = mSQLiteDb.insert(tableName, null, contentValues);
+            LogWrapper.showLog(Log.INFO, getLogTag(), "deletedAndInsertSingleItem - TID: "
+                    + Thread.currentThread().getId() + ", inserted index: " + insertedIndex);
 
-            mSQLiteDb.beginTransaction();
-            try {
-                int deleteIndex = mSQLiteDb.delete(tableName, whereClause, whereArgs);
-                LogWrapper.showLog(Log.INFO, getLogTag(), "deletedAndInsertSingleItem - TID: "
-                        + Thread.currentThread().getId() + ", deleted index: " + deleteIndex);
-
-                long insertedIndex = mSQLiteDb.insert(tableName, null, contentValues);
-                LogWrapper.showLog(Log.INFO, getLogTag(), "deletedAndInsertSingleItem - TID: "
-                        + Thread.currentThread().getId() + ", inserted index: " + insertedIndex);
-
-                mSQLiteDb.setTransactionSuccessful();
-            }
-            finally {
-                mSQLiteDb.endTransaction();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "deletedAndInsertSingleItem - endTransaction, TID: " + Thread.currentThread().getId());
-            }
+            mSQLiteDb.setTransactionSuccessful();
         }
         finally {
-            if (null != mSQLiteDb) {
-                mSQLiteDb.close();
-                mSQLiteDb = null;
-                LogWrapper.showLog(Log.INFO, getLogTag(), "deletedAndInsertSingleItem - Close Database, TID: " + Thread.currentThread().getId());
-            }
-
-            if (null != this.mDataUpdateLock) {
-                this.mDataUpdateLock.writeLock().unlock();
-            }
+            mSQLiteDb.endTransaction();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "deletedAndInsertSingleItem - endTransaction, TID: " + Thread.currentThread().getId());
         }
     }
 
@@ -187,27 +156,13 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
      */
     public void updateSingleItem (String tableName, ContentValues contentValues, long itemId) throws Exception {
         long tmp = -1;
-        try {
-            this.mDataUpdateLock.writeLock().lock();
 
-            if (null == mSQLiteDb) {
-                mSQLiteDb = getWritableDatabase();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "updateSingleItem - Open Database, TID: " + Thread.currentThread().getId());
-            }
-
-            tmp = mSQLiteDb.update(tableName, contentValues, ("_id=" + itemId), null);
+        if (null == mSQLiteDb) {
+            mSQLiteDb = getWritableDatabase();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "updateSingleItem - Open Database, TID: " + Thread.currentThread().getId());
         }
-        finally {
-            if (null != mSQLiteDb) {
-                mSQLiteDb.close();
-                mSQLiteDb = null;
-                LogWrapper.showLog(Log.INFO, getLogTag(), "updateSingleItem - Close Database, TID: " + Thread.currentThread().getId());
-            }
 
-            if (null != this.mDataUpdateLock) {
-                this.mDataUpdateLock.writeLock().unlock();
-            }
-        }
+        tmp = mSQLiteDb.update(tableName, contentValues, ("_id=" + itemId), null);
 
         if (tmp < 0) {
             throw new Exception("updateSingleItem is fail!!");
@@ -220,27 +175,13 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
                                                String whereClause,
                                                String[] whereArgs) throws Exception {
         long tmp = -1;
-        try {
-            this.mDataUpdateLock.writeLock().lock();
 
-            if (null == mSQLiteDb) {
-                mSQLiteDb = getWritableDatabase();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "updateSingleItemWithCondition - Open Database, TID: " + Thread.currentThread().getId());
-            }
-
-            tmp = mSQLiteDb.update(tableName, contentValues, whereClause, whereArgs);
+        if (null == mSQLiteDb) {
+            mSQLiteDb = getWritableDatabase();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "updateSingleItemWithCondition - Open Database, TID: " + Thread.currentThread().getId());
         }
-        finally {
-            if (null != mSQLiteDb) {
-                mSQLiteDb.close();
-                mSQLiteDb = null;
-                LogWrapper.showLog(Log.INFO, getLogTag(), "updateSingleItemWithCondition - Close Database, TID: " + Thread.currentThread().getId());
-            }
 
-            if (null != this.mDataUpdateLock) {
-                this.mDataUpdateLock.writeLock().unlock();
-            }
-        }
+        tmp = mSQLiteDb.update(tableName, contentValues, whereClause, whereArgs);
 
         if (tmp < 0) {
             throw new Exception("updateSingleItemWithCondition is fail!!");
@@ -259,38 +200,23 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
      */
     public void bulkInsertion (String tableName, List<ContentValues> contentValueList) throws Exception {
 
+        if (null == mSQLiteDb) {
+            mSQLiteDb = getWritableDatabase();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "bulkInsertion - Open Database, TID: " + Thread.currentThread().getId());
+        }
+
+        mSQLiteDb.beginTransaction();
         try {
-            this.mDataUpdateLock.writeLock().lock();
-
-            if (null == mSQLiteDb) {
-                mSQLiteDb = getWritableDatabase();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "bulkInsertion - Open Database, TID: " + Thread.currentThread().getId());
+            for (ContentValues contentValues : contentValueList) {
+                long tmp = mSQLiteDb.insert(tableName, null, contentValues);
+                LogWrapper.showLog(Log.INFO, getLogTag(), "bulkInsertion - TID: "
+                        + Thread.currentThread().getId() + ", inserted index: " + tmp);
             }
-
-            mSQLiteDb.beginTransaction();
-            try {
-                for (ContentValues contentValues : contentValueList) {
-                    long tmp = mSQLiteDb.insert(tableName, null, contentValues);
-                    LogWrapper.showLog(Log.INFO, getLogTag(), "bulkInsertion - TID: "
-                            + Thread.currentThread().getId() + ", inserted index: " + tmp);
-                }
-                mSQLiteDb.setTransactionSuccessful();
-            }
-            finally {
-                mSQLiteDb.endTransaction();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "bulkInsertion - endTransaction, TID: " + Thread.currentThread().getId());
-            }
+            mSQLiteDb.setTransactionSuccessful();
         }
         finally {
-            if (null != mSQLiteDb) {
-                mSQLiteDb.close();
-                mSQLiteDb = null;
-                LogWrapper.showLog(Log.INFO, getLogTag(), "bulkInsertion - Close Database, TID: " + Thread.currentThread().getId());
-            }
-
-            if (null != this.mDataUpdateLock) {
-                this.mDataUpdateLock.writeLock().unlock();
-            }
+            mSQLiteDb.endTransaction();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "bulkInsertion - endTransaction, TID: " + Thread.currentThread().getId());
         }
     }
 
@@ -302,42 +228,27 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
      */
     public void deleteAndBulkInsertion (String tableName, List<ContentValues> contentValueList) throws Exception {
 
+        if (null == mSQLiteDb) {
+            mSQLiteDb = getWritableDatabase();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "deleteAndBulkInsertion - Open Database, TID: " + Thread.currentThread().getId());
+        }
+
+        mSQLiteDb.beginTransaction();
         try {
-            this.mDataUpdateLock.writeLock().lock();
+            String sql = getDeleteAllFromTableSQL(tableName);
+            mSQLiteDb.execSQL(sql);
+            LogWrapper.showLog(Log.INFO, getLogTag(), "deleteAndBulkInsertion - SQL: " + sql);
 
-            if (null == mSQLiteDb) {
-                mSQLiteDb = getWritableDatabase();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "deleteAndBulkInsertion - Open Database, TID: " + Thread.currentThread().getId());
+            for (ContentValues contentValues : contentValueList) {
+                long tmp = mSQLiteDb.insert(tableName, null, contentValues);
+                LogWrapper.showLog(Log.INFO, getLogTag(), "deleteAndBulkInsertion - TID: "
+                        + Thread.currentThread().getId() + ", inserted index: " + tmp);
             }
-
-            mSQLiteDb.beginTransaction();
-            try {
-                String sql = getDeleteAllFromTableSQL(tableName);
-                mSQLiteDb.execSQL(sql);
-                LogWrapper.showLog(Log.INFO, getLogTag(), "deleteAndBulkInsertion - SQL: " + sql);
-
-                for (ContentValues contentValues : contentValueList) {
-                    long tmp = mSQLiteDb.insert(tableName, null, contentValues);
-                    LogWrapper.showLog(Log.INFO, getLogTag(), "deleteAndBulkInsertion - TID: "
-                            + Thread.currentThread().getId() + ", inserted index: " + tmp);
-                }
-                mSQLiteDb.setTransactionSuccessful();
-            }
-            finally {
-                mSQLiteDb.endTransaction();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "deleteAndBulkInsertion - endTransaction, TID: " + Thread.currentThread().getId());
-            }
+            mSQLiteDb.setTransactionSuccessful();
         }
         finally {
-            if (null != mSQLiteDb) {
-                mSQLiteDb.close();
-                mSQLiteDb = null;
-                LogWrapper.showLog(Log.INFO, getLogTag(), "deleteAndBulkInsertion - Close Database, TID: " + Thread.currentThread().getId());
-            }
-
-            if (null != this.mDataUpdateLock) {
-                this.mDataUpdateLock.writeLock().unlock();
-            }
+            mSQLiteDb.endTransaction();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "deleteAndBulkInsertion - endTransaction, TID: " + Thread.currentThread().getId());
         }
     }
 
@@ -349,28 +260,13 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
      */
     public void bulkUpdateMultipleTables (SQLInsertCallback callback) throws Exception {
 
-        try {
-            this.mDataUpdateLock.writeLock().lock();
-
-            if (null == mSQLiteDb) {
-                mSQLiteDb = getWritableDatabase();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "bulkInsertionMultipleTables - Open Database, TID: " + Thread.currentThread().getId());
-            }
-
-            if (null != callback) {
-                callback.onSQLiteDbAvailable(mSQLiteDb);
-            }
+        if (null == mSQLiteDb) {
+            mSQLiteDb = getWritableDatabase();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "bulkInsertionMultipleTables - Open Database, TID: " + Thread.currentThread().getId());
         }
-        finally {
-            if (null != mSQLiteDb) {
-                mSQLiteDb.close();
-                mSQLiteDb = null;
-                LogWrapper.showLog(Log.INFO, getLogTag(), "bulkInsertionMultipleTables - Close Database, TID: " + Thread.currentThread().getId());
-            }
 
-            if (null != this.mDataUpdateLock) {
-                this.mDataUpdateLock.writeLock().unlock();
-            }
+        if (null != callback) {
+            callback.onSQLiteDbAvailable(mSQLiteDb);
         }
     }
 
@@ -387,67 +283,37 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
     public void bulkUpdate (String tableName,
                             List<ContentValuesIdPair> contentValueList) throws Exception {
 
+        if (null == mSQLiteDb) {
+            mSQLiteDb = getWritableDatabase();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "bulkUpdate - Open Database, TID: " + Thread.currentThread().getId());
+        }
+
+        mSQLiteDb.beginTransaction();
         try {
-            this.mDataUpdateLock.writeLock().lock();
-
-            if (null == mSQLiteDb) {
-                mSQLiteDb = getWritableDatabase();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "bulkUpdate - Open Database, TID: " + Thread.currentThread().getId());
+            for (ContentValuesIdPair pair : contentValueList) {
+                long tmp = mSQLiteDb.update(tableName, pair.mContentValues, ("_id=" + pair.mItemId), null);
+                LogWrapper.showLog(Log.INFO, getLogTag(), "bulkUpdate - TID: "
+                        + Thread.currentThread().getId() + ", updated index: " + tmp);
             }
-
-            mSQLiteDb.beginTransaction();
-            try {
-                for (ContentValuesIdPair pair : contentValueList) {
-                    long tmp = mSQLiteDb.update(tableName, pair.mContentValues, ("_id=" + pair.mItemId), null);
-                    LogWrapper.showLog(Log.INFO, getLogTag(), "bulkUpdate - TID: "
-                            + Thread.currentThread().getId() + ", updated index: " + tmp);
-                }
-                mSQLiteDb.setTransactionSuccessful();
-            }
-            finally {
-                mSQLiteDb.endTransaction();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "bulkUpdate - endTransaction, TID: " + Thread.currentThread().getId());
-            }
+            mSQLiteDb.setTransactionSuccessful();
         }
         finally {
-            if (null != mSQLiteDb) {
-                mSQLiteDb.close();
-                mSQLiteDb = null;
-                LogWrapper.showLog(Log.INFO, getLogTag(), "bulkUpdate - Close Database, TID: " + Thread.currentThread().getId());
-            }
-
-            if (null != this.mDataUpdateLock) {
-                this.mDataUpdateLock.writeLock().unlock();
-            }
+            mSQLiteDb.endTransaction();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "bulkUpdate - endTransaction, TID: " + Thread.currentThread().getId());
         }
     }
 
     public void deleteAllFromTable (List<String> tableNameList) throws Exception {
 
-        try {
-            this.mDataUpdateLock.writeLock().lock();
-
-            if (null == mSQLiteDb) {
-                mSQLiteDb = getWritableDatabase();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "deleteAllFromTable - Open Database, TID: " + Thread.currentThread().getId());
-            }
-
-            for (String tableName : tableNameList) {
-                String sql = getDeleteAllFromTableSQL(tableName);
-                mSQLiteDb.execSQL(sql);
-                LogWrapper.showLog(Log.INFO, getLogTag(), "deleteAllFromTable - SQL: " + sql);
-            }
+        if (null == mSQLiteDb) {
+            mSQLiteDb = getWritableDatabase();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "deleteAllFromTable - Open Database, TID: " + Thread.currentThread().getId());
         }
-        finally {
-            if (null != mSQLiteDb) {
-                mSQLiteDb.close();
-                mSQLiteDb = null;
-                LogWrapper.showLog(Log.INFO, getLogTag(), "deleteAllFromTable - Close Database, TID: " + Thread.currentThread().getId());
-            }
 
-            if (null != this.mDataUpdateLock) {
-                this.mDataUpdateLock.writeLock().unlock();
-            }
+        for (String tableName : tableNameList) {
+            String sql = getDeleteAllFromTableSQL(tableName);
+            mSQLiteDb.execSQL(sql);
+            LogWrapper.showLog(Log.INFO, getLogTag(), "deleteAllFromTable - SQL: " + sql);
         }
     }
 
@@ -455,27 +321,12 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
     public void deleteSingleItem (String tableName, String condition) throws Exception {
         long tmp = -1;
 
-        try {
-            this.mDataUpdateLock.writeLock().lock();
-
-            if (null == mSQLiteDb) {
-                mSQLiteDb = getWritableDatabase();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "deleteSingleItem - Open Database, TID: " + Thread.currentThread().getId());
-            }
-
-            tmp = mSQLiteDb.delete(tableName, condition, null);
+        if (null == mSQLiteDb) {
+            mSQLiteDb = getWritableDatabase();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "deleteSingleItem - Open Database, TID: " + Thread.currentThread().getId());
         }
-        finally {
-            if (null != mSQLiteDb) {
-                mSQLiteDb.close();
-                mSQLiteDb = null;
-                LogWrapper.showLog(Log.INFO, getLogTag(), "deleteSingleItem - Close Database, TID: " + Thread.currentThread().getId());
-            }
 
-            if (null != this.mDataUpdateLock) {
-                this.mDataUpdateLock.writeLock().unlock();
-            }
-        }
+        tmp = mSQLiteDb.delete(tableName, condition, null);
 
         if (tmp < 0) {
             throw new Exception("deleteSingleItem is fail!!");
@@ -488,28 +339,13 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
     public void deleteWithCondition (String tableName,
                                      String columnName,
                                      String matchedValue) throws Exception {
-        try {
-            this.mDataUpdateLock.writeLock().lock();
-
-            if (null == mSQLiteDb) {
-                mSQLiteDb = getWritableDatabase();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "deleteWithCondition - Open Database, TID: " + Thread.currentThread().getId());
-            }
-
-            String[] selectionArgs = (null != matchedValue) ? new String[] {matchedValue} : null;
-            mSQLiteDb.delete(tableName, columnName + " = ?", selectionArgs);
+        if (null == mSQLiteDb) {
+            mSQLiteDb = getWritableDatabase();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "deleteWithCondition - Open Database, TID: " + Thread.currentThread().getId());
         }
-        finally {
-            if (null != mSQLiteDb) {
-                mSQLiteDb.close();
-                mSQLiteDb = null;
-                LogWrapper.showLog(Log.INFO, getLogTag(), "deleteWithCondition - Close Database, TID: " + Thread.currentThread().getId());
-            }
 
-            if (null != this.mDataUpdateLock) {
-                this.mDataUpdateLock.writeLock().unlock();
-            }
-        }
+        String[] selectionArgs = (null != matchedValue) ? new String[] {matchedValue} : null;
+        mSQLiteDb.delete(tableName, columnName + " = ?", selectionArgs);
     }
 
     public void deleteWithCondition (String tableName,
@@ -518,27 +354,12 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
 
         int tmp = -1;
 
-        try {
-            this.mDataUpdateLock.writeLock().lock();
-
-            if (null == mSQLiteDb) {
-                mSQLiteDb = getWritableDatabase();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "deleteWithCondition - Open Database, TID: " + Thread.currentThread().getId());
-            }
-
-            tmp = mSQLiteDb.delete(tableName, whereClause, whereArgs);
+        if (null == mSQLiteDb) {
+            mSQLiteDb = getWritableDatabase();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "deleteWithCondition - Open Database, TID: " + Thread.currentThread().getId());
         }
-        finally {
-            if (null != mSQLiteDb) {
-                mSQLiteDb.close();
-                mSQLiteDb = null;
-                LogWrapper.showLog(Log.INFO, getLogTag(), "deleteWithCondition - Close Database, TID: " + Thread.currentThread().getId());
-            }
 
-            if (null != this.mDataUpdateLock) {
-                this.mDataUpdateLock.writeLock().unlock();
-            }
-        }
+        tmp = mSQLiteDb.delete(tableName, whereClause, whereArgs);
 
         if (tmp < 0) {
             throw new Exception("deleteWithCondition is fail!!");
@@ -549,73 +370,44 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
 
     public void deleteMultipleTables (List<String> tableNameList) throws Exception {
 
+        if (null == mSQLiteDb) {
+            mSQLiteDb = getWritableDatabase();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "deleteMultipleTables - Open Database, TID: " + Thread.currentThread().getId());
+        }
+
+        mSQLiteDb.beginTransaction();
         try {
-            this.mDataUpdateLock.writeLock().lock();
-
-            if (null == mSQLiteDb) {
-                mSQLiteDb = getWritableDatabase();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "deleteMultipleTables - Open Database, TID: " + Thread.currentThread().getId());
+            for (String tableName : tableNameList) {
+                String sql = getDeleteAllFromTableSQL(tableName);
+                mSQLiteDb.execSQL(sql);
+                LogWrapper.showLog(Log.INFO, getLogTag(), "deleteMultipleTables - SQL: " + sql);
             }
 
-            mSQLiteDb.beginTransaction();
-            try {
-                for (String tableName : tableNameList) {
-                    String sql = getDeleteAllFromTableSQL(tableName);
-                    mSQLiteDb.execSQL(sql);
-                    LogWrapper.showLog(Log.INFO, getLogTag(), "deleteMultipleTables - SQL: " + sql);
-                }
-
-                mSQLiteDb.setTransactionSuccessful();
-            }
-            finally {
-                mSQLiteDb.endTransaction();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "deleteMultipleTables - endTransaction, TID: " + Thread.currentThread().getId());
-            }
+            mSQLiteDb.setTransactionSuccessful();
         }
         finally {
-            if (null != mSQLiteDb) {
-                mSQLiteDb.close();
-                mSQLiteDb = null;
-                LogWrapper.showLog(Log.INFO, getLogTag(), "deleteMultipleTables - Close Database, TID: " + Thread.currentThread().getId());
-            }
-
-            if (null != this.mDataUpdateLock) {
-                this.mDataUpdateLock.writeLock().unlock();
-            }
+            mSQLiteDb.endTransaction();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "deleteMultipleTables - endTransaction, TID: " + Thread.currentThread().getId());
         }
     }
 
     public void performCompoundOperations (List<SqlOperationSpec> operationList) throws Exception {
 
+        if (null == mSQLiteDb) {
+            mSQLiteDb = getWritableDatabase();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "performCompoundOperations - Open Database, TID: " + Thread.currentThread().getId());
+        }
+
+        mSQLiteDb.beginTransaction();
         try {
-            this.mDataUpdateLock.writeLock().lock();
-
-            if (null == mSQLiteDb) {
-                mSQLiteDb = getWritableDatabase();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "performCompoundOperations - Open Database, TID: " + Thread.currentThread().getId());
+            for (SqlOperationSpec xtOperation : operationList) {
+                performSingleOperation(xtOperation);
             }
-
-            mSQLiteDb.beginTransaction();
-            try {
-                for (SqlOperationSpec xtOperation : operationList) {
-                    performSingleOperation(xtOperation);
-                }
-                mSQLiteDb.setTransactionSuccessful();
-            }
-            finally {
-                mSQLiteDb.endTransaction();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "performCompoundOperations - endTransaction, TID: " + Thread.currentThread().getId());
-            }
+            mSQLiteDb.setTransactionSuccessful();
         }
         finally {
-            if (null != mSQLiteDb) {
-                mSQLiteDb.close();
-                mSQLiteDb = null;
-                LogWrapper.showLog(Log.INFO, getLogTag(), "performCompoundOperations - Close Database, TID: " + Thread.currentThread().getId());
-            }
-            if (null != this.mDataUpdateLock) {
-                this.mDataUpdateLock.writeLock().unlock();
-            }
+            mSQLiteDb.endTransaction();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "performCompoundOperations - endTransaction, TID: " + Thread.currentThread().getId());
         }
     }
 
@@ -672,10 +464,8 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
         Cursor cursor = null;
 
         try {
-            this.mDataUpdateLock.readLock().lock();
-
             if (null == mSQLiteDb) {
-                mSQLiteDb = getReadableDatabase();
+                mSQLiteDb = getWritableDatabase();
                 LogWrapper.showLog(Log.INFO, getLogTag(), "findObjectFromTableOrderByWithEqualTo - Open Database, TID: " + Thread.currentThread().getId());
             }
 
@@ -706,16 +496,6 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
                 cursor.close();
                 LogWrapper.showLog(Log.INFO, getLogTag(), "findObjectFromTableOrderByWithEqualTo - close cursor");
             }
-
-            if (null != mSQLiteDb) {
-                mSQLiteDb.close();
-                mSQLiteDb = null;
-                LogWrapper.showLog(Log.INFO, getLogTag(), "findObjectFromTableOrderByWithEqualTo - Close Database, TID: " + Thread.currentThread().getId());
-            }
-
-            if (null != this.mDataUpdateLock) {
-                this.mDataUpdateLock.readLock().unlock();
-            }
         }
     }
 
@@ -723,30 +503,15 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
     @Deprecated
     /** Use only for development */
     public void reCreateTableIfNeeded (String dropSQL, String creationSQL) {
-        try {
-            this.mDataUpdateLock.writeLock().lock();
-
-            if (null == mSQLiteDb) {
-                mSQLiteDb = getWritableDatabase();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "reCreateTableIfNeeded - Open DataBase");
-            }
-
-            LogWrapper.showLog(Log.INFO, getLogTag(), "reCreateTableIfNeeded - dropExistingTable: " + dropSQL);
-            mSQLiteDb.execSQL(dropSQL);
-            LogWrapper.showLog(Log.INFO, getLogTag(), "reCreateTableIfNeeded - createNewTable: " + creationSQL);
-            mSQLiteDb.execSQL(creationSQL);
+        if (null == mSQLiteDb) {
+            mSQLiteDb = getWritableDatabase();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "reCreateTableIfNeeded - Open DataBase");
         }
-        finally {
-            if (null != mSQLiteDb) {
-                mSQLiteDb.close();
-                mSQLiteDb = null;
-                LogWrapper.showLog(Log.INFO, getLogTag(), "reCreateTableIfNeeded - Close DataBase");
-            }
 
-            if (null != this.mDataUpdateLock) {
-                this.mDataUpdateLock.writeLock().unlock();
-            }
-        }
+        LogWrapper.showLog(Log.INFO, getLogTag(), "reCreateTableIfNeeded - dropExistingTable: " + dropSQL);
+        mSQLiteDb.execSQL(dropSQL);
+        LogWrapper.showLog(Log.INFO, getLogTag(), "reCreateTableIfNeeded - createNewTable: " + creationSQL);
+        mSQLiteDb.execSQL(creationSQL);
     }
 
     @Deprecated
@@ -755,26 +520,13 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
      */
     public void dropExistingTablesAndReCreated() throws Exception {
 
-        try {
-            this.mDataUpdateLock.writeLock().lock();
-
-            if (null == mSQLiteDb) {
-                mSQLiteDb = getWritableDatabase();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "dropExistingTables - Open Database, TID: " + Thread.currentThread().getId());
-            }
-            dropExistingTables(mSQLiteDb);
-            onCreate(mSQLiteDb);
-            LogWrapper.showLog(Log.INFO, getLogTag(), "dropExistingTables - done, TID: " + Thread.currentThread().getId());
-
-            mSQLiteDb.close();
-            LogWrapper.showLog(Log.INFO, getLogTag(), "dropExistingTables - Close Database, TID: " + Thread.currentThread().getId());
-            mSQLiteDb = null;
+        if (null == mSQLiteDb) {
+            mSQLiteDb = getWritableDatabase();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "dropExistingTables - Open Database, TID: " + Thread.currentThread().getId());
         }
-        finally {
-            if (null != this.mDataUpdateLock) {
-                this.mDataUpdateLock.writeLock().unlock();
-            }
-        }
+        dropExistingTables(mSQLiteDb);
+        onCreate(mSQLiteDb);
+        LogWrapper.showLog(Log.INFO, getLogTag(), "dropExistingTables - done, TID: " + Thread.currentThread().getId());
     }
 
 
