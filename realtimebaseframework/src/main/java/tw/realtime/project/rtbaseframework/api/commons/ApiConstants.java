@@ -48,5 +48,8 @@ public class ApiConstants {
         String XML_PARSING_FAILURE = "99974";
         String FACEBOOK_GRAPH_RESPONSE_ERROR = "99973";
         String RX_MAYBE_ON_COMPLETE = "99972";
+        String OUT_OF_MEMORY = "99971";
+        String MALFORMED_URL = "99970";
+        String UNSUPPORTED_ENCODING = "99969";
     }
 }
