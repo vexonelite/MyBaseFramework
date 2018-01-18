@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tw.realtime.project.rtbaseframework.widgets.SimpleSearchLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="40dp"
+	android:background="@drawable/base_radius_4_units_alpha_90_white">
+
+	<FrameLayout
+		android:id="@+id/actionSearch"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:layout_alignParentRight="true">
+
+		<ImageView
+			android:id="@+id/searchIcon"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="left|center_vertical"
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="13dp"
+			android:contentDescription=""/>
+			<!--android:src="@drawable/search_icon_grey"-->
+	</FrameLayout>
+
+	<EditText
+		android:id="@+id/keywordInput"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_toLeftOf="@id/actionSearch"
+		android:layout_centerVertical="true"
+		android:layout_marginLeft="13dp"
+		android:maxLines="1"
+		android:inputType="text"
+		android:textColor="@color/base_alpha_point_60_black"
+		android:textColorHint="@color/base_alpha_point_20_black"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textSize="16sp"
+		android:background="@android:color/transparent"/>
+		<!--android:hint="@string/search_hint"-->
+ 
+</tw.realtime.project.rtbaseframework.widgets.SimpleSearchLayout>
