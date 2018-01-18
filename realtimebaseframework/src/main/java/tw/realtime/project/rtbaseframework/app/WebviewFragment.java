@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
@@ -38,7 +37,6 @@ public class WebviewFragment extends BaseFragment {
     private boolean mDefaultWebViewClientEnabledFlag = false;
     private boolean mAutoDismissProgressDialogEnabledFlag = false;
     private boolean isWebViewLoading = false;
-    private boolean canWebViewBeTouched = true;
 
     private long mAutoDismissProgressDialogSecond = 10L;
 
@@ -171,7 +169,7 @@ public class WebviewFragment extends BaseFragment {
             mSwipeRefresh.setRefreshing(false);
         }
         isWebViewLoading = false;
-        canWebViewBeTouched = true;
+        mWebView.setEnabled(true);
     }
 
     // Ref:
@@ -204,14 +202,6 @@ public class WebviewFragment extends BaseFragment {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
-
-        // http://stackoverflow.com/questions/15492795/stop-loading-in-webviewclient
-        mWebView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return (!canWebViewBeTouched);
-            }
-        });
 
         // Enable Javascript
         settings.setJavaScriptEnabled(true);
@@ -302,7 +292,7 @@ public class WebviewFragment extends BaseFragment {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             LogWrapper.showLog(Log.INFO, getLogTag(), "onPageStarted: " + url);
             isWebViewLoading = true;
-            canWebViewBeTouched = false;
+            mWebView.setEnabled(false);
             showProgressDialog(getString(R.string.base_data_been_loading));
 
             if (mAutoDismissProgressDialogEnabledFlag) {
