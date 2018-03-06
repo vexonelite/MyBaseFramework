@@ -21,16 +21,6 @@ public abstract class BaseApiRequestSingle implements ApiParameterDelegate, Sing
     }
 
     @Override
-    public String getAesKey () {
-        return mAesKey;
-    }
-
-    @Override
-    public String getAesIv () {
-        return mAesIv;
-    }
-
-    @Override
     public boolean doesEnableHttpLog() {
         return mHttpLogEnable;
     }
@@ -51,9 +41,20 @@ public abstract class BaseApiRequestSingle implements ApiParameterDelegate, Sing
     }
 
     @Override
+    public String getAesKey () {
+        return mAesKey;
+    }
+
+    @Override
+    public String getAesIv () {
+        return mAesIv;
+    }
+
+    @Override
     public ApiDataDelegate getApiDataDelegate () {
         return mApiDataDelegate;
     }
+
 
     protected BaseApiRequestSingle(ApiParameterSetDelegate delegate) {
         if (null != delegate) {

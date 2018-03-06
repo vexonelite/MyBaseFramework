@@ -11,6 +11,8 @@ public abstract class BaseApiRequestObservable implements ApiParameterDelegate, 
     private String mApiUrl;
     private String mAccessToken;
     private String mDeviceToken;
+    private String mAesKey;
+    private String mAesIv;
     private ApiDataDelegate mApiDataDelegate;
 
     @Override
@@ -39,9 +41,20 @@ public abstract class BaseApiRequestObservable implements ApiParameterDelegate, 
     }
 
     @Override
+    public String getAesKey () {
+        return mAesKey;
+    }
+
+    @Override
+    public String getAesIv () {
+        return mAesIv;
+    }
+
+    @Override
     public ApiDataDelegate getApiDataDelegate () {
         return mApiDataDelegate;
     }
+
 
     protected BaseApiRequestObservable(ApiParameterSetDelegate delegate) {
         if (null != delegate) {
@@ -50,6 +63,8 @@ public abstract class BaseApiRequestObservable implements ApiParameterDelegate, 
             mApiUrl = delegate.getApiUrl();
             mAccessToken = (null != delegate.getAccessToken()) ? delegate.getAccessToken() : "";
             mDeviceToken = (null != delegate.getDeviceToken()) ? delegate.getDeviceToken() : "";
+            mAesKey = delegate.getAesKey();
+            mAesIv = delegate.getAesIv();
             mApiDataDelegate = delegate.getApiDataDelegate();
         }
     }

@@ -12,7 +12,10 @@ public abstract class BaseApiRequestCallable implements ApiParameterDelegate, Ca
     private String mApiUrl;
     private String mAccessToken;
     private String mDeviceToken;
+    private String mAesKey;
+    private String mAesIv;
     private ApiDataDelegate mApiDataDelegate;
+
 
     @Override
     public boolean doesEnableAesEncoding () {
@@ -40,9 +43,20 @@ public abstract class BaseApiRequestCallable implements ApiParameterDelegate, Ca
     }
 
     @Override
+    public String getAesKey () {
+        return mAesKey;
+    }
+
+    @Override
+    public String getAesIv () {
+        return mAesIv;
+    }
+
+    @Override
     public ApiDataDelegate getApiDataDelegate () {
         return mApiDataDelegate;
     }
+
 
     protected BaseApiRequestCallable(ApiParameterSetDelegate delegate) {
         if (null != delegate) {
@@ -51,6 +65,8 @@ public abstract class BaseApiRequestCallable implements ApiParameterDelegate, Ca
             mApiUrl = delegate.getApiUrl();
             mAccessToken = (null != delegate.getAccessToken()) ? delegate.getAccessToken() : "";
             mDeviceToken = (null != delegate.getDeviceToken()) ? delegate.getDeviceToken() : "";
+            mAesKey = delegate.getAesKey();
+            mAesIv = delegate.getAesIv();
             mApiDataDelegate = delegate.getApiDataDelegate();
         }
     }
