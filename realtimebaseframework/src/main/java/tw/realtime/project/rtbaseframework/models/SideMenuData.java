@@ -9,6 +9,7 @@ public class SideMenuData {
     private String mTitle;
     private String mBarTitle;
     private int mItemNumber;
+    private int mItemType;
 
 
     public int getIconResourceId () {
@@ -27,12 +28,20 @@ public class SideMenuData {
         return mItemNumber;
     }
 
+    /**
+     * return the type of menu item.
+     * The type is used by the getItemViewType method of adapter class.
+     */
+    public int getItemType () {
+        return mItemType;
+    }
 
     public static class Builder {
         private int bIconResId;
         private String bTitle;
         private String bBarTitle;
         private int bItemNumber;
+        private int bItemType = 0;
 
         public Builder setIconResourceId (int resId) {
             bIconResId = resId;
@@ -54,6 +63,15 @@ public class SideMenuData {
             return this;
         }
 
+        /**
+         * set type of menu item.
+         * The type is used by the getItemViewType method of adapter class.
+         */
+        public Builder setItemType (int type) {
+            bItemType = type;
+            return this;
+        }
+
         public SideMenuData build() {
             return new SideMenuData(this);
         }
@@ -64,5 +82,6 @@ public class SideMenuData {
         mTitle = builder.bTitle;
         mBarTitle = builder.bBarTitle;
         mItemNumber = builder.bItemNumber;
+        mItemType = builder.bItemType;
     }
 }
