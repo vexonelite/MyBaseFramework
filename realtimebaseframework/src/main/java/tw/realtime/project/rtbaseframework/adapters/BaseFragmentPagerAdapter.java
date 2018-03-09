@@ -1,5 +1,6 @@
 package tw.realtime.project.rtbaseframework.adapters;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -15,8 +16,15 @@ import tw.realtime.project.rtbaseframework.LogWrapper;
 
 
 /**
- * ViewPager 搭配使用之 Adapter，其內容是一或多個 Fragment
- * Created by vexonelite on 2017/6/12.
+ * Implementation of PagerAdapter that represents each page as a Fragment
+ * that is persistently kept in the fragment manager as long as the user can return to the page.
+ * <p>
+ * This version of the pager is best for use when there are a handful of typically more static fragments
+ * to be paged through, such as a set of tabs. The fragment of each page the user visits will be kept in memory,
+ * though its view hierarchy may be destroyed when not visible.
+ * This can result in using a significant amount of memory
+ * since fragment instances can hold on to an arbitrary amount of state.
+ * For larger sets of pages, consider FragmentStatePagerAdapter.
  */
 public abstract class BaseFragmentPagerAdapter<T> extends FragmentPagerAdapter {
 
@@ -43,10 +51,11 @@ public abstract class BaseFragmentPagerAdapter<T> extends FragmentPagerAdapter {
     }
 
     @Override
-    public int getItemPosition(Object object){
+    public int getItemPosition(@NonNull Object object){
         return PagerAdapter.POSITION_NONE;
     }
 
+    @NonNull
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
 

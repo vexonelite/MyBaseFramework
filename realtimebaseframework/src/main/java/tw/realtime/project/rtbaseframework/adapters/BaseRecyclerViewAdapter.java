@@ -1,5 +1,6 @@
 package tw.realtime.project.rtbaseframework.adapters;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
@@ -19,11 +20,11 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
     private final byte[] mLock = new byte[0];
     private List<V> mData = new ArrayList<V>();
 
-    @Override
-    public abstract K onCreateViewHolder(ViewGroup viewGroup, int viewType);
+    @NonNull
+    public abstract K onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType);
 
-    @Override
-    public abstract void onBindViewHolder(K holder, int position);
+
+    public abstract void onBindViewHolder(@NonNull K holder, int position);
 
     @Override
     public int getItemCount() {

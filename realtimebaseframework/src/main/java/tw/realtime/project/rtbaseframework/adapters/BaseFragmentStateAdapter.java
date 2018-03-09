@@ -1,5 +1,6 @@
 package tw.realtime.project.rtbaseframework.adapters;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -16,6 +17,12 @@ import tw.realtime.project.rtbaseframework.LogWrapper;
 
 /**
  * Base adapter that has some common features and is set to the ViewPager
+ *
+ * The FragmentStatePagerAdapter is more useful when there are a large number of pages,
+ * working more like a list view. When pages are not visible to the user,
+ * their entire fragment may be destroyed, only keeping the saved state of that fragment.
+ * This allows the pager to hold on to much less memory associated with each visited page
+ * as compared to FragmentPagerAdapter at the cost of potentially more overhead when switching between pages.
  */
 public abstract class BaseFragmentStateAdapter<T> extends FragmentStatePagerAdapter {
 
@@ -41,10 +48,11 @@ public abstract class BaseFragmentStateAdapter<T> extends FragmentStatePagerAdap
     }
 
     @Override
-    public int getItemPosition(Object object){
+    public int getItemPosition(@NonNull Object object){
         return PagerAdapter.POSITION_NONE;
     }
 
+    @NonNull
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
 
