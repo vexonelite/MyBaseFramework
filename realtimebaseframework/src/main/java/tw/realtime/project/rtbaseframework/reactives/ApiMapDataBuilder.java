@@ -5,6 +5,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import tw.realtime.project.rtbaseframework.api.commons.AsyncApiException;
+
 /**
  * Created by vexonelite on 2017/10/3.
  */
@@ -18,7 +20,7 @@ public class ApiMapDataBuilder implements ApiHashMapDelegate {
     }
 
     @Override
-    public ApiHashMapDelegate setData (String key, String value) {
+    public ApiHashMapDelegate setData (String key, String value) throws AsyncApiException  {
         if ( (null != key) && (!key.isEmpty()) && (null != value) ){
             bDataMap.put(key, value);
         }
