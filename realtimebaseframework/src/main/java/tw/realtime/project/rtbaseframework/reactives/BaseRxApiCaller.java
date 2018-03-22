@@ -56,9 +56,12 @@ public abstract class BaseRxApiCaller<T> {
 
     public class ApiDisposableObserver extends DisposableObserver<T> {
 
+        private T mCachedObject;
+
         @Override
         public void onNext(@NonNull T result) {
             LogWrapper.showLog(Log.INFO, getLogTag(), "ApiDisposableObserver - onNext - Tid: " + Thread.currentThread().getId());
+            mCachedObject = result;
         }
 
         @Override
@@ -90,6 +93,7 @@ public abstract class BaseRxApiCaller<T> {
 
             if (null != mCallback) {
                 mCallback.onEnd();
+                mCallback.onSuccess(mCachedObject);
             }
 
             rxDisposableIfNeeded();
