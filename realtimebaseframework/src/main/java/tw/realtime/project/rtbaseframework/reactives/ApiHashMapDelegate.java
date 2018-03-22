@@ -11,21 +11,6 @@ import java.util.Map;
 
 public interface ApiHashMapDelegate extends ApiDataDelegate {
     /**
-     * Put a key-value parameter into the HashMap. The returned ApiDataDelegate is handy for builder-style code.
-     * @param key
-     * @param value
-     * @return
-     */
-    ApiHashMapDelegate setData(String key, String value);
-
-    /**
-     * Retrieve the key-value parameter via a given key
-     * @param key
-     * @return the value corresponding to the given key
-     */
-    String retrieveData(String key);
-
-    /**
      * Get the HashMap that keeps all key-value parameters
      * @return
      */

@@ -26,6 +26,24 @@ public class ApiJSONDataBuilder implements ApiJSONObjectDelegate {
     }
 
     @Override
+    public ApiDataDelegate setData(String key, String value) throws AsyncApiException {
+        if ( (null != key) && (!key.isEmpty()) && (null != value) ){
+            try {
+                mJSONObject.put(key, value);
+            }
+            catch (Exception e) {
+                throw new AsyncApiException(ApiConstants.ExceptionCode.JSON_WRAPPING_FAILURE, e);
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public String retrieveData(String key) {
+        return JSONUtils.getStringFromJSON(mJSONObject, key, getClass().getSimpleName(), true);
+    }
+
+    @Override
     public ApiDataDelegate setJSONArray(String key, JSONArray jsonArray) throws AsyncApiException {
         if ( (null != key) && (!key.isEmpty()) && (null != jsonArray) ){
             try {
