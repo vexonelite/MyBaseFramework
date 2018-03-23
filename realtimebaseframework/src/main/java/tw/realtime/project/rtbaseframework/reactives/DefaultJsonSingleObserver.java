@@ -28,6 +28,10 @@ public class DefaultJsonSingleObserver extends DisposableSingleObserver<JSONObje
             end = end > jsonObject.toString().length() ? jsonObject.toString().length() : end;
             LogWrapper.showLog(Log.INFO, mTag, jsonObject.toString().substring(start, end));
         }
+
+        if (!isDisposed()) {
+            dispose();
+        }
     }
 
     @Override
@@ -38,6 +42,10 @@ public class DefaultJsonSingleObserver extends DisposableSingleObserver<JSONObje
             String code = ((AsyncApiException) e).getStatusCode();
             String message = e.getLocalizedMessage();
             LogWrapper.showLog(Log.ERROR, mTag, "code: " + code + ", message: " + message);
+        }
+
+        if (!isDisposed()) {
+            dispose();
         }
     }
 }
