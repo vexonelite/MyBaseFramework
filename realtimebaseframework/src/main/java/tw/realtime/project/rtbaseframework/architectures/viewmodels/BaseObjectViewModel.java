@@ -65,8 +65,9 @@ public abstract class BaseObjectViewModel<T> extends AndroidViewModel {
     @MainThread
     public void resetDataLiveData () {
         if (null != mDataLiveData) {
-            mDataLiveData.setValue(null);
-            //mListLiveData = new MutableLiveData<>();
+            // this way poses problem for some case
+            //mDataLiveData.setValue(null);
+            mDataLiveData = new MutableLiveData<>();
             LogWrapper.showLog(Log.WARN, getLogTag(), "resetDataLiveData");
         }
     }
@@ -93,8 +94,9 @@ public abstract class BaseObjectViewModel<T> extends AndroidViewModel {
     @MainThread
     public void resetStateLiveData () {
         if (null != mStateLiveData) {
-            mStateLiveData.setValue(null);
-            //mListLiveData = new MutableLiveData<>();
+            // this way poses problem for some case
+            //mStateLiveData.setValue(null);
+            mStateLiveData = new MutableLiveData<>();
             LogWrapper.showLog(Log.WARN, getLogTag(), "resetStateLiveData");
         }
     }
@@ -118,6 +120,16 @@ public abstract class BaseObjectViewModel<T> extends AndroidViewModel {
     }
 
     @MainThread
+    public void resetErrorLiveData () {
+        if (null != mErrorLiveData) {
+            // this way poses problem for some case
+            //mErrorLiveData.setValue(null);
+            mErrorLiveData = new MutableLiveData<>();
+            LogWrapper.showLog(Log.WARN, getLogTag(), "resetErrorLiveData");
+        }
+    }
+
+    @MainThread
     protected void setErrorLiveData (@NonNull AsyncApiException exception) {
         if (null != mErrorLiveData) {
             mErrorLiveData.setValue(exception);
@@ -132,6 +144,16 @@ public abstract class BaseObjectViewModel<T> extends AndroidViewModel {
             mTaskStateLiveData = new MutableLiveData<>();
         }
         return mTaskStateLiveData;
+    }
+
+    @MainThread
+    public void resetTaskState () {
+        if (null != mTaskStateLiveData) {
+            // this way poses problem for some case
+            //mTaskStateLiveData.setValue(null);
+            mTaskStateLiveData = new MutableLiveData<>();
+            LogWrapper.showLog(Log.WARN, getLogTag(), "resetTaskState");
+        }
     }
 
     @MainThread
