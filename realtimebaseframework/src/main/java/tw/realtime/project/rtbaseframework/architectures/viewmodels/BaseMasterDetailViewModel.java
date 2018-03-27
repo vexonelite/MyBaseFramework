@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.api.commons.AsyncApiException;
 import tw.realtime.project.rtbaseframework.enumerations.LiveDataState;
 
 
@@ -19,6 +20,7 @@ public abstract class BaseMasterDetailViewModel<T, R> extends BaseObjectViewMode
 
     private MutableLiveData<R> mDetailLiveData;
     private MutableLiveData<LiveDataState> mDetailStateLiveData;
+    private MutableLiveData<AsyncApiException> mDetailErrorLiveData;
 
 
     protected BaseMasterDetailViewModel(@NonNull Application application) {
@@ -38,12 +40,12 @@ public abstract class BaseMasterDetailViewModel<T, R> extends BaseObjectViewMode
     @MainThread
     public void resetDetailLiveData () {
         if (null != mDetailLiveData) {
-            //mDetailLiveData = new MutableLiveData<>();
-            mDetailLiveData.setValue(null);
+            // this way poses problem for some case
+            //mDetailLiveData.setValue(null);
+            mDetailLiveData = new MutableLiveData<>();
             LogWrapper.showLog(Log.WARN, getLogTag(), "resetDetailLiveData");
         }
     }
-
 
     @MainThread
     protected void setDetailLiveData (@NonNull R detail) {
@@ -67,8 +69,9 @@ public abstract class BaseMasterDetailViewModel<T, R> extends BaseObjectViewMode
     @MainThread
     public void resetDetailStateLiveData () {
         if (null != mDetailStateLiveData) {
-            mDetailStateLiveData.setValue(null);
-            //mListLiveData = new MutableLiveData<>();
+            // this way poses problem for some case
+            //mDetailStateLiveData.setValue(null);
+            mDetailStateLiveData = new MutableLiveData<>();
             LogWrapper.showLog(Log.WARN, getLogTag(), "resetDetailStateLiveData");
         }
     }
@@ -78,6 +81,32 @@ public abstract class BaseMasterDetailViewModel<T, R> extends BaseObjectViewMode
         if (null != mDetailStateLiveData) {
             mDetailStateLiveData.setValue(dataState);
             LogWrapper.showLog(Log.WARN, getLogTag(), "setDetailStateLiveData");
+        }
+    }
+
+
+    @MainThread
+    public LiveData<AsyncApiException> getDetailErrorLiveData () {
+        if (null == mDetailErrorLiveData) {
+            mDetailErrorLiveData = new MutableLiveData<>();
+        }
+        return mDetailErrorLiveData;
+    }
+
+    @MainThread
+    public void resetDetailErrorLiveData () {
+        if (null != mDetailErrorLiveData) {
+            // this way poses problem for some case
+            //mDetailErrorLiveData.setValue(null);
+            mDetailErrorLiveData = new MutableLiveData<>();
+            LogWrapper.showLog(Log.WARN, getLogTag(), "resetDetailErrorLiveData");
+        }
+    }
+
+    @MainThread
+    protected void setDetailErrorLiveData (@NonNull AsyncApiException exception) {
+        if (null != mDetailErrorLiveData) {
+            mDetailErrorLiveData.setValue(exception);
         }
     }
 
