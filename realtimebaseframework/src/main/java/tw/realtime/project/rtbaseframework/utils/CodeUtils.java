@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.EnumMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
 
@@ -83,6 +84,19 @@ public class CodeUtils {
             LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on convertDateToString", e);
             return null;
         }
+    }
+
+    /**
+     * 更新剩餘時間字串 hh:mm:ss
+     * @param timeStamp
+     */
+    public static String getTimeString (long timeStamp) {
+        int day = (int) TimeUnit.SECONDS.toDays(timeStamp);
+        int hours = (int)(TimeUnit.SECONDS.toHours(timeStamp) - (day * 24));
+        int minutes = (int)(TimeUnit.SECONDS.toMinutes(timeStamp) - (TimeUnit.SECONDS.toHours(timeStamp) * 60));
+        int seconds = (int)(TimeUnit.SECONDS.toSeconds(timeStamp) - (TimeUnit.SECONDS.toMinutes(timeStamp) * 60));
+        //LogWrapper.showLog(Log.WARN, "CodeUtil", "getTimeString - hours: " + hours + ", minutes: " + minutes + ", seconds: " + seconds);
+        return "" + hours + ":" + minutes + ":" + seconds;
     }
 
     public static String getDecimalFormatString (String inputPrice) {
