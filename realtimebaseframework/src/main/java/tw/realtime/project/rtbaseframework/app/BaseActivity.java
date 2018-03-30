@@ -1,19 +1,22 @@
 package tw.realtime.project.rtbaseframework.app;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.media.AudioManager;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.content.DialogInterface;
-import android.os.Build;
-import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
@@ -336,6 +339,24 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    protected void hideStatusBar () {
+        // If the Android version is lower than Jellybean, use this call to hide the status bar.
+        if (Build.VERSION.SDK_INT < 16) {
+            getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
+        else {
+            View decorView = getWindow().getDecorView();
+            // Hide the status bar.
+            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
+            // Remember that you should never show the action bar if the
+            // status bar is hidden, so hide that too if necessary.
+            hideActionBar();
+        }
+    }
+
     /**
      * Set the default Logo icon and Navigation icon.
      */
@@ -360,6 +381,24 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
     }
+
+    public void haveAudioManagerAlterStreamVolume (boolean hasRaised) {
+        AudioManager myAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        int maxLevelVol = myAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        int currentLevelVol = myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        int nextLevelVol = hasRaised ? (currentLevelVol + 1) : (currentLevelVol - 1);
+        if (nextLevelVol < 0) {
+            nextLevelVol = 0;
+        }
+        else if (nextLevelVol > maxLevelVol) {
+            nextLevelVol = maxLevelVol;
+        }
+        LogWrapper.showLog(Log.INFO, getLogTag(), "haveAudioManagerAlterStreamVolume - maxLevelVol: " + maxLevelVol);
+        LogWrapper.showLog(Log.INFO, getLogTag(), "haveAudioManagerAlterStreamVolume - currentLevelVol: " + currentLevelVol);
+        LogWrapper.showLog(Log.INFO, getLogTag(), "haveAudioManagerAlterStreamVolume - nextLevelVol: " + nextLevelVol);
+        myAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, nextLevelVol, 0);
+    }
+
 
     protected String getLogTag () {
         return this.getClass().getSimpleName();
