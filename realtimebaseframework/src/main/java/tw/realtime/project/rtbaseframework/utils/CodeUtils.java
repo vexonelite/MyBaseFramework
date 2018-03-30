@@ -91,12 +91,15 @@ public class CodeUtils {
      * @param timeStamp
      */
     public static String getTimeString (long timeStamp) {
+        Locale locale = Locale.getDefault();
         int day = (int) TimeUnit.SECONDS.toDays(timeStamp);
         int hours = (int)(TimeUnit.SECONDS.toHours(timeStamp) - (day * 24));
         int minutes = (int)(TimeUnit.SECONDS.toMinutes(timeStamp) - (TimeUnit.SECONDS.toHours(timeStamp) * 60));
         int seconds = (int)(TimeUnit.SECONDS.toSeconds(timeStamp) - (TimeUnit.SECONDS.toMinutes(timeStamp) * 60));
         //LogWrapper.showLog(Log.WARN, "CodeUtil", "getTimeString - hours: " + hours + ", minutes: " + minutes + ", seconds: " + seconds);
-        return "" + hours + ":" + minutes + ":" + seconds;
+        return  String.format(locale, "%02d", hours) + ":" +
+                String.format(locale, "%02d", minutes) + ":" +
+                String.format(locale, "%02d", seconds);
     }
 
     public static String getDecimalFormatString (String inputPrice) {
