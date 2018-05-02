@@ -136,4 +136,24 @@ public class CryptUtils {
             return null;
         }
     }
+
+
+    public static int getRandomNumber (SecureRandom random, int min, int max) throws IllegalArgumentException {
+        if (min < 0 || max < 0) {
+            throw new IllegalArgumentException("min or max < 0");
+        }
+        if (null == random) {
+            throw new IllegalArgumentException("random is null");
+        }
+
+        //SecureRandom rnd = new SecureRandom();
+        int inclusive = max - min + 1;
+        int exclusive = max - min;
+
+        int rndIntIncl = random.nextInt(inclusive) + min;
+        int rndIntExcl = random.nextInt(exclusive) + min;
+
+        return rndIntExcl;
+    }
+
 }

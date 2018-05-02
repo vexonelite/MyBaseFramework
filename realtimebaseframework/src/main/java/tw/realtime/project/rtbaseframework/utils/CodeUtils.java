@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -26,6 +27,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumMap;
 import java.util.Locale;
@@ -258,7 +260,7 @@ public class CodeUtils {
         LogWrapper.showLog(Log.INFO, "CodeUtils", "openBrowser - given url: " + url);
         if ( (!url.startsWith("http://")) && (!url.startsWith("https://")) ) {
             url = "http://" + url;
-            Log.i("", "openBrowser - append 'http': " + url);
+            LogWrapper.showLog(Log.INFO,"CodeUtil", "openBrowser - append 'http': " + url);
         }
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         context.startActivity(browserIntent);
@@ -347,4 +349,76 @@ public class CodeUtils {
         }
         return  isEmoji;
     }
+
+    public static boolean compareAppVersion (@NonNull String currentVersion,
+                                             @NonNull String apiVersion) throws IllegalArgumentException {
+        if (currentVersion.isEmpty()) {
+            throw new IllegalArgumentException("currentVersion cannot be empty");
+        }
+        if (apiVersion.isEmpty()) {
+            throw new IllegalArgumentException("apiVersion cannot be empty");
+        }
+        LogWrapper.showLog(Log.INFO,"CodeUtil", "compareAppVersion - currentVersion: "
+                + currentVersion + ", apiVersion: " + apiVersion);
+
+        final String[] currentArray = currentVersion.split("\\.");
+        final String[] apiArray = apiVersion.split("\\.");
+        final int currentSize = currentArray.length;
+        if (currentSize == 0) {
+            throw new IllegalArgumentException("currentSize is 0");
+        }
+        final int apiSize =  apiArray.length;
+        if (apiSize == 0) {
+            throw new IllegalArgumentException("apiSize is 0");
+        }
+        LogWrapper.showLog(Log.INFO,"CodeUtil", "compareAppVersion - currentSize: "
+                + currentSize + ", apiSize: " + apiSize);
+
+        ArrayList<String> currentList = new ArrayList<>();
+        ArrayList<String> apiList = new ArrayList<>();
+        boolean isUpToDate = true;
+        final int size = Math.max(currentSize, apiSize);
+        for (int i = 0; i < size; i++) {
+            if (i < currentArray.length) {
+                currentList.add(currentArray[i]);
+            }
+            else {
+                currentList.add("0");
+            }
+
+            if (i < apiArray.length) {
+                apiList.add(apiArray[i]);
+            }
+            else {
+                apiList.add("0");
+            }
+        }
+
+        LogWrapper.showLog(Log.INFO,"CodeUtil", "compareAppVersion - currentList.size: "
+                + currentList.size() + ", apiList.size: " + apiList.size());
+
+        for (int i = 0; i < size; i++) {
+            final int current = integerParseInt(currentList.get(i));
+            final int counterpart = integerParseInt(apiList.get(i));
+            LogWrapper.showLog(Log.INFO,"CodeUtil", "compareAppVersion - current: "
+                    + current + ", counterpart: " + counterpart);
+            if (counterpart > current) {
+                isUpToDate = false;
+                break;
+            }
+        }
+
+        return isUpToDate;
+    }
+
+    private static int integerParseInt(String input) {
+        try {
+            return Integer.parseInt(input);
+        }
+        catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+
 }
