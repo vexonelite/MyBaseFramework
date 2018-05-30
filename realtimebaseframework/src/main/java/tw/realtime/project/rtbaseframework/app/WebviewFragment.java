@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.ValueCallback;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -184,14 +185,14 @@ public class WebviewFragment extends BaseFragment {
         WebSettings settings = mWebView.getSettings();
         // Use WideViewport and Zoom out if there is no viewport defined
         settings.setUseWideViewPort(true);
-        settings.setLoadWithOverviewMode(true);
+        settings.setLoadWithOverviewMode(true); // default is false
         settings.setAllowFileAccess(true);
         // Enable pinch to zoom without the zoom buttons
-        settings.setBuiltInZoomControls(true);
+        settings.setBuiltInZoomControls(true); // default is false
         // Hide the zoom controls for HONEYCOMB+
-        settings.setDisplayZoomControls(false);
+        settings.setDisplayZoomControls(false); // default is true
 
-        //settings.setSupportZoom(true);
+        //settings.setSupportZoom(true); // default is true
         //settings.setSaveFormData(true);
         //settings.setLoadsImagesAutomatically(true);
         //settings.setBlockNetworkImage(false);
@@ -239,19 +240,48 @@ public class WebviewFragment extends BaseFragment {
 //        }
     }
 
+    // https://github.com/datatheorem/HandlingCaching-Android
+    private void clearAllCookiesVersion2 () {
+        CookieManager cookieManager = CookieManager.getInstance();
+        /* to disable all cookies */
+        cookieManager.setAcceptCookie(false);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            /* to disable thirdparty cookies */
+            cookieManager.setAcceptThirdPartyCookies(mWebView, false);
+
+            /* to remove all the cookies of the application from the device */
+            cookieManager.removeAllCookies(mCookieDeleted);
+
+            /* to remove a session specific cookies from the device */
+            cookieManager.removeSessionCookies(mCookieDeleted);
+        }
+        else {
+            /* to remove all the cookies of the application from the device */
+            cookieManager.removeAllCookie();
+            /* to remove a session specific cookies from the device */
+            cookieManager.removeSessionCookie();
+        }
+    }
+
+    /* the callback method */
+    private ValueCallback<Boolean> mCookieDeleted = new ValueCallback<Boolean>() {
+        @Override
+        public void onReceiveValue(Boolean value) {
+            LogWrapper.showLog(Log.INFO, getLogTag(), "cookies deleted");
+            // do whatever you want to do after the cookie is deleted; eg : reload tew page etc.
+        }
+    };
+
     /**
      * 清除 Webview 的 Cookies
      */
     private void clearAllCookies () {
-        //remove cookie before loadUrl
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            //MyLog.d(getLogTag(), "Using clearAllCookies code for API >=" + String.valueOf(Build.VERSION_CODES.LOLLIPOP));
             CookieManager.getInstance().removeAllCookies(null);
             CookieManager.getInstance().flush();
         }
         else {
-            //MyLog.d(getLogTag(), "Using clearAllCookies code for API <" + String.valueOf(Build.VERSION_CODES.LOLLIPOP));
             CookieSyncManager cookieSyncManager = CookieSyncManager.createInstance(getActivity());
             cookieSyncManager.startSync();
             CookieManager cookieManager = CookieManager.getInstance();
@@ -261,6 +291,8 @@ public class WebviewFragment extends BaseFragment {
             cookieSyncManager.sync();
         }
     }
+
+
 
     /**
      * 接受網頁來的 Cookies
