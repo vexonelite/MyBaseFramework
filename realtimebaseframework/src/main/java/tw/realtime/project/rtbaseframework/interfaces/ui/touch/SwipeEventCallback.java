@@ -1,4 +1,4 @@
-package tw.realtime.project.rtbaseframework.interfaces.ui;
+package tw.realtime.project.rtbaseframework.interfaces.ui.touch;
 
 
 import tw.realtime.project.rtbaseframework.enumerations.SwipeDirection;
