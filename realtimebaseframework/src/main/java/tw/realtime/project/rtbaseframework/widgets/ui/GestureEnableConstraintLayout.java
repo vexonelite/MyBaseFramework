@@ -13,9 +13,9 @@ import android.view.WindowManager;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.enumerations.SwipeDirection;
-import tw.realtime.project.rtbaseframework.interfaces.ui.DoubleTapEventCallback;
-import tw.realtime.project.rtbaseframework.interfaces.ui.SingleTapEventCallback;
-import tw.realtime.project.rtbaseframework.interfaces.ui.SwipeEventCallback;
+import tw.realtime.project.rtbaseframework.interfaces.ui.touch.DoubleTapEventCallback;
+import tw.realtime.project.rtbaseframework.interfaces.ui.touch.SingleTapEventCallback;
+import tw.realtime.project.rtbaseframework.interfaces.ui.touch.SwipeEventCallback;
 
 
 /**
