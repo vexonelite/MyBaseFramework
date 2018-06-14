@@ -31,3 +31,16 @@
 -dontwarn org.conscrypt.**
 # A resource is loaded with a relative path so the package of this class must be preserved.
 -keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+
+
+# Need for retrofit2
+# Retain generic type information for use by reflection by converters and adapters.
+-keepattributes Signature
+
+# Retain service method parameters.
+-keepclassmembers,allowshrinking,allowobfuscation interface * {
+    @retrofit2.http.* <methods>;
+}
+
+# Ignore annotation used for build tooling.
+-dontwarn org.c
