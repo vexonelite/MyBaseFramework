@@ -23,7 +23,6 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
     @NonNull
     public abstract K onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType);
 
-
     public abstract void onBindViewHolder(@NonNull K holder, int position);
 
     @Override
@@ -41,9 +40,6 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
      * @return
      */
     public int getRealDataCount () {
-        if ( (null == mData) || (mData.isEmpty()) ) {
-            return 0;
-        }
         return mData.size();
     }
 
@@ -53,7 +49,7 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
      * @return 對應的資料
      */
     public V getObjectAtPosition (int position) {
-        if ((null == mData) || (mData.isEmpty()) || (position < 0) || (position >= mData.size()) ) {
+        if ((mData.isEmpty()) || (position < 0) || (position >= mData.size()) ) {
             return null;
         }
         return mData.get(position);
@@ -65,7 +61,7 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
      * @param defaultNotify 是否執行 notifyItemRangeInserted()
      */
     public void appendNewDataSet(final List<V> data, boolean defaultNotify) {
-        if ( (null == mData) || (null == data) ) {
+        if (null == data) {
             return;
         }
         final int size = data.size();
@@ -85,7 +81,7 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
      * @param defaultNotify 是否執行 notifyItemRangeInserted()
      */
     public void appendNewDataSetToTheTop (final List<V> data, boolean defaultNotify) {
-        if ( (null == mData) || (null == data) ) {
+        if (null == data) {
             return;
         }
         final int size = data.size();
@@ -104,7 +100,7 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
      * @param defaultNotify 是否執行 notifyItemRangeRemoved()
      */
     public void removeAllExistingData(boolean defaultNotify) {
-        if ( (null == mData) || (mData.isEmpty()) ) {
+        if (mData.isEmpty()) {
             return;
         }
         final int size = mData.size();
@@ -122,7 +118,7 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
      * @param defaultNotify 是否執行 notifyItemInserted()
      */
     public void appendNewDataToTheEnd(V entity, boolean defaultNotify) {
-        if ( (null == mData) || (null == entity) ) {
+        if (null == entity) {
             return;
         }
         final int position = mData.size();
@@ -141,7 +137,7 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
      * @param defaultNotify 是否執行 notifyItemInserted()
      */
     public void addNewDataAtPosition(int position, V entity, boolean defaultNotify) {
-        if ( (null == mData) || (null == entity) ) {
+        if (null == entity) {
             return;
         }
         synchronized (mLock) {
@@ -158,14 +154,19 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
      * @param defaultNotify 是否執行 notifyItemRemoved()
      */
     public void removeSpecifiedData (V entity, boolean defaultNotify) {
-        if ( (null == mData) || (mData.isEmpty()) || (null == entity) ) {
+        if ( (mData.isEmpty()) || (null == entity) ) {
             return;
         }
         final int position = mData.indexOf(entity);
-        if (position < 0) {
+        if ( (position < 0) || (position >= mData.size()) ) {
             return;
         }
-        removeDataAtPosition(position, defaultNotify);
+        synchronized (mLock) {
+            mData.remove(position);
+        }
+        if (defaultNotify) {
+            notifyItemRemoved(position);
+        }
     }
 
     /**
@@ -174,7 +175,7 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
      * @param defaultNotify 是否執行 notifyItemRemoved()
      */
     public void removeDataAtPosition(final int position, boolean defaultNotify) {
-        if ( (null == mData) || (position < 0) || (position >= mData.size()) ) {
+        if ( (mData.isEmpty()) || (position < 0) || (position >= mData.size()) ) {
             return;
         }
         synchronized (mLock) {
@@ -192,7 +193,7 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
      * @param defaultNotify 是否執行 notifyItemMoved
      */
     public void swapDataFromAtoB (int fromPosition, int toPosition, boolean defaultNotify) {
-        if ( (null == mData) || (mData.isEmpty()) || (fromPosition == toPosition)
+        if ( (mData.isEmpty()) || (fromPosition == toPosition)
                 || (fromPosition < 0) || (fromPosition >= mData.size())
                 || (toPosition < 0) || (toPosition >= mData.size()) ) {
             return;
@@ -211,7 +212,7 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
      * @return
      */
     public int getIndexOfObject(V entity) {
-        if ( (null == mData) || (mData.isEmpty()) || (null == entity) ) {
+        if ( (mData.isEmpty()) || (null == entity) ) {
             return -1;
         }
         return mData.indexOf(entity);
