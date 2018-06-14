@@ -10,9 +10,9 @@ import java.util.Map;
 import java.util.Set;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
-import tw.realtime.project.rtbaseframework.api.commons.ApiDataBuilder;
 import tw.realtime.project.rtbaseframework.api.commons.BaseApiData;
 import tw.realtime.project.rtbaseframework.interfaces.CalendarEvent;
+import tw.realtime.project.rtbaseframework.reactives.ApiMapDataBuilder;
 
 
 public class DateItem extends BaseApiData {
@@ -211,7 +211,7 @@ public class DateItem extends BaseApiData {
                     (currentYear == getYear()) );
     }
 
-    public static class Builder extends ApiDataBuilder {
+    public static class Builder extends ApiMapDataBuilder {
 
         /** (calendar_uuid, CalendarEvent) */
         private Map<String, CalendarEvent> bEventMap;

@@ -2,8 +2,8 @@ package tw.realtime.project.rtbaseframework.sqlites;
 
 import java.util.List;
 
-import tw.realtime.project.rtbaseframework.api.commons.ApiDataBuilder;
 import tw.realtime.project.rtbaseframework.api.commons.BaseApiData;
+import tw.realtime.project.rtbaseframework.reactives.ApiMapDataBuilder;
 
 
 /**
@@ -107,7 +107,7 @@ public class QueryParameter extends BaseApiData {
     }
 
 
-    public static class Builder extends ApiDataBuilder {
+    public static class Builder extends ApiMapDataBuilder {
 
         //private boolean bHasWhereCondition = false;
         private boolean bNeedToSort = false;

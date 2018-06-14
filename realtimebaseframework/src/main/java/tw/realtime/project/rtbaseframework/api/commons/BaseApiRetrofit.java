@@ -8,6 +8,7 @@ import java.util.Map;
 
 import okhttp3.ResponseBody;
 import tw.realtime.project.rtbaseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.reactives.ApiMapDataBuilder;
 
 
 /**
@@ -36,7 +37,7 @@ public abstract class BaseApiRetrofit<T> extends BaseApiData
         mCallback = builder.bCallback;
     }
 
-    public static class BaseBuilder<T> extends ApiDataBuilder {
+    public static class BaseBuilder<T> extends ApiMapDataBuilder {
 
         private AsyncApiCallback<T> bCallback;
         private String bAccessToken;
