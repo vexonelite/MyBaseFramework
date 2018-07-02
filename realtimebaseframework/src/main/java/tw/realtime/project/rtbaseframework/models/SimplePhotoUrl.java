@@ -2,7 +2,7 @@ package tw.realtime.project.rtbaseframework.models;
 
 import android.net.Uri;
 
-import tw.realtime.project.rtbaseframework.interfaces.PhotoUrl;
+import tw.realtime.project.rtbaseframework.interfaces.ui.view.PhotoUrl;
 
 
 /**
