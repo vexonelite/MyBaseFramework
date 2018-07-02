@@ -5,6 +5,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
@@ -19,6 +20,7 @@ import tw.realtime.project.rtbaseframework.enumerations.LiveDataState;
 public abstract class BaseMasterDetailViewModel<T, R> extends BaseObjectViewModel<T> {
 
     private MutableLiveData<R> mDetailLiveData;
+    @Deprecated
     private MutableLiveData<LiveDataState> mDetailStateLiveData;
     private MutableLiveData<AsyncApiException> mDetailErrorLiveData;
 
@@ -38,6 +40,7 @@ public abstract class BaseMasterDetailViewModel<T, R> extends BaseObjectViewMode
     }
 
     @MainThread
+    @Deprecated
     public void resetDetailLiveData () {
         if (null != mDetailLiveData) {
             // this way poses problem for some case
@@ -48,16 +51,16 @@ public abstract class BaseMasterDetailViewModel<T, R> extends BaseObjectViewMode
     }
 
     @MainThread
-    protected void setDetailLiveData (@NonNull R detail) {
+    protected void setDetailLiveData (@Nullable R detail) {
         if (null != mDetailLiveData) {
             mDetailLiveData.setValue(detail);
             LogWrapper.showLog(Log.WARN, getLogTag(), "setDetailLiveData");
         }
     }
 
-
-
+    
     @MainThread
+    @Deprecated
     public LiveData<LiveDataState> getDetailStateLiveData () {
         if (null == mDetailStateLiveData) {
             mDetailStateLiveData = new MutableLiveData<>();
@@ -67,6 +70,7 @@ public abstract class BaseMasterDetailViewModel<T, R> extends BaseObjectViewMode
     }
 
     @MainThread
+    @Deprecated
     public void resetDetailStateLiveData () {
         if (null != mDetailStateLiveData) {
             // this way poses problem for some case
@@ -77,6 +81,7 @@ public abstract class BaseMasterDetailViewModel<T, R> extends BaseObjectViewMode
     }
 
     @MainThread
+    @Deprecated
     protected void setDetailStateLiveData (@NonNull LiveDataState dataState) {
         if (null != mDetailStateLiveData) {
             mDetailStateLiveData.setValue(dataState);
@@ -94,6 +99,7 @@ public abstract class BaseMasterDetailViewModel<T, R> extends BaseObjectViewMode
     }
 
     @MainThread
+    @Deprecated
     public void resetDetailErrorLiveData () {
         if (null != mDetailErrorLiveData) {
             // this way poses problem for some case
@@ -104,7 +110,7 @@ public abstract class BaseMasterDetailViewModel<T, R> extends BaseObjectViewMode
     }
 
     @MainThread
-    protected void setDetailErrorLiveData (@NonNull AsyncApiException exception) {
+    protected void setDetailErrorLiveData (@Nullable AsyncApiException exception) {
         if (null != mDetailErrorLiveData) {
             mDetailErrorLiveData.setValue(exception);
         }

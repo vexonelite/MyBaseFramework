@@ -6,6 +6,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import io.reactivex.disposables.Disposable;
@@ -28,6 +29,7 @@ public abstract class BaseObjectViewModel<T> extends AndroidViewModel {
     private MutableLiveData<AsyncApiException> mErrorLiveData;
 
     private MutableLiveData<T> mDataLiveData;
+    @Deprecated
     private MutableLiveData<LiveDataState> mStateLiveData;
 
     private Disposable mDisposable;
@@ -35,6 +37,11 @@ public abstract class BaseObjectViewModel<T> extends AndroidViewModel {
 
     protected BaseObjectViewModel(@NonNull Application application) {
         super(application);
+    }
+
+
+    protected String getLogTag () {
+        return this.getClass().getSimpleName();
     }
 
 
@@ -53,6 +60,7 @@ public abstract class BaseObjectViewModel<T> extends AndroidViewModel {
         }
     }
 
+
     @MainThread
     public LiveData<T> getDataLiveData () {
         if (null == mDataLiveData) {
@@ -63,6 +71,7 @@ public abstract class BaseObjectViewModel<T> extends AndroidViewModel {
     }
 
     @MainThread
+    @Deprecated
     public void resetDataLiveData () {
         if (null != mDataLiveData) {
             // this way poses problem for some case
@@ -73,7 +82,7 @@ public abstract class BaseObjectViewModel<T> extends AndroidViewModel {
     }
 
     @MainThread
-    protected void setDataLiveData (@NonNull T master) {
+    protected void setDataLiveData (@Nullable T master) {
         if (null != mDataLiveData) {
             mDataLiveData.setValue(master);
             LogWrapper.showLog(Log.WARN, getLogTag(), "setDataLiveData");
@@ -81,8 +90,8 @@ public abstract class BaseObjectViewModel<T> extends AndroidViewModel {
     }
 
 
-
     @MainThread
+    @Deprecated
     public LiveData<LiveDataState> getStateLiveData () {
         if (null == mStateLiveData) {
             mStateLiveData = new MutableLiveData<>();
@@ -92,6 +101,7 @@ public abstract class BaseObjectViewModel<T> extends AndroidViewModel {
     }
 
     @MainThread
+    @Deprecated
     public void resetStateLiveData () {
         if (null != mStateLiveData) {
             // this way poses problem for some case
@@ -102,13 +112,13 @@ public abstract class BaseObjectViewModel<T> extends AndroidViewModel {
     }
 
     @MainThread
+    @Deprecated
     protected void setStateLiveData (@NonNull LiveDataState dataState) {
         if (null != mStateLiveData) {
             mStateLiveData.setValue(dataState);
             LogWrapper.showLog(Log.WARN, getLogTag(), "resetListOfData");
         }
     }
-
 
 
     @MainThread
@@ -120,6 +130,7 @@ public abstract class BaseObjectViewModel<T> extends AndroidViewModel {
     }
 
     @MainThread
+    @Deprecated
     public void resetErrorLiveData () {
         if (null != mErrorLiveData) {
             // this way poses problem for some case
@@ -130,12 +141,11 @@ public abstract class BaseObjectViewModel<T> extends AndroidViewModel {
     }
 
     @MainThread
-    protected void setErrorLiveData (@NonNull AsyncApiException exception) {
+    protected void setErrorLiveData (@Nullable AsyncApiException exception) {
         if (null != mErrorLiveData) {
             mErrorLiveData.setValue(exception);
         }
     }
-
 
 
     @MainThread
@@ -147,6 +157,7 @@ public abstract class BaseObjectViewModel<T> extends AndroidViewModel {
     }
 
     @MainThread
+    @Deprecated
     public void resetTaskState () {
         if (null != mTaskStateLiveData) {
             // this way poses problem for some case
@@ -157,19 +168,10 @@ public abstract class BaseObjectViewModel<T> extends AndroidViewModel {
     }
 
     @MainThread
-    protected void setTaskState (@NonNull TaskState taskState) {
+    protected void setTaskState (@Nullable TaskState taskState) {
         if (null != mTaskStateLiveData) {
             mTaskStateLiveData.setValue(taskState);
         }
     }
-
-
-
-    protected String getLogTag () {
-        return this.getClass().getSimpleName();
-    }
-
-
-
 
 }
