@@ -13,9 +13,9 @@ import java.util.List;
  */
 public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<K> {
 
-    public static final int TYPE_ITEM = 1;
-    public static final int TYPE_HEADER = 2;
-    public static final int TYPE_LOADER = 3;
+//    public static final int TYPE_ITEM = 1;
+//    public static final int TYPE_HEADER = 2;
+//    public static final int TYPE_LOADER = 3;
 
     private final byte[] mLock = new byte[0];
     private List<V> mData = new ArrayList<V>();

@@ -58,7 +58,7 @@ public abstract class BaseMasterDetailViewModel<T, R> extends BaseObjectViewMode
         }
     }
 
-    
+
     @MainThread
     @Deprecated
     public LiveData<LiveDataState> getDetailStateLiveData () {
