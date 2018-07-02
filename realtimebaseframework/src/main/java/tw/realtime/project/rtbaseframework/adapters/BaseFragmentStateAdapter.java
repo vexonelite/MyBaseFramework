@@ -24,6 +24,7 @@ import tw.realtime.project.rtbaseframework.LogWrapper;
  * This allows the pager to hold on to much less memory associated with each visited page
  * as compared to FragmentPagerAdapter at the cost of potentially more overhead when switching between pages.
  */
+@Deprecated
 public abstract class BaseFragmentStateAdapter<T> extends FragmentStatePagerAdapter {
 
     private final byte[] mLock = new byte[0];

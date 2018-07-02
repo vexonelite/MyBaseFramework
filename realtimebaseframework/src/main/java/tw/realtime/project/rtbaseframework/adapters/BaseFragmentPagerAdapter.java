@@ -26,6 +26,7 @@ import tw.realtime.project.rtbaseframework.LogWrapper;
  * since fragment instances can hold on to an arbitrary amount of state.
  * For larger sets of pages, consider FragmentStatePagerAdapter.
  */
+@Deprecated
 public abstract class BaseFragmentPagerAdapter<T> extends FragmentPagerAdapter {
 
     private final byte[] mLock = new byte[0];
