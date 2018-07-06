@@ -1,7 +1,6 @@
 package tw.realtime.project.rtbaseframework.architectures.viewmodels;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.MainThread;
@@ -9,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import io.reactivex.disposables.Disposable;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.api.commons.AsyncApiException;
 import tw.realtime.project.rtbaseframework.enumerations.LiveDataState;
@@ -20,7 +18,7 @@ import tw.realtime.project.rtbaseframework.enumerations.TaskState;
  * Created by vexonelite on 2018/03/22.
  */
 
-public abstract class BaseObjectViewModel<T> extends AndroidViewModel {
+public abstract class BaseObjectViewModel<T> extends BaseRxViewModel {
 
     /** Used to decide if we have to show a progress dialog */
     private MutableLiveData<TaskState> mTaskStateLiveData;
@@ -32,32 +30,9 @@ public abstract class BaseObjectViewModel<T> extends AndroidViewModel {
     @Deprecated
     private MutableLiveData<LiveDataState> mStateLiveData;
 
-    private Disposable mDisposable;
-
 
     protected BaseObjectViewModel(@NonNull Application application) {
         super(application);
-    }
-
-
-    protected String getLogTag () {
-        return this.getClass().getSimpleName();
-    }
-
-
-    protected void setDisposable (Disposable disposable) {
-        mDisposable = disposable;
-    }
-
-    protected void localDisposableIfNeeded () {
-        if (null != mDisposable) {
-            if (!mDisposable.isDisposed()) {
-                mDisposable.dispose();
-                LogWrapper.showLog(Log.WARN, getLogTag(), "localDisposableIfNeeded - dispose");
-            }
-            mDisposable = null;
-            LogWrapper.showLog(Log.WARN, getLogTag(), "localDisposableIfNeeded - reset");
-        }
     }
 
 
