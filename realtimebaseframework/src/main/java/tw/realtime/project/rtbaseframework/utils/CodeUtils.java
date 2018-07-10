@@ -9,7 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
@@ -122,15 +122,18 @@ public class CodeUtils {
     }
 
     /**
+     * Deprecated!
+     * <p>
+     * Please use "ContextCompat.getColor(@NonNull Context context, @ColorRes int colorResId)" instead
+     * <p>
      * 將 R.color.resID 轉成 int color
      * @param context
-     * @param resID
+     * @param colorResId
      * @return
      */
-    public static int getColorFromResourceId (Context context, int resID) {
-        return (Build.VERSION.SDK_INT < 23)
-                ? context.getResources().getColor(resID)
-                : context.getResources().getColor(resID, null);
+    @Deprecated
+    public static int getColorFromResourceId (@NonNull Context context, @ColorRes int colorResId) {
+        return ContextCompat.getColor(context, colorResId);
     }
 
     /**

@@ -1,13 +1,16 @@
 package tw.realtime.project.rtbaseframework.app;
 
 import android.app.Activity;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -273,4 +276,47 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+
+    protected void conductNavigation (@NonNull BaseFragment fragment,
+                                      @IdRes int fragmentContainerId) {
+        conductNavigation(fragment, new DefaultOnViewDestroyCallback(), fragmentContainerId);
+    }
+
+
+    protected void conductNavigation (@NonNull BaseFragment fragment,
+                                      @Nullable onViewDestroyListener callback,
+                                      @IdRes int fragmentContainerId) {
+
+        if (!isAllowedToCommitFragmentTransaction() || (getHasBeenShroudedByChildFlag()) ) {
+            return;
+        }
+
+        fragment.setonViewDestroyListener(callback);
+        setMenuVisibility(false);
+        setHasBeenShroudedByChildFlag(true);
+
+        BaseActivity activity = (BaseActivity) getActivity();
+        onConductNavigationExecuted(activity);
+        activity.replaceOrShroudFragment(fragment, false, fragmentContainerId);
+    }
+
+    private class DefaultOnViewDestroyCallback implements BaseFragment.onViewDestroyListener {
+        @Override
+        public void onDestroyViewGetCalled() {
+            setMenuVisibility(true);
+            setHasBeenShroudedByChildFlag(false);
+
+            if ( (isAdded()) && (null != getActivity()) ) {
+                onDestroyViewExecuted((BaseActivity) getActivity());
+            }
+        }
+    }
+
+    protected void onConductNavigationExecuted(@NonNull BaseActivity activity) {
+
+    }
+
+    protected void onDestroyViewExecuted(@NonNull BaseActivity activity) {
+
+    }
 }
