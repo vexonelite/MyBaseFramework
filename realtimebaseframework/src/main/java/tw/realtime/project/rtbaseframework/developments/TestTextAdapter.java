@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import tw.realtime.project.rtbaseframework.R;
 import tw.realtime.project.rtbaseframework.adapters.BaseRecyclerViewAdapter;
 import tw.realtime.project.rtbaseframework.interfaces.HolderCellClickListener;
-import tw.realtime.project.rtbaseframework.widgets.BaseItemClicker;
+import tw.realtime.project.rtbaseframework.widgets.CommonItemWrapper;
 
 /**
  * Created by vexonelite on 2018/3/9.
@@ -38,10 +38,10 @@ public class TestTextAdapter
         holder.onBind(position, text, new MyItemClicker(text, position));
     }
 
-    private class MyItemClicker extends BaseItemClicker<String> {
+    private class MyItemClicker extends CommonItemWrapper<String> implements View.OnClickListener{
 
-        private MyItemClicker (String text, int position) {
-            super(text, position);
+        private MyItemClicker(@NonNull String object, int position) {
+            super(object, "", position);
         }
 
         @Override

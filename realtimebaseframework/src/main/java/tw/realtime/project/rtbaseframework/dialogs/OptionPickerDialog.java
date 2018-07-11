@@ -22,6 +22,7 @@ import tw.realtime.project.rtbaseframework.app.BaseDialogFragment;
 import tw.realtime.project.rtbaseframework.interfaces.OptionDelegate;
 import tw.realtime.project.rtbaseframework.utils.CodeUtils;
 import tw.realtime.project.rtbaseframework.widgets.BaseItemClicker;
+import tw.realtime.project.rtbaseframework.widgets.CommonItemClicker;
 
 
 public class OptionPickerDialog extends BaseDialogFragment {
@@ -226,7 +227,7 @@ public class OptionPickerDialog extends BaseDialogFragment {
 			final int color = (isInSelectedList(item)) ? mSelectedColor : mNormalColor;
 			mTitleView.setBackgroundColor(color);
 			mContainer.setOnClickListener(
-					new BaseItemClicker<OptionDelegate>(item, position) {
+					new CommonItemClicker<OptionDelegate>(item, "", position) {
 						@Override
 						public void onClick(View view) {
 							view.setEnabled(false);
