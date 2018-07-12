@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -137,14 +138,26 @@ public abstract class BaseFragment extends Fragment {
                 negativeCallback);
     }
 
-    /**
-     * 設定 ActionBar 的標題，並決定Icon 是 "<" 或 App Icon
-     * @param title
-     * @param homeButtonEnabledFlag
-     * @param homeAsUpEnabledFlag
-     */
-    protected void setUpActionBar (String title, boolean homeButtonEnabledFlag, boolean homeAsUpEnabledFlag) {
-        if ( (null == title) || (title.isEmpty()) || (!isAdded()) || (hasBeenShroudedByChild) ) {
+
+    private boolean forbidSetupActionBar () {
+        return (!isAdded()) || hasBeenShroudedByChild;
+    }
+
+    protected void setUpActionBarHomeAsUpIndicator (@DrawableRes final int iconResId) {
+        if (forbidSetupActionBar()) {
+            return;
+        }
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (null == activity) {
+            return;
+        }
+        ActionBar actionBar = activity.getSupportActionBar();
+        if (null != actionBar) {
+            actionBar.setHomeAsUpIndicator(iconResId);
+        }
+    }
+    protected void setUpActionBarTitle (String title) {
+        if ( (null == title) || (forbidSetupActionBar()) ) {
             return;
         }
         //LogWrapper.showLog(Log.INFO, getLogTag(), "setUpActionBar");
@@ -154,26 +167,74 @@ public abstract class BaseFragment extends Fragment {
             return;
         }
         ActionBar actionBar = activity.getSupportActionBar();
-        boolean isTargetActivity = isTargetActivity();
         if (null != actionBar) {
             actionBar.setTitle(title);
-            if (!isTargetActivity) {
-                actionBar.setHomeButtonEnabled(homeButtonEnabledFlag);
-                actionBar.setDisplayHomeAsUpEnabled(homeAsUpEnabledFlag);
-            }
-            else {
-                actionBar.setDisplayHomeAsUpEnabled(homeAsUpEnabledFlag);
-            }
+        }
+    }
+
+    protected void setUpActionBarTitleAndDisplayHomeAsUp (String title, boolean homeAsUpEnabledFlag) {
+        if ( (null == title) || (forbidSetupActionBar()) ) {
+            return;
+        }
+        //LogWrapper.showLog(Log.INFO, getLogTag(), "setUpActionBar");
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (null == activity) {
+            return;
+        }
+        ActionBar actionBar = activity.getSupportActionBar();
+        if (null != actionBar) {
+            actionBar.setTitle(title);
+            actionBar.setDisplayHomeAsUpEnabled(homeAsUpEnabledFlag);
         }
     }
 
     /**
-     * 讓 Subclass的 Fragment 有機會決定這件事
-     * @return 是不是 Fragment attached 的 Activity
+     * 設定 ActionBar 的標題，並決定Icon 是 "<" 或 App Icon
+     * @param title
+     * @param homeButtonEnabledFlag
+     * @param homeAsUpEnabledFlag
      */
-    protected boolean isTargetActivity() {
-        return false;
+    protected void setUpActionBar (String title, boolean homeButtonEnabledFlag, boolean homeAsUpEnabledFlag) {
+        if ( (null == title) || (forbidSetupActionBar()) ) {
+            return;
+        }
+        //LogWrapper.showLog(Log.INFO, getLogTag(), "setUpActionBar");
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (null == activity) {
+            return;
+        }
+        ActionBar actionBar = activity.getSupportActionBar();
+        if (null != actionBar) {
+            actionBar.setTitle(title);
+            actionBar.setHomeButtonEnabled(homeButtonEnabledFlag);
+            actionBar.setDisplayHomeAsUpEnabled(homeAsUpEnabledFlag);
+        }
     }
+
+    protected void hideActionBar () {
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (null == activity) {
+            return;
+        }
+        ActionBar actionBar = activity.getSupportActionBar();
+        if (null != actionBar) {
+            actionBar.hide();
+        }
+    }
+
+    protected void showActionBar () {
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (null == activity) {
+            return;
+        }
+        ActionBar actionBar = activity.getSupportActionBar();
+        if (null != actionBar) {
+            actionBar.show();
+        }
+    }
+
 
     /**
      * 將軟鍵盤隱藏

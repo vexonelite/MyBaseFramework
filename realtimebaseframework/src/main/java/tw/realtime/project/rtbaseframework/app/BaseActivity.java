@@ -6,10 +6,14 @@ import android.content.DialogInterface;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -28,6 +32,8 @@ import tw.realtime.project.rtbaseframework.dialogs.ProgressDialog;
  * Created by vexonelite on 2017/6/2.
  */
 public abstract class BaseActivity extends AppCompatActivity {
+
+    private Toolbar mToolbar;
 
     private ProgressDialog mProgressDialog;
 
@@ -367,6 +373,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (null == toolbar) {
             return;
         }
+        mToolbar = toolbar;
 
         if (enableDefault) {
             try {
@@ -380,6 +387,50 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         setSupportActionBar(toolbar);
+    }
+
+    public void setToolbarTextColor (@ColorInt final int textColor) {
+        try {
+            if (null != mToolbar) {
+                mToolbar.setTitleTextColor(textColor);
+            }
+        }
+        catch (Exception e) {
+            LogWrapper.showLog(Log.ERROR, BaseActivity.class.getSimpleName(), "Exception on setToolbarTextColor", e);
+        }
+    }
+
+    public void setToolbarTextColorResourceId (@ColorRes final int textColorResId) {
+        try {
+            if (null != mToolbar) {
+                mToolbar.setTitleTextColor(ContextCompat.getColor(this, textColorResId) );
+            }
+        }
+        catch (Exception e) {
+            LogWrapper.showLog(Log.ERROR, BaseActivity.class.getSimpleName(), "Exception on setToolbarTextColor", e);
+        }
+    }
+
+    public void setToolbarBackgroundColor (@ColorInt final int backgroundColor) {
+        try {
+            if (null != mToolbar) {
+                mToolbar.setBackgroundColor(backgroundColor);
+            }
+        }
+        catch (Exception e) {
+            LogWrapper.showLog(Log.ERROR, BaseActivity.class.getSimpleName(), "Exception on setToolbarTextColor", e);
+        }
+    }
+
+    public void setToolbarBackgroundDrawable (@DrawableRes final int backgroundDrawable) {
+        try {
+            if (null != mToolbar) {
+                mToolbar.setBackgroundResource(backgroundDrawable);
+            }
+        }
+        catch (Exception e) {
+            LogWrapper.showLog(Log.ERROR, BaseActivity.class.getSimpleName(), "Exception on setToolbarTextColor", e);
+        }
     }
 
     public void haveAudioManagerAlterStreamVolume (boolean hasRaised) {
