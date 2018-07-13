@@ -214,6 +214,9 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected void hideActionBar () {
+        if (forbidSetupActionBar()) {
+            return;
+        }
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (null == activity) {
             return;
@@ -225,6 +228,9 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected void showActionBar () {
+        if (forbidSetupActionBar()) {
+            return;
+        }
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (null == activity) {
             return;

@@ -2,6 +2,7 @@ package tw.realtime.project.rtbaseframework.app;
 
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -52,14 +53,20 @@ public class BaseDialogFragment extends DialogFragment {
 	 * https://gist.github.com/ishitcno1/9408188
 	 */
 	protected void setWindowStyle () {
-		
 		Window window = getDialog().getWindow();
 		WindowManager.LayoutParams params = window.getAttributes();
-		
+
 		// Use dimAmount to control the amount of dim
 		params.dimAmount = 0.6f;
 		window.setAttributes(params);
 		window.setBackgroundDrawableResource(android.R.color.transparent);
+		if (doesLayoutNeedToBeMatchParent()) {
+			window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+		}
+	}
+
+	protected boolean doesLayoutNeedToBeMatchParent () {
+		return false;
 	}
 }
 
