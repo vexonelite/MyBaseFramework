@@ -6,7 +6,7 @@ import android.view.View;
 
 
 public abstract class CommonItemClicker<T> extends CommonItemWrapper<T> implements View.OnClickListener {
-    public CommonItemClicker(@NonNull T object, @Nullable String action, int position) {
+    public CommonItemClicker(@NonNull T object, @NonNull String action, int position) {
         super(object, action, position);
     }
 }

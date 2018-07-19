@@ -1,6 +1,8 @@
 package tw.realtime.project.rtbaseframework.interfaces.ui.action;
 
 
+import android.support.annotation.NonNull;
+
 import tw.realtime.project.rtbaseframework.enumerations.ObjectEdit;
 
 /**
@@ -8,5 +10,5 @@ import tw.realtime.project.rtbaseframework.enumerations.ObjectEdit;
  */
 
 public interface ObjectEditDelegate<T> {
-    void onObjectEdited(ObjectEdit what, T object);
+    void onObjectEdited(@NonNull ObjectEdit what, T object);
 }

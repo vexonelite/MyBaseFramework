@@ -1,7 +1,6 @@
 package tw.realtime.project.rtbaseframework.widgets;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 
 public abstract class CommonItemWrapper<T> {
@@ -10,7 +9,9 @@ public abstract class CommonItemWrapper<T> {
 
     private long mLastClickTime = 0;
     private final int mPosition;
+    @NonNull
     private final String mAction;
+    @NonNull
     private final T mObject;
 
 
@@ -18,7 +19,7 @@ public abstract class CommonItemWrapper<T> {
      * Test if the time difference between the current click event and the last click event
      * exceeds the pre-defined threshold.
      */
-    protected boolean canHandleClickEvent() {
+    final protected boolean canHandleClickEvent() {
         long currentTime = System.currentTimeMillis();
         if ( (currentTime - mLastClickTime) > MIN_CLICK_TIME_DIFFERENCE) {
             mLastClickTime = currentTime;
@@ -29,22 +30,23 @@ public abstract class CommonItemWrapper<T> {
         }
     }
 
-    public CommonItemWrapper(@NonNull T object, @Nullable String action, int position) {
+    public CommonItemWrapper(@NonNull T object, @NonNull String action, int position) {
         mObject = object;
-        mAction = (null != action) ? action : "";
+        mAction = action;
         mPosition = position;
     }
 
-    public int getPosition () {
+    final public int getPosition () {
         return mPosition;
     }
 
-    public String getAction () {
+    @NonNull
+    final public String getAction () {
         return mAction;
     }
 
     @NonNull
-    public T getDataObject () {
+    final public T getDataObject () {
         return mObject;
     }
 }
