@@ -47,7 +47,7 @@ public class TestTextAdapter
         @Override
         public void onClick(View view) {
             if (null != mHolderCellClickCallback) {
-                mHolderCellClickCallback.onHolderCellClicked(getDataObject(), getPosition());
+                mHolderCellClickCallback.onHolderCellClicked(getDataObject(), getAction(), getPosition());
             }
         }
     }

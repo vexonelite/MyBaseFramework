@@ -21,7 +21,6 @@ import tw.realtime.project.rtbaseframework.adapters.BaseRecyclerViewAdapter;
 import tw.realtime.project.rtbaseframework.app.BaseDialogFragment;
 import tw.realtime.project.rtbaseframework.interfaces.OptionDelegate;
 import tw.realtime.project.rtbaseframework.utils.CodeUtils;
-import tw.realtime.project.rtbaseframework.widgets.BaseItemClicker;
 import tw.realtime.project.rtbaseframework.widgets.CommonItemClicker;
 
 
