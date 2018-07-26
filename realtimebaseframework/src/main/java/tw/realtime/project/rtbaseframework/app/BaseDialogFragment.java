@@ -1,5 +1,6 @@
 package tw.realtime.project.rtbaseframework.app;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
 import android.view.ViewGroup;
@@ -25,7 +26,8 @@ public class BaseDialogFragment extends DialogFragment {
          * @param dialogFrag    本對話框實體
          * @param dialogAction  使用者所點擊的按鈕結果
          */
-        void onNotification(DialogFragment dialogFrag, DialogAction dialogAction);
+        void onNotification(@NonNull DialogFragment dialogFrag,
+							@NonNull DialogAction dialogAction);
     }
 
     protected String getLogTag () {

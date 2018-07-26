@@ -59,7 +59,6 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         try {
             if (null != mCallback) {
                 mCallback.onDestroyViewGetCalled();
@@ -68,6 +67,7 @@ public abstract class BaseFragment extends Fragment {
             // 防止閃退；當 mCallback 中做了某些會閃退的事情
             LogWrapper.showLog(Log.ERROR, getLogTag(), "onDestroyView", e);
         }
+        super.onDestroyView();
     }
 
     @Override
