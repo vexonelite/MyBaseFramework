@@ -1,5 +1,6 @@
 package tw.realtime.project.rtbaseframework.models;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.json.JSONObject;
@@ -31,11 +32,13 @@ public class DistrictData implements OptionDelegate<DistrictData> {
         return (null != districtName) && (null != title) && (districtName.equals(title));
     }
 
+    @NonNull
     @Override
     public String getOptionTitle() {
         return districtName;
     }
 
+    @NonNull
     @Override
     public DistrictData getHeldObject() {
         return this;
