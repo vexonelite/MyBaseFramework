@@ -1,5 +1,6 @@
 package tw.realtime.project.rtbaseframework.api.commons;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.util.concurrent.TimeUnit;
@@ -40,7 +41,7 @@ public class OkHttpUtils {
      */
     private static OkHttpClient getOkHttpClient (boolean enableHttpLoggingInterceptor) {
 
-        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+        final OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(ApiConstants.OkHttpSetting.CONNECTION_TIME, TimeUnit.MILLISECONDS)
                 .readTimeout(ApiConstants.OkHttpSetting.READ_TIMEOUT, TimeUnit.MILLISECONDS)
                 .writeTimeout(ApiConstants.OkHttpSetting.WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
@@ -48,7 +49,7 @@ public class OkHttpUtils {
                 .followSslRedirects(true);
 
         if (enableHttpLoggingInterceptor) {
-            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             builder.addInterceptor(interceptor);
         }
@@ -73,10 +74,10 @@ public class OkHttpUtils {
      * @param apiUrl        Request 的網址
      * @return
      */
-    public static okhttp3.Call generateRequestCall (RequestBody requestBody,
-                                                    String apiUrl,
+    public static okhttp3.Call generateRequestCall (@NonNull RequestBody requestBody,
+                                                    @NonNull String apiUrl,
                                                     boolean enableHttpLoggingInterceptor) {
-        Request request = new Request.Builder()
+        final Request request = new Request.Builder()
                 //.header("Authorization", "Client-ID " + IMGUR_CLIENT_ID)
                 .url(apiUrl)
                 .post(requestBody)
@@ -86,24 +87,34 @@ public class OkHttpUtils {
         return getInstance(enableHttpLoggingInterceptor).newCall(request);
     }
 
-    public static FormBody.Builder getFormBodyBuilder (String key, String outString) {
-        FormBody.Builder formBodyBuilder = new okhttp3.FormBody.Builder();
-        if ( (null != key) && (!key.isEmpty()) && (null != outString) && (!outString.isEmpty()) ) {
+    public static FormBody.Builder getFormBodyBuilder (@NonNull String key, @NonNull String outString) {
+        final FormBody.Builder formBodyBuilder = new okhttp3.FormBody.Builder();
+        //if ( (null != key) && (!key.isEmpty()) && (null != outString) && (!outString.isEmpty()) ) {
+        if ((!key.isEmpty())&& (!outString.isEmpty()) ) {
             formBodyBuilder.add(key, outString);
             LogWrapper.showLog(Log.INFO, "okHttpUtils", "getFormBodyBuilder - (" + key + ", " + outString + ")");
         }
         return formBodyBuilder;
     }
 
-    public static MultipartBody.Builder getMultipartBodyBuilder (String key, String outString) {
-        MultipartBody.Builder multiPartBuilder = new MultipartBody.Builder();
+    public static MultipartBody.Builder getMultipartBodyBuilder (@NonNull String key, @NonNull String outString) {
+        final MultipartBody.Builder multiPartBuilder = new MultipartBody.Builder();
         multiPartBuilder.setType(MultipartBody.FORM);
-        if ( (null != key) && (!key.isEmpty()) && (null != outString) && (!outString.isEmpty()) ) {
+        //if ( (null != key) && (!key.isEmpty()) && (null != outString) && (!outString.isEmpty()) ) {
+        if ((!key.isEmpty())&& (!outString.isEmpty()) ) {
             multiPartBuilder.addFormDataPart(key, outString);
             LogWrapper.showLog(Log.INFO, "okHttpUtils", "getMultipartBodyBuilder - (" + key + ", " + outString + ")");
         }
         return multiPartBuilder;
     }
 
+    public static okhttp3.Call generateHttpGetRequestCall (@NonNull String apiUrl,
+                                                           boolean enableHttpLoggingInterceptor) {
+        final Request request = new Request.Builder()
+                .url(apiUrl)
+                .build();
+        LogWrapper.showLog(Log.INFO, "okHttpUtils", "generateHttpGetRequestCall - apiUrl: " + apiUrl);
+        return getInstance(enableHttpLoggingInterceptor).newCall(request);
+    }
 
 }
