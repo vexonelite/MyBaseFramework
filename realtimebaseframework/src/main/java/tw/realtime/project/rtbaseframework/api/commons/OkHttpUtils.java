@@ -109,12 +109,15 @@ public class OkHttpUtils {
     }
 
     public static okhttp3.Call generateHttpGetRequestCall (@NonNull String apiUrl,
-                                                           boolean enableHttpLoggingInterceptor) {
-        final Request request = new Request.Builder()
-                .url(apiUrl)
-                .build();
+                                                           boolean enableHttpLoggingInterceptor,
+                                                           boolean doesAddContentTypeForJson) {
+        final Request.Builder builder = new Request.Builder()
+                .url(apiUrl);
+        if (doesAddContentTypeForJson) {
+            builder.addHeader("Content-Type", "application/json");
+        }
         LogWrapper.showLog(Log.INFO, "okHttpUtils", "generateHttpGetRequestCall - apiUrl: " + apiUrl);
-        return getInstance(enableHttpLoggingInterceptor).newCall(request);
+        return getInstance(enableHttpLoggingInterceptor).newCall(builder.build());
     }
 
 }
