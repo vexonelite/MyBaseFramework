@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
-import tw.realtime.project.rtbaseframework.adapters.BaseRecyclerViewAdapter;
+import tw.realtime.project.rtbaseframework.adapters.recyclerview.BaseRecyclerViewAdapter;
 import tw.realtime.project.rtbaseframework.app.BaseDialogFragment;
 import tw.realtime.project.rtbaseframework.interfaces.OptionDelegate;
 import tw.realtime.project.rtbaseframework.utils.CodeUtils;

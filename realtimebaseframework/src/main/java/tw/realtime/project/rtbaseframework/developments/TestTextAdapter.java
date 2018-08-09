@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import tw.realtime.project.rtbaseframework.R;
-import tw.realtime.project.rtbaseframework.adapters.BaseRecyclerViewAdapter;
+import tw.realtime.project.rtbaseframework.adapters.recyclerview.BaseRecyclerViewAdapter;
 import tw.realtime.project.rtbaseframework.interfaces.HolderCellClickListener;
 import tw.realtime.project.rtbaseframework.widgets.CommonItemWrapper;
 

@@ -39,7 +39,7 @@ import java.util.List;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.interfaces.ui.view.DescriptionDelegate;
-import tw.realtime.project.rtbaseframework.interfaces.ui.view.TabItemDelegate;
+import tw.realtime.project.rtbaseframework.interfaces.ui.tab.TabItemDelegate;
 import tw.realtime.project.rtbaseframework.widgets.CommonItemWrapper;
 
 /**
