@@ -1,4 +1,4 @@
-package tw.realtime.project.rtbaseframework.adapters;
+package tw.realtime.project.rtbaseframework.adapters.recyclerview;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;

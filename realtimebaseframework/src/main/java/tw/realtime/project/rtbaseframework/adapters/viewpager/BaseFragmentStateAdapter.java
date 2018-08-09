@@ -1,9 +1,9 @@
-package tw.realtime.project.rtbaseframework.adapters;
+package tw.realtime.project.rtbaseframework.adapters.viewpager;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
@@ -16,32 +16,29 @@ import tw.realtime.project.rtbaseframework.LogWrapper;
 
 
 /**
- * Implementation of PagerAdapter that represents each page as a Fragment
- * that is persistently kept in the fragment manager as long as the user can return to the page.
- * <p>
- * This version of the pager is best for use when there are a handful of typically more static fragments
- * to be paged through, such as a set of tabs. The fragment of each page the user visits will be kept in memory,
- * though its view hierarchy may be destroyed when not visible.
- * This can result in using a significant amount of memory
- * since fragment instances can hold on to an arbitrary amount of state.
- * For larger sets of pages, consider FragmentStatePagerAdapter.
+ * Base adapter that has some common features and is set to the ViewPager
+ *
+ * The FragmentStatePagerAdapter is more useful when there are a large number of pages,
+ * working more like a list view. When pages are not visible to the user,
+ * their entire fragment may be destroyed, only keeping the saved state of that fragment.
+ * This allows the pager to hold on to much less memory associated with each visited page
+ * as compared to FragmentPagerAdapter at the cost of potentially more overhead when switching between pages.
  */
 @Deprecated
-public abstract class BaseFragmentPagerAdapter<T> extends FragmentPagerAdapter {
+public abstract class BaseFragmentStateAdapter<T> extends FragmentStatePagerAdapter {
 
     private final byte[] mLock = new byte[0];
     private List<T> mItemSet;
     private SparseArrayCompat<Fragment> mFragmentHolder;
 
 
-    public BaseFragmentPagerAdapter(FragmentManager fm) {
+    public BaseFragmentStateAdapter(FragmentManager fm) {
         super(fm);
         mItemSet = new ArrayList<>();
         mFragmentHolder = new SparseArrayCompat<>();
     }
 
-
-    protected String getLogTag() {
+    protected String getLogTag () {
         return this.getClass().getSimpleName();
     }
 
@@ -67,7 +64,7 @@ public abstract class BaseFragmentPagerAdapter<T> extends FragmentPagerAdapter {
                 mFragmentHolder.put(position, fragment);
             }
             LogWrapper.showLog(Log.INFO, getLogTag(), "instantiateItem - position: " + position
-                    + ", tag: " + fragment.getClass().getSimpleName() );
+            		+ ", tag: " + fragment.getClass().getSimpleName() );
         }
         return holder;
     }
@@ -83,24 +80,18 @@ public abstract class BaseFragmentPagerAdapter<T> extends FragmentPagerAdapter {
     }
 
 
-    /**
-     * 加入新的資料 List 到 內部資料 Holder
-     * @param itemSet   新的資料 List
-     */
-    public void addItemSet(List<T> itemSet) {
-        if(null != itemSet && !itemSet.isEmpty()) {
+    /** append the given list of data to the tail of data holder in the adapter. */
+    public void addItemSet (List<T> itemSet) {
+        if ( (null != itemSet) && (!itemSet.isEmpty()) ) {
             synchronized (mLock) {
                 mItemSet.addAll(itemSet);
             }
         }
     }
 
-    /**
-     * 設定內部資料 Holder 的 Reference 到指定的資料 List
-     * @param itemSet 指定的資料 List
-     */
-    public void setItemSet(List<T> itemSet) {
-        if(null != itemSet && !itemSet.isEmpty()) {
+    /** replace the given list of data with the current data holder in the adapter. */
+    public void setItemSet (List<T> itemSet) {
+        if ( (null != itemSet) && (!itemSet.isEmpty()) ) {
             synchronized (mLock) {
                 mItemSet = itemSet;
             }
@@ -108,9 +99,8 @@ public abstract class BaseFragmentPagerAdapter<T> extends FragmentPagerAdapter {
     }
 
     /**
-     * 取得 position 所對應的資料物件
-     * @param position
-     * @return position 所對應的資料物件；若 position不合法，會回傳 Null
+     * get the corresponding element in the data holder by the given position.
+     * If it has not existed, 'null' will be return.
      */
     public T getItemSetElement (int position) {
         if ( (position >= 0) && (position < mItemSet.size()) ) {
@@ -122,9 +112,8 @@ public abstract class BaseFragmentPagerAdapter<T> extends FragmentPagerAdapter {
     }
 
     /**
-     * 取得 position 所對應的 Fragment
-     * @param position
-     * @return position 所對應的Fragment；若 position不合法，會回傳 Null
+     * get the corresponding Fragment in the Fragment holder by the given position.
+     * If it has not existed, 'null' will be return.
      */
     public Fragment getRegisteredFragment(int position) {
         LogWrapper.showLog(Log.INFO, getLogTag(), "getRegisteredFragment");
@@ -136,4 +125,6 @@ public abstract class BaseFragmentPagerAdapter<T> extends FragmentPagerAdapter {
             return null;
         }
     }
+
 }
+
