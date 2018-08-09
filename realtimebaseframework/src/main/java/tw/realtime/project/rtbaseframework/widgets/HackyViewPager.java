@@ -45,38 +45,39 @@ public class HackyViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        if (!isLocked) {
-            try {
-                if (getAdapter() == null || getAdapter().getCount() == 0) {
-                    return false;
-                } else {
-                    return super.onInterceptTouchEvent(event);
-                }
-            } catch (RuntimeException e) {
-                LogWrapper.showLog(Log.ERROR, "HackyViewPager", "RuntimeException on onInterceptTouchEvent", e);
-                return false;
-            }
-        }
-        return false;
+        return (!isLocked) && (null != getAdapter()) && (getAdapter().getCount() > 0);
+//        if (!isLocked) {
+//            try {
+//                if (getAdapter() == null || getAdapter().getCount() == 0) {
+//                    return false;
+//                } else {
+//                    return super.onInterceptTouchEvent(event);
+//                }
+//            } catch (RuntimeException e) {
+//                LogWrapper.showLog(Log.ERROR, "HackyViewPager", "RuntimeException on onInterceptTouchEvent", e);
+//                return false;
+//            }
+//        }
+//        return false;
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (isLocked) {
-            return false;
-        } else {
-            if (getAdapter() == null || getAdapter().getCount() == 0) {
-                return false;
-            } else {
-                try {
-                    return super.onTouchEvent(event);
-                } catch (RuntimeException e) {
-                    LogWrapper.showLog(Log.ERROR, "HackyViewPager", "RuntimeException on onTouchEvent", e);
-                    return false;
-                }
-            }
-        }
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        if (isLocked) {
+//            return false;
+//        } else {
+//            if (getAdapter() == null || getAdapter().getCount() == 0) {
+//                return false;
+//            } else {
+//                try {
+//                    return super.onTouchEvent(event);
+//                } catch (RuntimeException e) {
+//                    LogWrapper.showLog(Log.ERROR, "HackyViewPager", "RuntimeException on onTouchEvent", e);
+//                    return false;
+//                }
+//            }
+//        }
+//    }
 
     public void toggleLock() {
         isLocked = !isLocked;
