@@ -2,14 +2,11 @@ package tw.realtime.project.rtbaseframework.widgets.google.slidestrip;
 
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.view.ViewGroup;
 
-import tw.realtime.project.rtbaseframework.interfaces.ui.view.TabItemDelegate;
+import tw.realtime.project.rtbaseframework.interfaces.ui.tab.TabItemDelegate;
+import tw.realtime.project.rtbaseframework.interfaces.ui.tab.TabViewDelegate;
 
-public interface TabAdapterDelegate<T extends TabItemDelegate> {
-    @NonNull
-    View getTabView(@NonNull ViewGroup parent, int position, @NonNull T tabItem);
-
+public interface TabAdapterDelegate<T extends TabItemDelegate> extends TabViewDelegate<T> {
     /**
      * Determine if the tabView is selected by checking if (position == currentPage)
      *
