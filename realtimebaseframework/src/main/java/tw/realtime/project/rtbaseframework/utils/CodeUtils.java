@@ -353,8 +353,8 @@ public class CodeUtils {
         return  isEmoji;
     }
 
-    public static boolean compareAppVersion (@NonNull String currentVersion,
-                                             @NonNull String apiVersion) throws IllegalArgumentException {
+    public static int compareAppVersion (@NonNull String currentVersion,
+                                         @NonNull String apiVersion) throws IllegalArgumentException {
         if (currentVersion.isEmpty()) {
             throw new IllegalArgumentException("currentVersion cannot be empty");
         }
@@ -377,9 +377,8 @@ public class CodeUtils {
         LogWrapper.showLog(Log.INFO,"CodeUtil", "compareAppVersion - currentSize: "
                 + currentSize + ", apiSize: " + apiSize);
 
-        ArrayList<String> currentList = new ArrayList<>();
-        ArrayList<String> apiList = new ArrayList<>();
-        boolean isUpToDate = true;
+        final ArrayList<String> currentList = new ArrayList<>();
+        final ArrayList<String> apiList = new ArrayList<>();
         final int size = Math.max(currentSize, apiSize);
         for (int i = 0; i < size; i++) {
             if (i < currentArray.length) {
@@ -400,19 +399,21 @@ public class CodeUtils {
         LogWrapper.showLog(Log.INFO,"CodeUtil", "compareAppVersion - currentList.size: "
                 + currentList.size() + ", apiList.size: " + apiList.size());
 
+        int result = 0;
         for (int i = 0; i < size; i++) {
-            final int current = integerParseInt(currentList.get(i));
-            final int counterpart = integerParseInt(apiList.get(i));
-            LogWrapper.showLog(Log.INFO,"CodeUtil", "compareAppVersion - current: "
-                    + current + ", counterpart: " + counterpart);
-            if (counterpart > current) {
-                isUpToDate = false;
+            final int currentIndex = integerParseInt(currentList.get(i));
+            final int apiIndex = integerParseInt(apiList.get(i));
+            LogWrapper.showLog(Log.INFO,"CodeUtil", "compareAppVersion - currentIndex: "
+                    + currentIndex + ", apiIndex: " + apiIndex);
+            if (currentIndex != apiIndex) {
+                result = currentIndex > apiIndex ? 1 : -1;
                 break;
             }
         }
 
-        return isUpToDate;
+        return result;
     }
+
 
     private static int integerParseInt(String input) {
         try {
