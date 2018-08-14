@@ -39,7 +39,7 @@ public class ApiRequestBuilder implements ApiParameterSetDelegate {
     @Override
     public ApiParameterSetDelegate setHttpLogEnableFlag(boolean flag) {
         bHttpLogEnable = flag;
-        return null;
+        return this;
     }
 
     @Override
