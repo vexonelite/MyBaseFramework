@@ -8,8 +8,8 @@ import java.util.List;
 
 public class PagerDataWrapper<T, R> {
     private final byte[] lock = new byte[0];
-    private List<T> itemSet = new ArrayList<>();
-    private SparseArrayCompat<R> sparseArray = new SparseArrayCompat<>();
+    private final List<T> itemSet = new ArrayList<>();
+    private final SparseArrayCompat<R> sparseArray = new SparseArrayCompat<>();
 
 
     public int getRealDataCount() {
