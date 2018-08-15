@@ -21,7 +21,8 @@ public class PagerDataWrapper<T, R> {
      * @param givenSet   新的資料 List
      */
     public void appendItemSet(@NonNull List<T> givenSet) {
-        if ( (null != givenSet) && (!givenSet.isEmpty()) ) {
+        //if ( (null != givenSet) && (!givenSet.isEmpty()) ) {
+        if (!givenSet.isEmpty()) {
             synchronized(lock) {
                 itemSet.addAll(givenSet);
             }
@@ -33,7 +34,8 @@ public class PagerDataWrapper<T, R> {
      * @param givenSet 指定的資料 List
      */
     public void setItemSet(@NonNull List<T> givenSet) {
-        if ( (null != givenSet) && (!givenSet.isEmpty()) ) {
+        //if ( (null != givenSet) && (!givenSet.isEmpty()) ) {
+        if (!givenSet.isEmpty()) {
             synchronized(lock) {
                 itemSet.clear();
                 itemSet.addAll(givenSet);
