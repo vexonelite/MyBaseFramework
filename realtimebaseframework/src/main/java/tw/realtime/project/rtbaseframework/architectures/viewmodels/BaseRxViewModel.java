@@ -13,7 +13,7 @@ import tw.realtime.project.rtbaseframework.LogWrapper;
  * Created by vexonelite on 2018/03/22.
  */
 
-abstract class BaseRxViewModel extends AndroidViewModel implements RxDisposeDelegate {
+public abstract class BaseRxViewModel extends AndroidViewModel implements RxDisposeDelegate {
 
     private Disposable mDisposable;
 
