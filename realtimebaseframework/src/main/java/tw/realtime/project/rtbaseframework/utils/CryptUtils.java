@@ -1,5 +1,7 @@
 package tw.realtime.project.rtbaseframework.utils;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Base64;
 import android.util.Log;
 
@@ -8,6 +10,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
+import java.util.UUID;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -73,7 +76,8 @@ public class CryptUtils {
      * @param length The desired length of result.
      * @return Return a randomly generated String with length is exactly 32.
      */
-    public static String generateRandomStringWithLength (SecureRandom random, int length) throws Exception {
+    @NonNull
+    public static String generateRandomStringWithLength (@NonNull SecureRandom random, int length) throws Exception {
 //        return random.ints(48,122)
 //                .filter(i-> (i<57 || i>65) && (i <90 || i>97))
 //                .mapToObj(i -> (char) i)
@@ -81,16 +85,17 @@ public class CryptUtils {
 //                .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
 //                .toString();
 
-        String randomString = "";
-        while (randomString.length() < length) {
-            randomString = randomString + generateRandomString(random);
-            LogWrapper.showLog(Log.INFO, "CryptUtils", "randomString: " + randomString + ", length: " + randomString.length());
+        //String randomString = "";
+        final StringBuilder builder = new StringBuilder();
+        while (builder.length() < length) {
+            //randomString = randomString + generateRandomString(random);
+            builder.append(generateRandomString(random));
+            LogWrapper.showLog(Log.INFO, "CryptUtils", "randomString: " + builder.toString() + ", length: " + builder.length());
         }
 
-        String result = "";
-        if (randomString.length() >= length) {
-            result = randomString.substring(0, length);
-        }
+        final String randomString = builder.toString();
+        final String result = (randomString.length() >= length)
+                ? randomString.substring(0, length) : randomString;
         LogWrapper.showLog(Log.INFO, "CryptUtils", "result: " + result + ", length: " + result.length());
 
         return result;
@@ -115,8 +120,18 @@ public class CryptUtils {
      * @param random It must be a SecureRandom instance.
      * @return Return a randomly generated String.
      */
-    private static String generateRandomString (SecureRandom random) throws Exception {
+    @NonNull
+    public static String generateRandomString (@NonNull SecureRandom random) { //throws Exception {
         return new BigInteger(130, random).toString(32);
+    }
+
+    /**
+     * @return Return a UUID random string plus "_" and time stamp string
+     * @throws Exception
+     */
+    @NonNull
+    public static String generateRandomStringViaUuid () {
+        return UUID.randomUUID().toString() + "_" + System.currentTimeMillis();
     }
 
     /**
@@ -125,9 +140,10 @@ public class CryptUtils {
      * @param data  The given byte array.
      * @return A fixed-length hashed byte array.
      */
-    public static byte[] messageDigestSHA256 (byte[] data) {
+    @Nullable
+    public static byte[] messageDigestSHA256 (@NonNull byte[] data) {
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            final MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(data);
             return md.digest();
         }
@@ -138,22 +154,22 @@ public class CryptUtils {
     }
 
 
-    public static int getRandomNumber (SecureRandom random, int min, int max) throws IllegalArgumentException {
+    public static int getRandomNumber (@NonNull SecureRandom random, int min, int max) throws IllegalArgumentException {
         if (min < 0 || max < 0) {
             throw new IllegalArgumentException("min or max < 0");
         }
-        if (null == random) {
-            throw new IllegalArgumentException("random is null");
-        }
+//        if (null == random) {
+//            throw new IllegalArgumentException("random is null");
+//        }
 
         //SecureRandom rnd = new SecureRandom();
-        int inclusive = max - min + 1;
-        int exclusive = max - min;
+        final int inclusive = max - min + 1;
+        //final int exclusive = max - min;
 
-        int rndIntIncl = random.nextInt(inclusive) + min;
-        int rndIntExcl = random.nextInt(exclusive) + min;
+        //int rndIntIncl = random.nextInt(inclusive) + min;
+        //int rndIntExcl = random.nextInt(exclusive) + min;
 
-        return rndIntExcl;
+        return random.nextInt(inclusive) + min;
     }
 
 }

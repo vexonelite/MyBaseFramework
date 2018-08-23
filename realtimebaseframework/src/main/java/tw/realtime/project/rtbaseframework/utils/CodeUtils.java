@@ -11,6 +11,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -49,14 +50,13 @@ public class CodeUtils {
      * @param dateFormat 指定的日期格式 (若是空字串或 Null，會使用預設值)
      * @return Date 物件
      */
-    public static Date convertStringToDate (String dateString, String dateFormat) {
+    @Nullable
+    public static Date convertStringToDate (@NonNull String dateString, @NonNull String dateFormat) {
         try {
-            if ( (null == dateFormat) || (dateFormat.isEmpty()) ) {
-                dateFormat = "yyyy-MM-dd hh:mm:ss";
-            }
-            Locale locale = Locale.getDefault();
+            final String internalDateFormat = (dateFormat.isEmpty()) ? "yyyy-MM-dd hh:mm:ss" : dateFormat;
+            final Locale locale = Locale.getDefault();
             //LogWrapper.showLog(Log.INFO, "CodeUtil", "convertStringToDate: " + locale);
-            SimpleDateFormat fmt = new SimpleDateFormat(dateFormat, locale);
+            final SimpleDateFormat fmt = new SimpleDateFormat(internalDateFormat, locale);
             return fmt.parse(dateString);
 
         }
@@ -72,14 +72,12 @@ public class CodeUtils {
      * @param dateFormat 指定的日期格式 (若是空字串或 Null，會使用預設值)
      * @return 日期字串
      */
-    public static String convertDateToString (Date date, String dateFormat) {
+    public static String convertDateToString (@NonNull Date date, @NonNull String dateFormat) {
         try {
-            if ( (null == dateFormat) || (dateFormat.isEmpty()) ) {
-                dateFormat = "yyyy-MM-dd hh:mm:ss";
-            }
-            Locale locale = Locale.getDefault();
+            final String internalDateFormat = (dateFormat.isEmpty()) ? "yyyy-MM-dd hh:mm:ss" : dateFormat;
+            final Locale locale = Locale.getDefault();
             //LogWrapper.showLog(Log.INFO, "CodeUtil", "convertDateToString: " + locale);
-            SimpleDateFormat fmt = new SimpleDateFormat(dateFormat, locale);
+            final SimpleDateFormat fmt = new SimpleDateFormat(internalDateFormat, locale);
             return fmt.format(date);
         }
         catch (Exception e) {
@@ -92,27 +90,29 @@ public class CodeUtils {
      * 更新剩餘時間字串 hh:mm:ss
      * @param timeStamp
      */
+    @NonNull
     public static String getTimeString (long timeStamp) {
-        Locale locale = Locale.getDefault();
-        int day = (int) TimeUnit.SECONDS.toDays(timeStamp);
-        int hours = (int)(TimeUnit.SECONDS.toHours(timeStamp) - (day * 24));
-        int minutes = (int)(TimeUnit.SECONDS.toMinutes(timeStamp) - (TimeUnit.SECONDS.toHours(timeStamp) * 60));
-        int seconds = (int)(TimeUnit.SECONDS.toSeconds(timeStamp) - (TimeUnit.SECONDS.toMinutes(timeStamp) * 60));
+        final Locale locale = Locale.getDefault();
+        final int day = (int) TimeUnit.SECONDS.toDays(timeStamp);
+        final int hours = (int)(TimeUnit.SECONDS.toHours(timeStamp) - (day * 24));
+        final int minutes = (int)(TimeUnit.SECONDS.toMinutes(timeStamp) - (TimeUnit.SECONDS.toHours(timeStamp) * 60));
+        final int seconds = (int)(TimeUnit.SECONDS.toSeconds(timeStamp) - (TimeUnit.SECONDS.toMinutes(timeStamp) * 60));
         //LogWrapper.showLog(Log.WARN, "CodeUtil", "getTimeString - hours: " + hours + ", minutes: " + minutes + ", seconds: " + seconds);
         return  String.format(locale, "%02d", hours) + ":" +
                 String.format(locale, "%02d", minutes) + ":" +
                 String.format(locale, "%02d", seconds);
     }
 
+    @Nullable
     public static String getDecimalFormatString (String inputPrice) {
-        DecimalFormat fmt = new DecimalFormat();
-        DecimalFormatSymbols fmts = new DecimalFormatSymbols();
+        final DecimalFormat fmt = new DecimalFormat();
+        final DecimalFormatSymbols fmts = new DecimalFormatSymbols();
         fmts.setGroupingSeparator(',');
         fmt.setGroupingSize(3);
         fmt.setGroupingUsed(true);
         fmt.setDecimalFormatSymbols(fmts);
         try {
-            float fPrice = Float.parseFloat(inputPrice);
+            final float fPrice = Float.parseFloat(inputPrice);
             return fmt.format(fPrice);
         }
         catch (Exception e) {
