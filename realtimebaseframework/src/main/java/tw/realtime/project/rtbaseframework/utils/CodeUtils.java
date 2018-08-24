@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -139,13 +140,14 @@ public class CodeUtils {
     /**
      * 將 R.drawable.resID 轉成 Drawable drawable
      * @param context
-     * @param resID
+     * @param drawableResID
      * @return
      *
      * Ref: https://stackoverflow.com/questions/29041027/android-getresources-getdrawable-deprecated-api-22
      */
-    public static Drawable getDrawableFromResourceId (Context context, int resID) {
-        return ContextCompat.getDrawable(context, resID);
+    @Deprecated
+    public static Drawable getDrawableFromResourceId (@NonNull Context context, @DrawableRes int drawableResID) {
+        return ContextCompat.getDrawable(context, drawableResID);
 //        if (Build.VERSION.SDK_INT >= 21) {
 //            return Resources.getDrawable(resID, Theme);
 //        }
