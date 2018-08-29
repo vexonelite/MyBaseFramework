@@ -10,6 +10,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
+import java.util.List;
 import java.util.UUID;
 
 import javax.crypto.Cipher;
@@ -172,4 +173,24 @@ public class CryptUtils {
         return random.nextInt(inclusive) + min;
     }
 
+    @Nullable
+    public static <T> T getRandomObject (@NonNull SecureRandom secureRandom,
+                                         @NonNull List<T> objectList) {
+        if (objectList.isEmpty()) {
+            return null;
+        }
+        else if (objectList.size() == 1) {
+            return objectList.get(0);
+        }
+        else {
+            try {
+                final int index = CryptUtils.getRandomNumber(secureRandom, 0, objectList.size() - 1);
+                return objectList.get(index);
+            }
+            catch (Exception e) {
+                LogWrapper.showLog(Log.ERROR, "CryptUtils", "Exception on getRandomObject: ", e);
+                return null;
+            }
+        }
+    }
 }
