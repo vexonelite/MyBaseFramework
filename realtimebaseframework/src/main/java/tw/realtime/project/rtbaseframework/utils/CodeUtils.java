@@ -271,6 +271,7 @@ public class CodeUtils {
         context.startActivity(browserIntent);
     }
 
+    @SuppressWarnings({"MissingPermission"})
     public static boolean hasInterNet (Context context) {
         ConnectivityManager connMgr =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -296,6 +297,7 @@ public class CodeUtils {
         return hasInterNet;
     }
 
+    @SuppressWarnings({"MissingPermission"})
     public static String getNetworkAccessType (Context context) {
         ConnectivityManager connMgr =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
