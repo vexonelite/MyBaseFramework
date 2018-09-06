@@ -1,18 +1,19 @@
 package tw.realtime.project.rtbaseframework.models;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import tw.realtime.project.rtbaseframework.interfaces.ui.view.PhotoUrl;
-
 
 /**
  * Created by vexonelite on 2017/7/14.
  */
 
-public class SimplePhotoUrl implements PhotoUrl {
+public final class SimplePhotoUrl implements PhotoUrl {
 
-    private String mUrl;
-    public SimplePhotoUrl (String url) {
+    private final String mUrl;
+
+    public SimplePhotoUrl (@NonNull String url) {
         mUrl = url;
     }
 

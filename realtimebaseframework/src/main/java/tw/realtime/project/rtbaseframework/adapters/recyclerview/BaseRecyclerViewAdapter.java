@@ -1,6 +1,7 @@
 package tw.realtime.project.rtbaseframework.adapters.recyclerview;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
@@ -13,16 +14,17 @@ import java.util.List;
  */
 public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<K> {
 
-//    public static final int TYPE_ITEM = 1;
-//    public static final int TYPE_HEADER = 2;
-//    public static final int TYPE_LOADER = 3;
+    public static final int TYPE_ITEM = 1;
+    public static final int TYPE_HEADER = 2;
+    public static final int TYPE_LOADER = 3;
 
-    private final byte[] mLock = new byte[0];
-    private List<V> mData = new ArrayList<V>();
+    private final byte[] lock = new byte[0];
+    private final List<V> dataSetKeeper = new ArrayList<V>();
 
     @NonNull
-    public abstract K onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType);
+    public abstract K onCreateViewHolder(@NonNull ViewGroup parent, int viewType);
 
+    @Override
     public abstract void onBindViewHolder(@NonNull K holder, int position);
 
     @Override
@@ -31,7 +33,7 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
     }
 
 
-    public boolean isEmpty () {
+    public final boolean isEmpty () {
         return (getRealDataCount() == 0);
     }
 
@@ -39,8 +41,8 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
      * 回傳實際 Data Holder 的 資料數量
      * @return
      */
-    public int getRealDataCount () {
-        return mData.size();
+    public final int getRealDataCount () {
+        return dataSetKeeper.size();
     }
 
     /**
@@ -48,27 +50,28 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
      * @param position
      * @return 對應的資料
      */
-    public V getObjectAtPosition (int position) {
-        if ((mData.isEmpty()) || (position < 0) || (position >= mData.size()) ) {
+    @Nullable
+    public final V getObjectAtPosition (int position) {
+        if ((dataSetKeeper.isEmpty()) || (position < 0) || (position >= dataSetKeeper.size()) ) {
             return null;
         }
-        return mData.get(position);
+        return dataSetKeeper.get(position);
     }
 
     /**
      * 將資料 List 加至目前 Data Holder 的尾端
-     * @param data 資料 List
+     * @param dataSet 資料 List
      * @param defaultNotify 是否執行 notifyItemRangeInserted()
      */
-    public void appendNewDataSet(final List<V> data, boolean defaultNotify) {
-        if (null == data) {
+    public final void appendNewDataSet(@NonNull List<V> dataSet, boolean defaultNotify) {
+        if (dataSet.isEmpty()) {
             return;
         }
-        final int size = data.size();
+        final int size = dataSet.size();
         //final int start = (mData.isEmpty()) ? 0 : (mData.size() - 1);
-        final int start = mData.size();
-        synchronized (mLock) {
-            mData.addAll(data);
+        final int start = dataSetKeeper.size();
+        synchronized (lock) {
+            dataSetKeeper.addAll(dataSet);
         }
         if (defaultNotify) {
             notifyItemRangeInserted(start, size);
@@ -77,18 +80,18 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
 
     /**
      * 將資料 List 加至目前 Data Holder 的前端
-     * @param data 資料 List
+     * @param dataSet 資料 List
      * @param defaultNotify 是否執行 notifyItemRangeInserted()
      */
-    public void appendNewDataSetToTheTop (final List<V> data, boolean defaultNotify) {
-        if (null == data) {
+    public final void appendNewDataSetToTheTop (@NonNull List<V> dataSet, boolean defaultNotify) {
+        if (dataSet.isEmpty()) {
             return;
         }
-        final int size = data.size();
+        final int size = dataSet.size();
         //final int start = (mData.isEmpty()) ? 0 : (mData.size() - 1);
         final int start = 0;
-        synchronized (mLock) {
-            mData.addAll(start, data);
+        synchronized (lock) {
+            dataSetKeeper.addAll(start, dataSet);
         }
         if (defaultNotify) {
             notifyItemRangeInserted(start, (size - 1));
@@ -99,13 +102,13 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
      * 清除目前 Data Holder 的資料
      * @param defaultNotify 是否執行 notifyItemRangeRemoved()
      */
-    public void removeAllExistingData(boolean defaultNotify) {
-        if (mData.isEmpty()) {
+    public final void removeAllExistingData(boolean defaultNotify) {
+        if (dataSetKeeper.isEmpty()) {
             return;
         }
-        final int size = mData.size();
-        synchronized (mLock) {
-            mData.clear();
+        final int size = dataSetKeeper.size();
+        synchronized (lock) {
+            dataSetKeeper.clear();
         }
         if (defaultNotify) {
             notifyItemRangeRemoved(0, size);
@@ -117,13 +120,10 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
      * @param entity 資料物件
      * @param defaultNotify 是否執行 notifyItemInserted()
      */
-    public void appendNewDataToTheEnd(V entity, boolean defaultNotify) {
-        if (null == entity) {
-            return;
-        }
-        final int position = mData.size();
-        synchronized (mLock) {
-            mData.add(entity);
+    public final void appendNewDataToTheEnd(@NonNull V entity, boolean defaultNotify) {
+        final int position = dataSetKeeper.size();
+        synchronized (lock) {
+            dataSetKeeper.add(entity);
         }
         if (defaultNotify) {
             notifyItemInserted(position);
@@ -136,12 +136,9 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
      * @param entity 資料物件
      * @param defaultNotify 是否執行 notifyItemInserted()
      */
-    public void addNewDataAtPosition(int position, V entity, boolean defaultNotify) {
-        if (null == entity) {
-            return;
-        }
-        synchronized (mLock) {
-            mData.add(position, entity);
+    final public void addNewDataAtPosition(int position, @NonNull V entity, boolean defaultNotify) {
+        synchronized (lock) {
+            dataSetKeeper.add(position, entity);
         }
         if (defaultNotify) {
             notifyItemInserted(position);
@@ -153,20 +150,15 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
      * @param entity 指定的資料物件
      * @param defaultNotify 是否執行 notifyItemRemoved()
      */
-    public void removeSpecifiedData (V entity, boolean defaultNotify) {
-        if ( (mData.isEmpty()) || (null == entity) ) {
+    public final void removeSpecifiedData (@NonNull V entity, boolean defaultNotify) {
+        if (dataSetKeeper.isEmpty()) {
             return;
         }
-        final int position = mData.indexOf(entity);
-        if ( (position < 0) || (position >= mData.size()) ) {
+        final int position = dataSetKeeper.indexOf(entity);
+        if (position < 0) {
             return;
         }
-        synchronized (mLock) {
-            mData.remove(position);
-        }
-        if (defaultNotify) {
-            notifyItemRemoved(position);
-        }
+        removeDataAtPosition(position, defaultNotify);
     }
 
     /**
@@ -174,12 +166,12 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
      * @param position 指定的位置
      * @param defaultNotify 是否執行 notifyItemRemoved()
      */
-    public void removeDataAtPosition(final int position, boolean defaultNotify) {
-        if ( (mData.isEmpty()) || (position < 0) || (position >= mData.size()) ) {
+    public final void removeDataAtPosition(final int position, boolean defaultNotify) {
+        if ( (position < 0) || (position >= dataSetKeeper.size()) ) {
             return;
         }
-        synchronized (mLock) {
-            mData.remove(position);
+        synchronized (lock) {
+            dataSetKeeper.remove(position);
         }
         if (defaultNotify) {
             notifyItemRemoved(position);
@@ -192,14 +184,14 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
      * @param toPosition
      * @param defaultNotify 是否執行 notifyItemMoved
      */
-    public void swapDataFromAtoB (int fromPosition, int toPosition, boolean defaultNotify) {
-        if ( (mData.isEmpty()) || (fromPosition == toPosition)
-                || (fromPosition < 0) || (fromPosition >= mData.size())
-                || (toPosition < 0) || (toPosition >= mData.size()) ) {
+    public final void swapDataFromAtoB (int fromPosition, int toPosition, boolean defaultNotify) {
+        if ( (dataSetKeeper.isEmpty()) || (fromPosition == toPosition)
+                || (fromPosition < 0) || (fromPosition >= dataSetKeeper.size())
+                || (toPosition < 0) || (toPosition >= dataSetKeeper.size()) ) {
             return;
         }
-        synchronized (mLock) {
-            Collections.swap(mData, fromPosition, toPosition);
+        synchronized (lock) {
+            Collections.swap(dataSetKeeper, fromPosition, toPosition);
         }
         if (defaultNotify) {
             notifyItemMoved(fromPosition, toPosition);
@@ -211,10 +203,10 @@ public abstract class BaseRecyclerViewAdapter<V, K extends RecyclerView.ViewHold
      * @param entity 資料物件
      * @return
      */
-    public int getIndexOfObject(V entity) {
-        if ( (mData.isEmpty()) || (null == entity) ) {
+    public final int getIndexOfObject(@NonNull V entity) {
+        if (dataSetKeeper.isEmpty()) {
             return -1;
         }
-        return mData.indexOf(entity);
+        return dataSetKeeper.indexOf(entity);
     }
 }

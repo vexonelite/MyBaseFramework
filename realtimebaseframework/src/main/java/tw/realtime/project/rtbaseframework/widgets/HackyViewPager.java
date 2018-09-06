@@ -1,5 +1,6 @@
 package tw.realtime.project.rtbaseframework.widgets;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -61,23 +62,25 @@ public class HackyViewPager extends ViewPager {
 //        return false;
     }
 
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//        if (isLocked) {
-//            return false;
-//        } else {
-//            if (getAdapter() == null || getAdapter().getCount() == 0) {
-//                return false;
-//            } else {
-//                try {
-//                    return super.onTouchEvent(event);
-//                } catch (RuntimeException e) {
-//                    LogWrapper.showLog(Log.ERROR, "HackyViewPager", "RuntimeException on onTouchEvent", e);
-//                    return false;
-//                }
-//            }
-//        }
-//    }
+    // https://stackoverflow.com/questions/27462468/custom-view-overrides-ontouchevent-but-not-performclick
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (isLocked) {
+            return false;
+        } else {
+            if (getAdapter() == null || getAdapter().getCount() == 0) {
+                return false;
+            } else {
+                try {
+                    return super.onTouchEvent(event);
+                } catch (RuntimeException e) {
+                    LogWrapper.showLog(Log.ERROR, "HackyViewPager", "RuntimeException on onTouchEvent", e);
+                    return false;
+                }
+            }
+        }
+    }
 
     public void toggleLock() {
         isLocked = !isLocked;
