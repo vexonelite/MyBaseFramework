@@ -1,5 +1,7 @@
 package tw.realtime.project.rtbaseframework.developments;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -17,15 +19,13 @@ public class TestTextViewHolder extends RecyclerView.ViewHolder {
         mTextLabel = (TextView) view;
     }
 
-    public void onBind (int position, String title, View.OnClickListener clicker) {
-        String text = "";
-        if (null != title) {
-            text = text + title;
-            mTextLabel.setOnClickListener(clicker);
-        }
-        else {
+    public void onBind (int position, @NonNull String title, @Nullable View.OnClickListener clicker) {
+        if (title.isEmpty()) {
             mTextLabel.setOnClickListener(null);
         }
-        mTextLabel.setText(text);
+        else {
+            mTextLabel.setOnClickListener(clicker);
+        }
+        mTextLabel.setText(title);
     }
 }

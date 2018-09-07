@@ -27,14 +27,14 @@ public class TestTextAdapter
     @NonNull
     @Override
     public TestTextViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         return new TestTextViewHolder( inflater.inflate(
                 R.layout.test_text_view_item, parent, false) );
     }
 
     @Override
     public void onBindViewHolder(@NonNull TestTextViewHolder holder, int position) {
-        String text = getObjectAtPosition(position);
+        final String text = (null != getObjectAtPosition(position)) ? getObjectAtPosition(position) : "";
         holder.onBind(position, text, new MyItemClicker(text, position));
     }
 

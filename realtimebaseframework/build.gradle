@@ -6,6 +6,12 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion 27
 
+    // Enable Java 1.8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 27

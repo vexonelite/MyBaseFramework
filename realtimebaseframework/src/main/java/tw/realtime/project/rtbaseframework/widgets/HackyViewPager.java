@@ -2,12 +2,17 @@ package tw.realtime.project.rtbaseframework.widgets;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.R;
 
 
 /**
@@ -28,25 +33,60 @@ import tw.realtime.project.rtbaseframework.LogWrapper;
  * There's not much I can do in my code for now, but we can mask the result by
  * just catching the problem and ignoring it.
  *
+ * <p/>
+ * revision in 2018/09/07
+ * <p>
+ * I have added swipe vertically feature.
+ * @see <a href="https://www.journaldev.com/19336/android-nested-viewpager-vertical-viewpager">Android Nested ViewPager, Vertical ViewPager</a>
+ * @see <a href="https://medium.com/@jimitpatel/viewpager-with-vertical-swiping-ability-e40200094281">ViewPager with vertical Swiping ability</a>
+ * <p/>
+ *
  * @author Chris Banes
  */
 public class HackyViewPager extends ViewPager {
 
+    public static final int HORIZONTAL = 0;
+    public static final int VERTICAL = 1;
+
+    private static final float MIN_SCALE = 0.75f;
+
+    private int swipeOrientation = HORIZONTAL;
+    //private ScrollerCustomDuration scroller = null;
+
     private boolean isLocked;
 
-    public HackyViewPager(Context context) {
+
+    public HackyViewPager(@NonNull Context context) {
         super(context);
         isLocked = false;
+        swipeOrientation = HORIZONTAL;
+        initSwipeMethods();
     }
 
-    public HackyViewPager(Context context, AttributeSet attrs) {
+    public HackyViewPager(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         isLocked = false;
+        setSwipeOrientation(context, attrs);
+        initSwipeMethods();
     }
+
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        return (!isLocked) && (null != getAdapter()) && (getAdapter().getCount() > 0);
+        //version 3 - support both lock and swipe vertically
+        if (isLocked) {
+            return false;
+        }
+        else {
+            final boolean intercepted = super.onInterceptHoverEvent(swapXY(event));
+            swapXY(event);
+            return intercepted;
+        }
+
+        //version 2
+//        return (!isLocked) && (null != getAdapter()) && (getAdapter().getCount() > 0);
+
+        //version 1
 //        if (!isLocked) {
 //            try {
 //                if (getAdapter() == null || getAdapter().getCount() == 0) {
@@ -66,20 +106,24 @@ public class HackyViewPager extends ViewPager {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (isLocked) {
-            return false;
-        } else {
-            if (getAdapter() == null || getAdapter().getCount() == 0) {
-                return false;
-            } else {
-                try {
-                    return super.onTouchEvent(event);
-                } catch (RuntimeException e) {
-                    LogWrapper.showLog(Log.ERROR, "HackyViewPager", "RuntimeException on onTouchEvent", e);
-                    return false;
-                }
-            }
-        }
+        // version 2 - support both lock and swipe vertically
+        return (!isLocked) && (super.onTouchEvent(swipeOrientation == VERTICAL ? swapXY(event) : event));
+
+        //version 1
+//        if (isLocked) {
+//            return false;
+//        } else {
+//            if (getAdapter() == null || getAdapter().getCount() == 0) {
+//                return false;
+//            } else {
+//                try {
+//                    return super.onTouchEvent(event);
+//                } catch (RuntimeException e) {
+//                    LogWrapper.showLog(Log.ERROR, "HackyViewPager", "RuntimeException on onTouchEvent", e);
+//                    return false;
+//                }
+//            }
+//        }
     }
 
     public void toggleLock() {
@@ -92,5 +136,124 @@ public class HackyViewPager extends ViewPager {
 
     public boolean isLocked() {
         return isLocked;
+    }
+
+//    public void setSwipeOrientation(int swipeOrientation) {
+//        if (swipeOrientation == HORIZONTAL || swipeOrientation == VERTICAL) {
+//            this.swipeOrientation = swipeOrientation;
+//        }
+//        else {
+//            LogWrapper.showLog(Log.WARN, "HackyViewPager", "Swipe Orientation can be either CustomViewPager.HORIZONTAL or CustomViewPager.VERTICAL!!");
+////            throw new IllegalStateException("Swipe Orientation can be either CustomViewPager.HORIZONTAL" +
+////                    " or CustomViewPager.VERTICAL");
+//        }
+//        initSwipeMethods();
+//    }
+
+    private void setSwipeOrientation(@NonNull Context context, @Nullable AttributeSet attrs) {
+        if (null == attrs) {
+            return;
+        }
+        final TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.HackyViewPager);
+        swipeOrientation = typedArray.getInteger(R.styleable.HackyViewPager_swipe_orientation, 0);
+        typedArray.recycle();
+    }
+
+    private void initSwipeMethods() {
+        if (swipeOrientation == VERTICAL) {
+            // The majority of the work is done over here
+            setPageTransformer(true, this::verticalPageTransformer);
+            //setPageTransformer(true, this::verticalPageTransformerAnimate);
+
+            // The easiest way to get rid of the overscroll drawing that happens on the left and right
+            setOverScrollMode(OVER_SCROLL_NEVER);
+        }
+    }
+
+//    /**
+//     * Set the factor by which the duration will change
+//     */
+//    public void setScrollDurationFactor(double scrollFactor) {
+//        scroller.setScrollDurationFactor(scrollFactor);
+//    }
+
+    /**
+     * Swaps the X and Y coordinates of your touch event.
+     */
+    private MotionEvent swapXY(MotionEvent ev) {
+        final float width = getWidth();
+        final float height = getHeight();
+
+        final float newX = (ev.getY() / height) * width;
+        final float newY = (ev.getX() / width) * height;
+
+        ev.setLocation(newX, newY);
+
+        return ev;
+    }
+
+
+    /**
+     * implements ViewPager.PageTransformer (void transformPage(@NonNull View page, float position)) via method reference.
+     * <p></p>
+     * We create a custom implementation of PageTransformer class where
+     * instead of translating the view horizontally using translationX,
+     * we do so vertically using translationY.
+     * Same is done for motion events when the user swipes on the screen.
+     */
+    private void verticalPageTransformer (@NonNull View page, float position) {
+        if (position < -1) { // [-Infinity,-1)
+            // This page is way off-screen to the left.
+            page.setAlpha(0);
+
+        } else if (position <= 1) { // [-1,1]
+            page.setAlpha(1);
+
+            // Counteract the default slide transition
+            page.setTranslationX(page.getWidth() * -position);
+
+            //set Y position to swipe in from top
+            final float yPosition = position * page.getHeight();
+            page.setTranslationY(yPosition);
+
+        } else { // (1,+Infinity]
+            // This page is way off-screen to the right.
+            page.setAlpha(0);
+        }
+    }
+
+
+    /**
+     * implements ViewPager.PageTransformer (void transformPage(@NonNull View page, float position)) via method reference.
+     */
+    private void verticalPageTransformerAnimate(@NonNull View page, float position) {
+
+        final int pageWidth = page.getWidth();
+        final int pageHeight = page.getHeight();
+        float alpha = 0;
+        if (0 <= position && position <= 1) {
+            alpha = 1 - position;
+        }
+        else if (-1 < position && position < 0) {
+            final float scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position));
+            final float verticalMargin = pageHeight * (1 - scaleFactor) / 2;
+            final float horizontalMargin = pageWidth * (1 - scaleFactor) / 2;
+            if (position < 0) {
+                page.setTranslationX(horizontalMargin - verticalMargin / 2);
+            }
+            else {
+                page.setTranslationX(-horizontalMargin + verticalMargin / 2);
+            }
+
+            page.setScaleX(scaleFactor);
+            page.setScaleY(scaleFactor);
+
+            alpha = position + 1;
+        }
+
+        page.setAlpha(alpha);
+        page.setTranslationX(page.getWidth() * -position);
+        final float yPosition = position * page.getHeight();
+        page.setTranslationY(yPosition);
     }
 }
