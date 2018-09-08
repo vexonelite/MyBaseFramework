@@ -1,4 +1,4 @@
-package tw.realtime.project.rtbaseframework.widgets;
+package tw.realtime.project.rtbaseframework.widgets.viewpagers;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -50,10 +50,9 @@ public class HackyViewPager extends ViewPager {
 
     private static final float MIN_SCALE = 0.75f;
 
-    private int swipeOrientation = HORIZONTAL;
-    //private ScrollerCustomDuration scroller = null;
-
     private boolean isLocked;
+
+    private int swipeOrientation = HORIZONTAL;
 
 
     public HackyViewPager(@NonNull Context context) {
@@ -70,6 +69,9 @@ public class HackyViewPager extends ViewPager {
         initSwipeMethods();
     }
 
+    protected final String getLogTag() {
+        return this.getClass().getSimpleName();
+    }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
@@ -79,6 +81,7 @@ public class HackyViewPager extends ViewPager {
         }
         else {
             final boolean intercepted = super.onInterceptHoverEvent(swapXY(event));
+            LogWrapper.showLog(Log.INFO, "HackyViewPager", "onInterceptTouchEvent - intercepted: " + intercepted);
             swapXY(event);
             return intercepted;
         }
@@ -126,29 +129,17 @@ public class HackyViewPager extends ViewPager {
 //        }
     }
 
-    public void toggleLock() {
+    public final void toggleLock() {
         isLocked = !isLocked;
     }
 
-    public void setLocked(boolean isLocked) {
+    public final void setLocked(boolean isLocked) {
         this.isLocked = isLocked;
     }
 
-    public boolean isLocked() {
+    public final boolean isLocked() {
         return isLocked;
     }
-
-//    public void setSwipeOrientation(int swipeOrientation) {
-//        if (swipeOrientation == HORIZONTAL || swipeOrientation == VERTICAL) {
-//            this.swipeOrientation = swipeOrientation;
-//        }
-//        else {
-//            LogWrapper.showLog(Log.WARN, "HackyViewPager", "Swipe Orientation can be either CustomViewPager.HORIZONTAL or CustomViewPager.VERTICAL!!");
-////            throw new IllegalStateException("Swipe Orientation can be either CustomViewPager.HORIZONTAL" +
-////                    " or CustomViewPager.VERTICAL");
-//        }
-//        initSwipeMethods();
-//    }
 
     private void setSwipeOrientation(@NonNull Context context, @Nullable AttributeSet attrs) {
         if (null == attrs) {
@@ -169,13 +160,6 @@ public class HackyViewPager extends ViewPager {
             setOverScrollMode(OVER_SCROLL_NEVER);
         }
     }
-
-//    /**
-//     * Set the factor by which the duration will change
-//     */
-//    public void setScrollDurationFactor(double scrollFactor) {
-//        scroller.setScrollDurationFactor(scrollFactor);
-//    }
 
     /**
      * Swaps the X and Y coordinates of your touch event.
@@ -221,7 +205,6 @@ public class HackyViewPager extends ViewPager {
             page.setAlpha(0);
         }
     }
-
 
     /**
      * implements ViewPager.PageTransformer (void transformPage(@NonNull View page, float position)) via method reference.
