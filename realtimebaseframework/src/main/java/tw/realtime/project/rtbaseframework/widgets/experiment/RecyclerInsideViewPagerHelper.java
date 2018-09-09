@@ -1,4 +1,4 @@
-package tw.realtime.project.rtbaseframework.widgets.viewpagers;
+package tw.realtime.project.rtbaseframework.widgets.experiment;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -40,17 +40,16 @@ import tw.realtime.project.rtbaseframework.interfaces.ui.nestedscroll.TakeOverTo
  * <p>
  * @author VexonElite
  */
-public final class RecyclerInsideViewPagerHelper extends RecyclerView.OnScrollListener
+public class RecyclerInsideViewPagerHelper extends RecyclerView.OnScrollListener
     implements RecyclerView.OnItemTouchListener {
 
-    private int direction = 0;
-    private final TakeOverTouchEventDelegate takeOverTouchEventCallback;
+    protected final TakeOverTouchEventDelegate takeOverTouchEventCallback;
 
     public RecyclerInsideViewPagerHelper (@NonNull TakeOverTouchEventDelegate callback) {
         takeOverTouchEventCallback = callback;
     }
 
-    private String getLogTag () {
+    protected final String getLogTag () {
         return this.getClass().getSimpleName();
     }
 
@@ -80,29 +79,12 @@ public final class RecyclerInsideViewPagerHelper extends RecyclerView.OnScrollLi
                 break;
             case MotionEvent.ACTION_MOVE:
                 LogWrapper.showLog(Log.INFO, getLogTag(), "RecyclerView#onInterceptTouchEvent - ACTION_MOVE");
-                final boolean directionUp = recyclerView.canScrollVertically(-1);
-                final boolean directionDown = recyclerView.canScrollVertically(1);
-                LogWrapper.showLog(Log.INFO, getLogTag(), "canScrollVertically for Down: "
-                        + directionDown + ", for Up: " + directionUp + ", direction: " + direction);
-                if ( (direction > 0) && (!directionDown) ) {
-                    LogWrapper.showLog(Log.INFO, getLogTag(), "lock for for Down");
-                    takeOverTouchEventCallback.timeToInterceptTouchEvent(true);
-                } else if ( (direction < 0) && (!directionUp) ) {
-                    LogWrapper.showLog(Log.INFO, getLogTag(), "lock for for Up");
-                    takeOverTouchEventCallback.timeToInterceptTouchEvent(true);
-                }
-                else {
-                    LogWrapper.showLog(Log.INFO, getLogTag(), "no lock");
-                    //takeOverTouchEventCallback.timeToInterceptTouchEvent(false);
-                }
                 break;
             case MotionEvent.ACTION_UP:
                 LogWrapper.showLog(Log.INFO, getLogTag(), "RecyclerView#onInterceptTouchEvent - ACTION_UP");
-                takeOverTouchEventCallback.timeToInterceptTouchEvent(false);
                 break;
             case MotionEvent.ACTION_CANCEL:
                 LogWrapper.showLog(Log.INFO, getLogTag(), "RecyclerView#onInterceptTouchEvent - ACTION_CANCEL");
-                takeOverTouchEventCallback.timeToInterceptTouchEvent(false);
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 LogWrapper.showLog(Log.INFO, getLogTag(), "RecyclerView#onInterceptTouchEvent - ACTION_POINTER_DOWN");
@@ -159,30 +141,6 @@ public final class RecyclerInsideViewPagerHelper extends RecyclerView.OnScrollLi
     @Override
     public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
-    }
-
-
-////// implementation of RecyclerView.OnScrollListener
-    @Override
-    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        super.onScrolled(recyclerView, dx, dy);
-        LogWrapper.showLog(Log.INFO, getLogTag(), "RecyclerView#onScrolled for dy: " + dy);
-        direction = dy;
-//        if (dy > 0) {
-//            // Scrolling down
-//        } else {
-//            // Scrolling up
-//        }
-    }
-
-    @Override
-    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-        super.onScrollStateChanged(recyclerView, newState);
-        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-            LogWrapper.showLog(Log.INFO, getLogTag(), "RecyclerView#onScrollStateChanged - SCROLL_STATE_IDLE");
-            takeOverTouchEventCallback.timeToInterceptTouchEvent(false);
-            direction = 0;
-        }
     }
 
 }
