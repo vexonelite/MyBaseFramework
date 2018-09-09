@@ -13,7 +13,7 @@ import tw.realtime.project.rtbaseframework.R;
 /**
  * A Fragment simply showing a single text on it.
  */
-public class SingleTextFragment extends BaseFragment {
+public final class SingleTextFragment extends BaseFragment {
 
 	public static final String SINGLE_TEXT_KEY = "_single_text";
 
