@@ -1,4 +1,4 @@
-package tw.realtime.project.rtbaseframework.widgets.viewpagers;
+package tw.realtime.project.rtbaseframework.widgets;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -75,15 +75,16 @@ public class HackyViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
+        //LogWrapper.showLog(Log.INFO, getLogTag(), "[] onInterceptTouchEvent");
         //version 3 - support both lock and swipe vertically
         if (isLocked) {
             return false;
         }
         else {
-            final boolean intercepted = super.onInterceptHoverEvent(swapXY(event));
-            LogWrapper.showLog(Log.INFO, "HackyViewPager", "onInterceptTouchEvent - intercepted: " + intercepted);
+            final boolean resultFromSuper = super.onInterceptHoverEvent(swapXY(event));
+            //LogWrapper.showLog(Log.INFO, getLogTag(), "[] onInterceptTouchEvent - resultFromSuper: " + resultFromSuper);
             swapXY(event);
-            return intercepted;
+            return resultFromSuper;
         }
 
         //version 2
@@ -109,8 +110,10 @@ public class HackyViewPager extends ViewPager {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        final boolean resultFromSuper = super.onTouchEvent(swipeOrientation == VERTICAL ? swapXY(event) : event);
+        //LogWrapper.showLog(Log.INFO, getLogTag(), "[] onTouchEvent - resultFromSuper: " + resultFromSuper);
         // version 2 - support both lock and swipe vertically
-        return (!isLocked) && (super.onTouchEvent(swipeOrientation == VERTICAL ? swapXY(event) : event));
+        return (!isLocked) && resultFromSuper;
 
         //version 1
 //        if (isLocked) {
