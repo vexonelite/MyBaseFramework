@@ -104,8 +104,8 @@ public class CodeUtils {
                 String.format(locale, "%02d", seconds);
     }
 
-    @Nullable
-    public static String getDecimalFormatString (String inputPrice) {
+    @NonNull
+    public static String getDecimalFormatString (@NonNull String inputPrice) {
         final DecimalFormat fmt = new DecimalFormat();
         final DecimalFormatSymbols fmts = new DecimalFormatSymbols();
         fmts.setGroupingSeparator(',');
@@ -118,7 +118,7 @@ public class CodeUtils {
         }
         catch (Exception e) {
             LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on getDecimalFormatString", e);
-            return null;
+            return inputPrice;
         }
     }
 

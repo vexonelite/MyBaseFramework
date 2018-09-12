@@ -50,7 +50,9 @@ public class HackyViewPager extends ViewPager {
 
     private static final float MIN_SCALE = 0.75f;
 
+    /** Lock for touch event */
     private boolean isLocked;
+    private boolean canScrollHorizontally;
 
     private int swipeOrientation = HORIZONTAL;
 
@@ -58,6 +60,7 @@ public class HackyViewPager extends ViewPager {
     public HackyViewPager(@NonNull Context context) {
         super(context);
         isLocked = false;
+        canScrollHorizontally = true;
         swipeOrientation = HORIZONTAL;
         initSwipeMethods();
     }
@@ -65,6 +68,7 @@ public class HackyViewPager extends ViewPager {
     public HackyViewPager(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         isLocked = false;
+        canScrollHorizontally = true;
         setSwipeOrientation(context, attrs);
         initSwipeMethods();
     }
@@ -130,6 +134,15 @@ public class HackyViewPager extends ViewPager {
 //                }
 //            }
 //        }
+    }
+
+    @Override
+    public boolean canScrollHorizontally(int direction) {
+        return canScrollHorizontally;
+    }
+
+    public final void setCanScrollHorizontallyFlag (boolean flag) {
+        canScrollHorizontally = flag;
     }
 
     public final void toggleLock() {

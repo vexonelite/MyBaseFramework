@@ -1,34 +1,24 @@
 package tw.realtime.project.rtbaseframework.models;
 
-import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import tw.realtime.project.rtbaseframework.interfaces.ui.view.PhotoUrl;
+import tw.realtime.project.rtbaseframework.interfaces.ui.view.PhotoUrlDelegate;
 
 /**
  * Created by vexonelite on 2017/7/14.
  */
 
-public final class SimplePhotoUrl implements PhotoUrl {
+public final class SimplePhotoUrl implements PhotoUrlDelegate {
 
-    private final String mUrl;
+    private final String photoUrl;
 
     public SimplePhotoUrl (@NonNull String url) {
-        mUrl = url;
+        photoUrl = url;
     }
 
+    @NonNull
     @Override
-    public String onPhotoUrlIsRequired() {
-        return mUrl;
-    }
-
-    @Override
-    public Uri onPhotoUriIsRequired() {
-        return null;
-    }
-
-    @Override
-    public int onPhotoResourceIdIsRequired() {
-        return 0;
+    public String getPhotoUrl() {
+        return photoUrl;
     }
 }
