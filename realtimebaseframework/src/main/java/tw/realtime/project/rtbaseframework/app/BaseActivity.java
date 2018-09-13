@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,12 +28,13 @@ import android.view.inputmethod.InputMethodManager;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.dialogs.ConfirmDialog;
 import tw.realtime.project.rtbaseframework.dialogs.ProgressDialog;
+import tw.realtime.project.rtbaseframework.interfaces.fragment.FragmentManipulationDelegate;
 
 
 /**
  * Created by vexonelite on 2017/6/2.
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements FragmentManipulationDelegate {
 
     private Toolbar mToolbar;
 
@@ -145,28 +148,24 @@ public abstract class BaseActivity extends AppCompatActivity {
                 (mLifeCycleState == LifeCycleState.ON_POST_RESUME) );
     }
 
-    /**
+    /*
      * Fragment 的取代或蓋頁
      * @param targetFragment 要被顯示的 Fragment
      * @param doesReplace   是否要取代或蓋頁
      * @param containerResId 對應的容器 Id
      */
-    public void replaceOrShroudFragment (final Fragment targetFragment,
-                                         boolean doesReplace,
-                                         final int containerResId) {
-
-        if (null == targetFragment) {
-            return;
-        }
+    @Override
+    public final void replaceOrShroudFragment (@NonNull Fragment targetFragment,
+                                               boolean doesReplace,
+                                               @IdRes final int containerResId) {
 
         if (doesReplace) {
             popAllFragmentsIfNeeded();
         }
 
-        FragmentManager fragManager = getSupportFragmentManager();
-        FragmentTransaction fragTransaction = fragManager.beginTransaction();
-        fragTransaction.setTransition(FragmentTransaction.TRANSIT_NONE);
-
+        final FragmentTransaction fragTransaction = getSupportFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_NONE);
         if (doesReplace) {
             fragTransaction.replace(containerResId, targetFragment);
         }
@@ -184,13 +183,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public void popAllFragmentsIfNeeded () {
-        FragmentManager fragManager = getSupportFragmentManager();
+    @Override
+    public final void popAllFragmentsIfNeeded () {
         try {
-            int len = fragManager.getBackStackEntryCount();
-            if (len > 0) {
-                for(int i = 0; i < len; ++i) {
-                    fragManager.popBackStackImmediate();
+            final FragmentManager fragmentManager = getSupportFragmentManager();
+            final int fragmentCount = fragmentManager.getBackStackEntryCount();
+            if (fragmentCount > 0) {
+                for(int i = 0; i < fragmentCount; ++i) {
+                    fragmentManager.popBackStackImmediate();
                 }
             }
         }
@@ -200,11 +200,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    /**
+    /*
      * Pop 目前畫面中的 Fragment
      */
-    public void popFragment () {
-        FragmentManager fragManager = getSupportFragmentManager();
+    @Override
+    public final void popFragmentIfNeeded () {
+        final FragmentManager fragManager = getSupportFragmentManager();
         if (fragManager.getBackStackEntryCount() <= 0) {
             return;
         }
@@ -218,13 +219,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public void showAlertDialog (boolean isSingleOption,
-                                 String title,
-                                 String message,
-                                 String positiveText,
-                                 String negativeText,
-                                 DialogInterface.OnClickListener positiveCallback,
-                                 DialogInterface.OnClickListener negativeCallback) {
+    public final void showAlertDialog (boolean isSingleOption,
+                                       String title,
+                                       String message,
+                                       String positiveText,
+                                       String negativeText,
+                                       DialogInterface.OnClickListener positiveCallback,
+                                       DialogInterface.OnClickListener negativeCallback) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -268,7 +269,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 顯示對話框 Fragment
      * @param dialogFragment 要顯示的 DialogFragment 實體
      */
-    public void showDialogFragment (DialogFragment dialogFragment) {
+    public final void showDialogFragment (DialogFragment dialogFragment) {
         if (null == dialogFragment) {
             return;
         }
@@ -430,6 +431,22 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         catch (Exception e) {
             LogWrapper.showLog(Log.ERROR, BaseActivity.class.getSimpleName(), "Exception on setToolbarTextColor", e);
+        }
+    }
+
+    /**
+     * 設定 ActionBar 的標題，並決定Icon 是 "<" 或 App Icon
+     * @param title
+     * @param homeButtonEnabledFlag
+     * @param homeAsUpEnabledFlag
+     */
+    protected final void setUpActionBar (@NonNull String title, boolean homeButtonEnabledFlag, boolean homeAsUpEnabledFlag) {
+        //LogWrapper.showLog(Log.INFO, getLogTag(), "setUpActionBar");
+        final ActionBar actionBar = getSupportActionBar();
+        if (null != actionBar) {
+            actionBar.setTitle(title);
+            actionBar.setHomeButtonEnabled(homeButtonEnabledFlag);
+            actionBar.setDisplayHomeAsUpEnabled(homeAsUpEnabledFlag);
         }
     }
 

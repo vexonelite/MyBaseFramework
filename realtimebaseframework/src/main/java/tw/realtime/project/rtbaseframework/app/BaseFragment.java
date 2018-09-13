@@ -143,46 +143,46 @@ public abstract class BaseFragment extends Fragment {
         return (!isAdded()) || hasBeenShroudedByChild;
     }
 
-    protected void setUpActionBarHomeAsUpIndicator (@DrawableRes final int iconResId) {
+    protected final void setUpActionBarHomeAsUpIndicator (@DrawableRes final int iconResId) {
         if (forbidSetupActionBar()) {
             return;
         }
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        final AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (null == activity) {
             return;
         }
-        ActionBar actionBar = activity.getSupportActionBar();
+        final ActionBar actionBar = activity.getSupportActionBar();
         if (null != actionBar) {
             actionBar.setHomeAsUpIndicator(iconResId);
         }
     }
-    protected void setUpActionBarTitle (String title) {
+    protected final void setUpActionBarTitle (String title) {
         if ( (null == title) || (forbidSetupActionBar()) ) {
             return;
         }
         //LogWrapper.showLog(Log.INFO, getLogTag(), "setUpActionBar");
 
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        final AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (null == activity) {
             return;
         }
-        ActionBar actionBar = activity.getSupportActionBar();
+        final ActionBar actionBar = activity.getSupportActionBar();
         if (null != actionBar) {
             actionBar.setTitle(title);
         }
     }
 
-    protected void setUpActionBarTitleAndDisplayHomeAsUp (String title, boolean homeAsUpEnabledFlag) {
+    protected final void setUpActionBarTitleAndDisplayHomeAsUp (String title, boolean homeAsUpEnabledFlag) {
         if ( (null == title) || (forbidSetupActionBar()) ) {
             return;
         }
         //LogWrapper.showLog(Log.INFO, getLogTag(), "setUpActionBar");
 
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        final AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (null == activity) {
             return;
         }
-        ActionBar actionBar = activity.getSupportActionBar();
+        final ActionBar actionBar = activity.getSupportActionBar();
         if (null != actionBar) {
             actionBar.setTitle(title);
             actionBar.setDisplayHomeAsUpEnabled(homeAsUpEnabledFlag);
@@ -195,17 +195,17 @@ public abstract class BaseFragment extends Fragment {
      * @param homeButtonEnabledFlag
      * @param homeAsUpEnabledFlag
      */
-    protected void setUpActionBar (String title, boolean homeButtonEnabledFlag, boolean homeAsUpEnabledFlag) {
-        if ( (null == title) || (forbidSetupActionBar()) ) {
+    protected final void setUpActionBar (@NonNull String title, boolean homeButtonEnabledFlag, boolean homeAsUpEnabledFlag) {
+        if (forbidSetupActionBar()) {
             return;
         }
         //LogWrapper.showLog(Log.INFO, getLogTag(), "setUpActionBar");
 
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        final AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (null == activity) {
             return;
         }
-        ActionBar actionBar = activity.getSupportActionBar();
+        final ActionBar actionBar = activity.getSupportActionBar();
         if (null != actionBar) {
             actionBar.setTitle(title);
             actionBar.setHomeButtonEnabled(homeButtonEnabledFlag);
@@ -213,15 +213,15 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    protected void hideActionBar () {
+    protected final void hideActionBar () {
         if (forbidSetupActionBar()) {
             return;
         }
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        final AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (null == activity) {
             return;
         }
-        ActionBar actionBar = activity.getSupportActionBar();
+        final ActionBar actionBar = activity.getSupportActionBar();
         if (null != actionBar) {
             actionBar.hide();
         }
@@ -231,11 +231,11 @@ public abstract class BaseFragment extends Fragment {
         if (forbidSetupActionBar()) {
             return;
         }
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        final AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (null == activity) {
             return;
         }
-        ActionBar actionBar = activity.getSupportActionBar();
+        final ActionBar actionBar = activity.getSupportActionBar();
         if (null != actionBar) {
             actionBar.show();
         }
@@ -249,44 +249,50 @@ public abstract class BaseFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-        BaseActivity activity = (BaseActivity) getActivity();
+        final BaseActivity activity = (BaseActivity) getActivity();
         if (null == activity) {
             return;
         }
         activity.hideSoftKeyboard();
     }
 
-    protected boolean isAllowedToCommitFragmentTransaction () {
+    protected final boolean isAllowedToCommitFragmentTransaction () {
         if (!isAdded()) {
             return false;
         }
         if (null == getActivity()) {
             return false;
         }
-        BaseActivity activity = (BaseActivity) getActivity();
+        final BaseActivity activity = (BaseActivity) getActivity();
         return activity.isAllowedToCommitFragmentTransaction();
     }
 
-    protected void showDialogFragment (DialogFragment dialogFragment) {
-        if (null == dialogFragment) {
-            return;
-        }
+    /**
+     * make sure you have added
+     * <pre>
+     * {@code   if (!isAllowedToCommitFragmentTransaction() ) {
+     *      return;
+     *     }
+     * }
+     * </pre>
+     * before involve the method!
+     * @param dialogFragment
+     */
+    protected final void showDialogFragment (@NonNull DialogFragment dialogFragment) {
         if (!isAllowedToCommitFragmentTransaction()) {
             return;
         }
         // DialogFragment.show() will take care of adding the fragment in a transaction.
         // We also want to remove any currently showing dialog,
         // so make our own transaction and take care of that here.
-        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-        Fragment prev = getChildFragmentManager().findFragmentByTag(dialogFragment.getClass().getSimpleName());
-        if (prev != null) {
-            ft.remove(prev);
+        final FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        final Fragment previousFragment = getChildFragmentManager().findFragmentByTag(dialogFragment.getClass().getSimpleName());
+        if (null != previousFragment) {
+            fragmentTransaction.remove(previousFragment);
         }
-        ft.addToBackStack(null);
-
-        dialogFragment.show(ft, dialogFragment.getClass().getSimpleName());
+        fragmentTransaction.addToBackStack(null);
+        dialogFragment.show(fragmentTransaction, dialogFragment.getClass().getSimpleName());
     }
-
 
     /**
      * 預設實作好，給確定或取消選項之 Callback，點下會令目前 Fragment 被 Pop
@@ -344,15 +350,14 @@ public abstract class BaseFragment extends Fragment {
     }
 
 
-    protected void conductNavigation (@NonNull BaseFragment fragment,
-                                      @IdRes int fragmentContainerId) {
+    protected final void conductNavigation (@NonNull BaseFragment fragment, @IdRes int fragmentContainerId) {
         conductNavigation(fragment, new DefaultOnViewDestroyCallback(), fragmentContainerId);
     }
 
 
-    protected void conductNavigation (@NonNull BaseFragment fragment,
-                                      @Nullable onViewDestroyListener callback,
-                                      @IdRes int fragmentContainerId) {
+    protected final void conductNavigation (@NonNull BaseFragment fragment,
+                                            @Nullable onViewDestroyListener callback,
+                                            @IdRes int fragmentContainerId) {
 
         if (!isAllowedToCommitFragmentTransaction() || (getHasBeenShroudedByChildFlag()) ) {
             return;
@@ -362,12 +367,12 @@ public abstract class BaseFragment extends Fragment {
         setMenuVisibility(false);
         setHasBeenShroudedByChildFlag(true);
 
-        BaseActivity activity = (BaseActivity) getActivity();
+        final BaseActivity activity = (BaseActivity) getActivity();
         onConductNavigationExecuted(activity);
         activity.replaceOrShroudFragment(fragment, false, fragmentContainerId);
     }
 
-    private class DefaultOnViewDestroyCallback implements BaseFragment.onViewDestroyListener {
+    public class DefaultOnViewDestroyCallback implements BaseFragment.onViewDestroyListener {
         @Override
         public void onDestroyViewGetCalled() {
             setMenuVisibility(true);
@@ -379,11 +384,11 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    protected void onConductNavigationExecuted(@NonNull BaseActivity activity) {
+    protected void onConductNavigationExecuted(@Nullable BaseActivity activity) {
 
     }
 
-    protected void onDestroyViewExecuted(@NonNull BaseActivity activity) {
+    protected void onDestroyViewExecuted(@Nullable BaseActivity activity) {
 
     }
 }
