@@ -3,18 +3,17 @@ package tw.realtime.project.rtbaseframework.adapters.viewpager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.view.ViewGroup;
 
 import tw.realtime.project.rtbaseframework.adapters.PagerDataWrapper;
 
-
-public abstract class BaseFragmentPagerAdapter<T> extends FragmentPagerAdapter {
+public abstract class BaseFragmentStatePagerAdapter<T> extends FragmentStatePagerAdapter {
 
     public final PagerDataWrapper<T, Fragment> dataWrapper = new PagerDataWrapper<>();
 
-    public BaseFragmentPagerAdapter(FragmentManager fm) {
+    public BaseFragmentStatePagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
