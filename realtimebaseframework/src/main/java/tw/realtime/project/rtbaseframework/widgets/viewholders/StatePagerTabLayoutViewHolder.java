@@ -8,20 +8,21 @@ import android.support.v4.view.ViewPager;
 
 import java.util.List;
 
-import tw.realtime.project.rtbaseframework.adapters.viewpager.BaseFragmentPagerAdapter;
+import tw.realtime.project.rtbaseframework.adapters.viewpager.BaseFragmentStatePagerAdapter;
 import tw.realtime.project.rtbaseframework.interfaces.ui.tab.TabItemDelegate;
 import tw.realtime.project.rtbaseframework.interfaces.ui.tab.TabViewDelegate;
 
-public abstract class PagerTabLayoutViewHolder<T extends TabItemDelegate>
+
+public abstract class StatePagerTabLayoutViewHolder<T extends TabItemDelegate>
         extends BasePagerTabLayoutViewHolder<T> {
 
     // this is view pager version of adapter
-    private final BaseFragmentPagerAdapter<T> pagerAdapter;
+    private final BaseFragmentStatePagerAdapter<T> pagerAdapter;
 
-    public PagerTabLayoutViewHolder(@NonNull TabLayout tabLayout,
-                                    @NonNull ViewPager viewPager,
-                                    @NonNull BaseFragmentPagerAdapter<T> pagerAdapter,
-                                    @NonNull TabViewDelegate<T> tabViewDelegate) {
+    public StatePagerTabLayoutViewHolder(@NonNull TabLayout tabLayout,
+                                         @NonNull ViewPager viewPager,
+                                         @NonNull BaseFragmentStatePagerAdapter<T> pagerAdapter,
+                                         @NonNull TabViewDelegate<T> tabViewDelegate) {
         super(tabLayout, viewPager, pagerAdapter, tabViewDelegate);
         this.pagerAdapter = pagerAdapter;
     }
@@ -43,4 +44,5 @@ public abstract class PagerTabLayoutViewHolder<T extends TabItemDelegate>
     protected final T getItemElementAtPositionFromPagerAdapter (final int index) {
         return pagerAdapter.dataWrapper.getItemElementAtPosition(index);
     }
+
 }
