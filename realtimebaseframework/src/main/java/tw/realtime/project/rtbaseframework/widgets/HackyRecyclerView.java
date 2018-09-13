@@ -4,11 +4,9 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
-import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.enumerations.SwipeDirection;
 import tw.realtime.project.rtbaseframework.interfaces.ui.touch.SwipeEventCallback;
 
@@ -77,18 +75,17 @@ public final class HackyRecyclerView extends RecyclerView {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             scrollState = newState;
-            switch (newState) {
-                case RecyclerView.SCROLL_STATE_IDLE: {
-                    LogWrapper.showLog(Log.INFO, getLogTag(), "RecyclerView#onScrollStateChanged - SCROLL_STATE_IDLE");
-                    break;
-                }
-                case RecyclerView.SCROLL_STATE_DRAGGING:
-                    LogWrapper.showLog(Log.INFO, getLogTag(), "RecyclerView#onScrollStateChanged - SCROLL_STATE_DRAGGING");
-                    break;
-                case RecyclerView.SCROLL_STATE_SETTLING:
-                    LogWrapper.showLog(Log.INFO, getLogTag(), "RecyclerView#onScrollStateChanged - SCROLL_STATE_SETTLING");
-                    break;
-            }
+//            switch (newState) {
+//                case RecyclerView.SCROLL_STATE_IDLE:
+//                    LogWrapper.showLog(Log.INFO, getLogTag(), "RecyclerView#onScrollStateChanged - SCROLL_STATE_IDLE");
+//                    break;
+//                case RecyclerView.SCROLL_STATE_DRAGGING:
+//                    LogWrapper.showLog(Log.INFO, getLogTag(), "RecyclerView#onScrollStateChanged - SCROLL_STATE_DRAGGING");
+//                    break;
+//                case RecyclerView.SCROLL_STATE_SETTLING:
+//                    LogWrapper.showLog(Log.INFO, getLogTag(), "RecyclerView#onScrollStateChanged - SCROLL_STATE_SETTLING");
+//                    break;
+//            }
         }
     }
 
@@ -98,8 +95,8 @@ public final class HackyRecyclerView extends RecyclerView {
         // http://stackoverflow.com/questions/13095494/how-to-detect-swipe-direction-between-left-right-and-up-down/26387629#26387629
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            LogWrapper.showLog(Log.INFO, getLogTag(), "SimpleGestureCallback - onFling - e1: " + e1 + ", e2: " + e2
-                    + ", velocityX: " + velocityX + ", velocityY: " + velocityY);
+//            LogWrapper.showLog(Log.INFO, getLogTag(), "SimpleGestureCallback - onFling - e1: " + e1 + ", e2: " + e2
+//                    + ", velocityX: " + velocityX + ", velocityY: " + velocityY);
 
             // Grab two events located on the plane at e1=(x1, y1) and e2=(x2, y2)
             // Let e1 be the initial event
@@ -125,7 +122,7 @@ public final class HackyRecyclerView extends RecyclerView {
             final float x2 = e2.getX();
             final float y2 = e2.getY();
             final SwipeDirection direction = getDirection(x1, y1, x2, y2);
-            LogWrapper.showLog(Log.INFO, getLogTag(), "SimpleGestureCallback - onFling: " + direction);
+//            LogWrapper.showLog(Log.INFO, getLogTag(), "SimpleGestureCallback - onFling: " + direction);
             return onSwipe(direction);
             //return super.onFling(e1, e2, velocityX, velocityY);
         }
