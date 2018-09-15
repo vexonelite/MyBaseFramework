@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -15,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.webkit.ValueCallback;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -42,12 +42,12 @@ public class WebviewFragment extends BaseFragment {
     private long mAutoDismissProgressDialogSecond = 10L;
 
     private String mCustomizedUserAgent;
-    private String mTargetUrl;
-    private String mActionBarTitle;
+    private String mTargetUrl = "";
+    private String mActionBarTitle = "";
 
     private int mSwipeRefreshColorSchemeResourceId = android.R.color.holo_blue_light;
 
-    @Deprecated
+    //@Deprecated
     //private WebViewClient mWebViewClient;
 
 
@@ -76,12 +76,12 @@ public class WebviewFragment extends BaseFragment {
         return this;
     }
 
-    public WebviewFragment setTargetUrl (String url) {
+    public WebviewFragment setTargetUrl (@NonNull String url) {
         mTargetUrl = url;
         return this;
     }
 
-    public WebviewFragment setActionBarTitle (String actionBarTitle) {
+    public WebviewFragment setActionBarTitle (@NonNull String actionBarTitle) {
         mActionBarTitle = actionBarTitle;
         return this;
     }
@@ -112,47 +112,40 @@ public class WebviewFragment extends BaseFragment {
 
 
 
-	@Override
-	public View onCreateView(LayoutInflater inflater,
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.base_refreash_webview, container, false);
-	}
+    }
 
     @Override
-    public void onViewCreated(View rootView, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
-
         setupSwipeRefreshLayout( (SwipeRefreshLayout) rootView);
-        setupWebView( (WebView) rootView.findViewById(R.id.webView) );
+        setupWebView(rootView.findViewById(R.id.webView));
         webViewLoadInitialContent();
     }
 
     @Override
     public void onResume () {
         super.onResume();
-
         if (null != mActionBarTitle) {
             setUpActionBar(mActionBarTitle, mHomeButtonEnabledFlag, true);
         }
     }
 
-    private void setupSwipeRefreshLayout (SwipeRefreshLayout srLayout) {
-        if (null == srLayout) {
-            return;
-        }
+    private void setupSwipeRefreshLayout (@NonNull SwipeRefreshLayout srLayout) {
         mSwipeRefresh = srLayout;
         mSwipeRefresh.setColorSchemeResources(mSwipeRefreshColorSchemeResourceId);
-        mSwipeRefresh.setOnRefreshListener(new ListRefreshHandler());
+        mSwipeRefresh.setOnRefreshListener(this::swipeRefreshOnRefreshCallback);
         mSwipeRefresh.setEnabled(mSwipeRefreshEnabledFlag);
     }
 
-    private class ListRefreshHandler implements SwipeRefreshLayout.OnRefreshListener {
-        @Override
-        public void onRefresh() {
-            if (!mSwipeRefresh.canChildScrollUp() ) {
-                onRefreshHandler();
-            }
+    /** implements SwipeRefreshLayout.OnRefreshListener */
+    private void swipeRefreshOnRefreshCallback ()  {
+        if (!mSwipeRefresh.canChildScrollUp() ) {
+            onRefreshHandler();
         }
     }
 
@@ -176,23 +169,19 @@ public class WebviewFragment extends BaseFragment {
     // Ref:
     //    http://stackoverflow.com/questions/6199717/how-can-i-know-that-my-webview-is-loaded-100
     //    http://stackoverflow.com/questions/5049616/android-webviewclient-callbacks-called-too-often
-    private void setupWebView (WebView webView) {
-        if (null == webView) {
-            return;
-        }
+    private void setupWebView (@NonNull WebView webView) {
         mWebView = webView;
-
-        WebSettings settings = mWebView.getSettings();
+        final WebSettings settings = mWebView.getSettings();
         // Use WideViewport and Zoom out if there is no viewport defined
         settings.setUseWideViewPort(true);
-        settings.setLoadWithOverviewMode(true); // default is false
+        settings.setLoadWithOverviewMode(true);
         settings.setAllowFileAccess(true);
         // Enable pinch to zoom without the zoom buttons
-        settings.setBuiltInZoomControls(true); // default is false
+        settings.setBuiltInZoomControls(true);
         // Hide the zoom controls for HONEYCOMB+
-        settings.setDisplayZoomControls(false); // default is true
+        settings.setDisplayZoomControls(false);
 
-        //settings.setSupportZoom(true); // default is true
+        //settings.setSupportZoom(true);
         //settings.setSaveFormData(true);
         //settings.setLoadsImagesAutomatically(true);
         //settings.setBlockNetworkImage(false);
@@ -207,9 +196,10 @@ public class WebviewFragment extends BaseFragment {
         // Enable Javascript
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            onAddJavascriptInterface(mWebView);
-        }
+
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        onAddJavascriptInterface(mWebView);
+//        }
 
 //        if (null != mWebViewClient) {
 //            mWebView.setWebViewClient(mWebViewClient);
@@ -222,10 +212,10 @@ public class WebviewFragment extends BaseFragment {
         mWebView.setHorizontalScrollBarEnabled(false);
 
         // retrieve the user agent String
-        String userAgentStr = settings.getUserAgentString();
+        final String userAgentStr = settings.getUserAgentString();
         if (null != mCustomizedUserAgent) {
-        // append the customized user agent to the tail of user agent String,
-        // then update the user agent to the setting of WebView
+            // append the customized user agent to the tail of user agent String,
+            // then update the user agent to the setting of WebView
             mWebView.getSettings().setUserAgentString(userAgentStr + mCustomizedUserAgent);
         }
         //MyLog.d(getLogTag(), "setupWebView - userAgentStr [post]: " + settings.getUserAgentString());
@@ -233,66 +223,35 @@ public class WebviewFragment extends BaseFragment {
         clearAllCookies();
     }
 
-    protected void onAddJavascriptInterface (WebView webView) {
+    protected void onAddJavascriptInterface (@NonNull WebView webView) {
 //        if ( (null != mJavaScriptBridge) && (null != mJavaScriptBridgeName)
 //                && (!mJavaScriptBridgeName.isEmpty()) ) {
 //            mWebView.addJavascriptInterface(mJavaScriptBridge, mJavaScriptBridgeName);
 //        }
     }
 
-    // https://github.com/datatheorem/HandlingCaching-Android
-    private void clearAllCookiesVersion2 () {
-        CookieManager cookieManager = CookieManager.getInstance();
-        /* to disable all cookies */
-        cookieManager.setAcceptCookie(false);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            /* to disable thirdparty cookies */
-            cookieManager.setAcceptThirdPartyCookies(mWebView, false);
-
-            /* to remove all the cookies of the application from the device */
-            cookieManager.removeAllCookies(mCookieDeleted);
-
-            /* to remove a session specific cookies from the device */
-            cookieManager.removeSessionCookies(mCookieDeleted);
-        }
-        else {
-            /* to remove all the cookies of the application from the device */
-            cookieManager.removeAllCookie();
-            /* to remove a session specific cookies from the device */
-            cookieManager.removeSessionCookie();
-        }
-    }
-
-    /* the callback method */
-    private ValueCallback<Boolean> mCookieDeleted = new ValueCallback<Boolean>() {
-        @Override
-        public void onReceiveValue(Boolean value) {
-            LogWrapper.showLog(Log.INFO, getLogTag(), "cookies deleted");
-            // do whatever you want to do after the cookie is deleted; eg : reload tew page etc.
-        }
-    };
-
     /**
      * 清除 Webview 的 Cookies
      */
     private void clearAllCookies () {
+        //remove cookie before loadUrl
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //MyLog.d(getLogTag(), "Using clearAllCookies code for API >=" + String.valueOf(Build.VERSION_CODES.LOLLIPOP));
             CookieManager.getInstance().removeAllCookies(null);
             CookieManager.getInstance().flush();
         }
         else {
-            CookieSyncManager cookieSyncManager = CookieSyncManager.createInstance(getActivity());
+            //MyLog.d(getLogTag(), "Using clearAllCookies code for API <" + String.valueOf(Build.VERSION_CODES.LOLLIPOP));
+            final CookieSyncManager cookieSyncManager = CookieSyncManager.createInstance(getActivity());
             cookieSyncManager.startSync();
-            CookieManager cookieManager = CookieManager.getInstance();
+            final CookieManager cookieManager = CookieManager.getInstance();
             cookieManager.removeAllCookie();
             cookieManager.removeSessionCookie();
             cookieSyncManager.stopSync();
             cookieSyncManager.sync();
         }
     }
-
-
 
     /**
      * 接受網頁來的 Cookies
@@ -305,9 +264,9 @@ public class WebviewFragment extends BaseFragment {
         }
         else {
             //MyLog.d(getLogTag(), "Using acceptCookie code for API <" + String.valueOf(Build.VERSION_CODES.LOLLIPOP));
-            CookieSyncManager cookieSyncManager = CookieSyncManager.createInstance(getActivity());
+            final CookieSyncManager cookieSyncManager = CookieSyncManager.createInstance(getActivity());
             cookieSyncManager.startSync();
-            CookieManager cookieManager=CookieManager.getInstance();
+            final CookieManager cookieManager=CookieManager.getInstance();
             cookieManager.removeAllCookie();
             cookieManager.removeSessionCookie();
             cookieSyncManager.stopSync();
