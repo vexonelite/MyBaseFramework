@@ -12,7 +12,7 @@ import io.reactivex.annotations.Nullable;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.enumerations.SwipeDirection;
 import tw.realtime.project.rtbaseframework.interfaces.ui.nestedscroll.TakeOverTouchEventDelegate;
-import tw.realtime.project.rtbaseframework.widgets.HackyViewPager;
+import tw.realtime.project.rtbaseframework.widgets.ui.HackyViewPager;
 
 /**
  * please refers to {@link RecyclerInsideViewPagerHelper}.
