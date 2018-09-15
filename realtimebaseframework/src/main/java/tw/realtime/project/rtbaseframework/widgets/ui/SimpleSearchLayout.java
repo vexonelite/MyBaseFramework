@@ -1,4 +1,4 @@
-package tw.realtime.project.rtbaseframework.widgets;
+package tw.realtime.project.rtbaseframework.widgets.ui;
 
 import android.content.Context;
 import android.graphics.Bitmap;

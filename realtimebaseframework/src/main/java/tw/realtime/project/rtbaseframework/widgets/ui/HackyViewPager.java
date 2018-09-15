@@ -1,4 +1,4 @@
-package tw.realtime.project.rtbaseframework.widgets;
+package tw.realtime.project.rtbaseframework.widgets.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
