@@ -18,9 +18,10 @@ import android.util.Log;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.dialogs.ProgressDialog;
+import tw.realtime.project.rtbaseframework.interfaces.ActionBarDelegate;
 
 
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements ActionBarDelegate {
 
     private boolean hasBeenShroudedByChild;
 
@@ -389,6 +390,11 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected void onDestroyViewExecuted(@Nullable BaseActivity activity) {
+
+    }
+
+    @Override
+    public void onActionBarSetup() {
 
     }
 }
