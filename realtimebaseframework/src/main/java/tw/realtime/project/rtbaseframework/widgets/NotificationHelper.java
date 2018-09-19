@@ -1,6 +1,8 @@
 package tw.realtime.project.rtbaseframework.widgets;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,6 +10,8 @@ import android.graphics.BitmapFactory;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
@@ -24,6 +28,8 @@ import tw.realtime.project.rtbaseframework.LogWrapper;
 public class NotificationHelper {
 
     private Context nContext;
+    /** Android O requires a Notification Channel. */
+    private String nChannelId;
     private String nTitle;
     private String nBody;
     private String nGroup;
@@ -46,8 +52,14 @@ public class NotificationHelper {
     }
 
 
-    public NotificationHelper setContext (Context context) {
+    public NotificationHelper setContext (@NonNull Context context) {
         nContext = context;
+        return this;
+    }
+
+    /** Android O requires a Notification Channel. */
+    public NotificationHelper setChannelId (@NonNull String channelId) {
+        nChannelId = channelId;
         return this;
     }
 
@@ -159,7 +171,7 @@ public class NotificationHelper {
 
     public Notification generate() {
 
-        if ( (null == nContext) || (null == nTitle) || (null == nBody)) {
+        if ( (null == nContext) || (null == nChannelId) || (null == nTitle) || (null == nBody)) {
             return null;
         }
 
@@ -172,7 +184,7 @@ public class NotificationHelper {
                 }
             }
 
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(nContext)
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(nContext, nChannelId)
                     .setContentTitle(nTitle)
                     .setTicker(nTitle)
                     .setContentText(nBody)
@@ -280,5 +292,38 @@ public class NotificationHelper {
     public static void playCustomizedSoundIfNeeded (Context context, Uri soundUri) throws RuntimeException {
         Ringtone ringtone = RingtoneManager.getRingtone(context, soundUri);
         ringtone.play();
+    }
+
+    /**
+     * The object that involves the method should be either Activity or Service
+     * <p>
+     * Android O requires a Notification Channel.
+     */
+    public static void setNotificationChannelIfNeeded (@NonNull Context context,
+                                                       @NonNull String channelId,
+                                                       @NonNull String channelName) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            return;
+        }
+
+        //final CharSequence channelName = getString(R.string.app_name);
+        // Create the channel for the notification
+        //final int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        final int importance = NotificationManager.IMPORTANCE_LOW;
+        final NotificationChannel notificationChannel = new NotificationChannel(
+                channelId, channelName, importance);
+
+//        // Sets whether notifications posted to this channel should display notification lights
+//        notificationChannel.enableLights(true);
+//        // Sets whether notification posted to this channel should vibrate.
+//        notificationChannel.enableVibration(true);
+//        // Sets the notification light color for notifications posted to this channel
+//        notificationChannel.setLightColor(Color.GREEN);
+//        // Sets whether notifications posted to this channel appear on the lockscreen or not
+//        notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+
+        // Set the Notification Channel for the Notification Manager.
+        final NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.createNotificationChannel(notificationChannel);
     }
 }
