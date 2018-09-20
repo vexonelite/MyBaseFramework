@@ -314,9 +314,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
     /**
      * 將軟鍵盤隱藏
      */
-    public void hideSoftKeyboard() {
+    public final void hideSoftKeyboard() {
         if (null != getCurrentFocus()) {
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             getCurrentFocus().clearFocus();
         }
@@ -325,8 +325,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
     /**
      * 顯示軟鍵盤
      */
-    public void showSoftKeyboard(View view) {
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+    public final void showSoftKeyboard(@NonNull View view) {
+        final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         view.requestFocus();
         inputMethodManager.showSoftInput(view, 0);
     }
@@ -367,15 +367,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
     /**
      * Set the default Logo icon and Navigation icon.
      */
-    protected void setupToolbarAsActionBar (final Toolbar toolbar,
-                                            final boolean enableDefault,
-                                            final int logoResourceId,
-                                            final int navigationIconResourceId) {
-        if (null == toolbar) {
-            return;
-        }
+    protected final void setupToolbarAsActionBar (@NonNull final Toolbar toolbar,
+                                                  final boolean enableDefault,
+                                                  final int logoResourceId,
+                                                  final int navigationIconResourceId) {
         mToolbar = toolbar;
-
         if (enableDefault) {
             try {
                 toolbar.setLogo(logoResourceId);
@@ -390,7 +386,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         setSupportActionBar(toolbar);
     }
 
-    public void setToolbarTextColor (@ColorInt final int textColor) {
+    public final void setToolbarTextColor (@ColorInt final int textColor) {
         try {
             if (null != mToolbar) {
                 mToolbar.setTitleTextColor(textColor);
@@ -401,7 +397,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         }
     }
 
-    public void setToolbarTextColorResourceId (@ColorRes final int textColorResId) {
+    public final void setToolbarTextColorResourceId (@ColorRes final int textColorResId) {
         try {
             if (null != mToolbar) {
                 mToolbar.setTitleTextColor(ContextCompat.getColor(this, textColorResId) );
@@ -412,7 +408,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         }
     }
 
-    public void setToolbarBackgroundColor (@ColorInt final int backgroundColor) {
+    public final void setToolbarBackgroundColor (@ColorInt final int backgroundColor) {
         try {
             if (null != mToolbar) {
                 mToolbar.setBackgroundColor(backgroundColor);
@@ -423,7 +419,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         }
     }
 
-    public void setToolbarBackgroundDrawable (@DrawableRes final int backgroundDrawable) {
+    public final void setToolbarBackgroundDrawable (@DrawableRes final int backgroundDrawable) {
         try {
             if (null != mToolbar) {
                 mToolbar.setBackgroundResource(backgroundDrawable);
@@ -431,6 +427,17 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         }
         catch (Exception e) {
             LogWrapper.showLog(Log.ERROR, BaseActivity.class.getSimpleName(), "Exception on setToolbarTextColor", e);
+        }
+    }
+
+    public final void setToolbarNavigationIcon (@DrawableRes final int navigationIconResourceId) {
+        try {
+            if (null != mToolbar) {
+                mToolbar.setNavigationIcon(navigationIconResourceId);
+            }
+        }
+        catch (Exception e) {
+            LogWrapper.showLog(Log.ERROR, BaseActivity.class.getSimpleName(), "Exception on setNavigationIcon", e);
         }
     }
 

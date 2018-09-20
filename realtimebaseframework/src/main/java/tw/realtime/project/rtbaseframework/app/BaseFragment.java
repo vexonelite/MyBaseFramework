@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.dialogs.ProgressDialog;
@@ -246,7 +247,7 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
     /**
      * 將軟鍵盤隱藏
      */
-    protected void hideSoftKeyboard () {
+    protected final void hideSoftKeyboard () {
         if (!isAdded()) {
             return;
         }
@@ -255,6 +256,20 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
             return;
         }
         activity.hideSoftKeyboard();
+    }
+
+    /**
+     * 顯示軟鍵盤
+     */
+    protected final void showSoftKeyboard(@NonNull View view) {
+        if (!isAdded()) {
+            return;
+        }
+        final BaseActivity activity = (BaseActivity) getActivity();
+        if (null == activity) {
+            return;
+        }
+        activity.showSoftKeyboard(view);
     }
 
     protected final boolean isAllowedToCommitFragmentTransaction () {
