@@ -1,14 +1,12 @@
 package tw.realtime.project.rtbaseframework.widgets.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Point;
-import android.os.Build;
+import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
@@ -29,7 +27,7 @@ import tw.realtime.project.rtbaseframework.interfaces.ui.touch.SwipeEventCallbac
  */
 public class GestureEnableFrameLayout extends FrameLayout {
 
-    private GestureDetector mSwipeGestureDetector;
+    private GestureDetectorCompat mSwipeGestureDetector;
     private GestureDetector.OnDoubleTapListener mInternalDoubleTapCallback;
 
     private SingleTapEventCallback mSingleTapCallback;
@@ -71,6 +69,8 @@ public class GestureEnableFrameLayout extends FrameLayout {
     }
 
 
+    // https://stackoverflow.com/questions/27462468/custom-view-overrides-ontouchevent-but-not-performclick
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent (MotionEvent event) {
         //LogWrapper.showLog(Log.INFO, getLogTag(), "onTouchEvent - event: " + event);
@@ -95,38 +95,7 @@ public class GestureEnableFrameLayout extends FrameLayout {
     // the GestureDetector.SimpleOnGestureListener and SimpleOnGestureListener.OnDoubleTapListener.
     private void setupSwipeGestureDetector () {
         mInternalDoubleTapCallback = new DoubleTapCallback();
-        mSwipeGestureDetector = new GestureDetector(getContext(), new SimpleGestureCallback());
-    }
-
-    // get the size of device's screen by excluding embedding control panel
-    // (such as back button, home button, etc.)
-    private Point getRealScreenSize () {
-        WindowManager manager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-        Point size = new Point();
-        if (Build.VERSION.SDK_INT >= 17) {
-            try {
-                manager.getDefaultDisplay().getRealSize(size);
-            } catch (NoSuchMethodError e) {
-                LogWrapper.showLog(Log.ERROR, "error", "it can't work");
-            }
-        } else {
-            DisplayMetrics metrics = new DisplayMetrics();
-            manager.getDefaultDisplay().getMetrics(metrics);
-            size.x = metrics.widthPixels;
-            size.y = metrics.heightPixels;
-        }
-        return size;
-    }
-
-    // get the size of device's screen.
-    private Point getScreenSize () {
-        WindowManager manager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-        Point size = new Point();
-        DisplayMetrics metrics = new DisplayMetrics();
-        manager.getDefaultDisplay().getMetrics(metrics);
-        size.x = metrics.widthPixels;
-        size.y = metrics.heightPixels;
-        return size;
+        mSwipeGestureDetector = new GestureDetectorCompat(getContext(), new SimpleGestureCallback());
     }
 
 
@@ -234,11 +203,11 @@ public class GestureEnableFrameLayout extends FrameLayout {
             //  D => it's a LEFT swipe
             //
 
-            float x1 = e1.getX();
-            float y1 = e1.getY();
-            float x2 = e2.getX();
-            float y2 = e2.getY();
-            SwipeDirection direction = getDirection(x1, y1, x2, y2);
+            final float x1 = e1.getX();
+            final float y1 = e1.getY();
+            final float x2 = e2.getX();
+            final float y2 = e2.getY();
+            SwipeDirection direction = SwipeDirection.getDirection(x1, y1, x2, y2);
             LogWrapper.showLog(Log.INFO, getLogTag(), "VhcSimpleGestureListener - onFling: " + direction);
             return onSwipe(direction);
             //return super.onFling(e1, e2, velocityX, velocityY);
@@ -252,37 +221,6 @@ public class GestureEnableFrameLayout extends FrameLayout {
             else {
                 return false;
             }
-        }
-
-        /**
-         * Given two points in the plane p1=(x1, x2) and p2=(y1, y1), this method
-         * returns the direction that an arrow pointing from p1 to p2 would have.
-         * @param x1 the x position of the first point
-         * @param y1 the y position of the first point
-         * @param x2 the x position of the second point
-         * @param y2 the y position of the second point
-         * @return the direction
-         */
-        private SwipeDirection getDirection(float x1, float y1, float x2, float y2){
-            double angle = getAngle(x1, y1, x2, y2);
-            return SwipeDirection.get(angle);
-        }
-
-        /**
-         *
-         * Finds the angle between two points in the plane (x1,y1) and (x2, y2)
-         * The angle is measured with 0/360 being the X-axis to the right, angles
-         * increase counter clockwise.
-         *
-         * @param x1 the x position of the first point
-         * @param y1 the y position of the first point
-         * @param x2 the x position of the second point
-         * @param y2 the y position of the second point
-         * @return the angle between two points
-         */
-        private double getAngle(float x1, float y1, float x2, float y2) {
-            double rad = Math.atan2(y1-y2,x2-x1) + Math.PI;
-            return (rad * 180 / Math.PI + 180) % 360;
         }
     }
 
