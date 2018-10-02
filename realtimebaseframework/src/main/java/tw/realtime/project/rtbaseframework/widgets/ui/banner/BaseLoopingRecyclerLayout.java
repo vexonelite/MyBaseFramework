@@ -46,6 +46,8 @@ public abstract class BaseLoopingRecyclerLayout<V, K extends RecyclerView.ViewHo
 
     private MuzaffarPageIndicator pageIndicator;
 
+    private boolean doesScrollAutomatically = false;
+
 
     public BaseLoopingRecyclerLayout(@NonNull Context context) {
         super(context);
@@ -97,7 +99,6 @@ public abstract class BaseLoopingRecyclerLayout<V, K extends RecyclerView.ViewHo
         setupRecyclerView(givenRecyclerView);
         pageIndicator = givenPageIndicator;
     }
-
 
     private String getLogTag(){
         return this.getClass().getSimpleName();
@@ -160,7 +161,9 @@ public abstract class BaseLoopingRecyclerLayout<V, K extends RecyclerView.ViewHo
                     if (null != pageIndicator) {
                         pageIndicator.setIndicatorAsSelected(pageNumber);
                     }
-                    startAutoScrollIfNeededInternally(dataSetHolder.size(), DEFAULT_INTERVAL_IN_MILLIS);
+                    if (doesScrollAutomatically) {
+                        startAutoScrollIfNeededInternally(dataSetHolder.size(), DEFAULT_INTERVAL_IN_MILLIS);
+                    }
                 }
             }
         }
@@ -199,6 +202,10 @@ public abstract class BaseLoopingRecyclerLayout<V, K extends RecyclerView.ViewHo
     }
 
     public final void setDataSet (@NonNull List<V> dataSet) {
+        setDataSet(dataSet, false);
+    }
+
+    public final void setDataSet (@NonNull List<V> dataSet, boolean scrollAutomatically) {
         if (dataSet.isEmpty()) {
             return;
         }
@@ -219,7 +226,10 @@ public abstract class BaseLoopingRecyclerLayout<V, K extends RecyclerView.ViewHo
             if (dataSet.size() > 1) {
                 recyclerView.addOnScrollListener(onScrollCallback);
                 recyclerView.scrollToPosition(1);
-                startAutoScrollIfNeededInternally(dataSetHolder.size(), DEFAULT_INTERVAL_IN_MILLIS);
+                if (scrollAutomatically) {
+                    startAutoScrollIfNeeded();
+                    //startAutoScrollIfNeededInternally(dataSetHolder.size(), DEFAULT_INTERVAL_IN_MILLIS);
+                }
                 LogWrapper.showLog(Log.INFO, getLogTag(), "setDataSet: enable Looping Mode!");
             }
         }
@@ -234,7 +244,12 @@ public abstract class BaseLoopingRecyclerLayout<V, K extends RecyclerView.ViewHo
     }
 
 
+//    public void setDoesScrollAutomaticallyFlag (boolean flag) {
+//        doesScrollAutomatically = flag;
+//    }
+
     public final void startAutoScrollIfNeeded() {
+        doesScrollAutomatically = true;
         startAutoScrollIfNeededInternally(dataSetHolder.size(), DEFAULT_INTERVAL_IN_MILLIS);
     }
 
@@ -293,7 +308,7 @@ public abstract class BaseLoopingRecyclerLayout<V, K extends RecyclerView.ViewHo
 
     public final void stopAutoScrollIfNeeded() {
         if (null != dispose) {
-            dispose.isDisposed();
+            dispose.dispose();
         }
 //        LogWrapper.showLog(Log.WARN, getLogTag(), "stopAutoScrollIfNeeded!");
     }
