@@ -10,6 +10,7 @@ package tw.realtime.project.rtbaseframework.enumerations;
 
 public enum SwipeDirection {
 
+    NOT_DETECTED,
     LEFT,
     UP,
     RIGHT,
@@ -50,5 +51,36 @@ public enum SwipeDirection {
      */
     private static boolean inRange(double angle, float init, float end) {
         return (angle >= init) && (angle < end);
+    }
+
+    /**
+     * Given two points in the plane p1=(x1, x2) and p2=(y1, y1), this method
+     * returns the direction that an arrow pointing from p1 to p2 would have.
+     *
+     * @param x1 the x position of the first point
+     * @param y1 the y position of the first point
+     * @param x2 the x position of the second point
+     * @param y2 the y position of the second point
+     * @return the direction
+     */
+    public static SwipeDirection getDirection(float x1, float y1, float x2, float y2) {
+        final double angle = getAngle(x1, y1, x2, y2);
+        return SwipeDirection.get(angle);
+    }
+
+    /**
+     * Finds the angle between two points in the plane (x1,y1) and (x2, y2)
+     * The angle is measured with 0/360 being the X-axis to the right, angles
+     * increase counter clockwise.
+     *
+     * @param x1 the x position of the first point
+     * @param y1 the y position of the first point
+     * @param x2 the x position of the second point
+     * @param y2 the y position of the second point
+     * @return the angle between two points
+     */
+    public static double getAngle(float x1, float y1, float x2, float y2) {
+        final double rad = Math.atan2(y1 - y2, x2 - x1) + Math.PI;
+        return (rad * 180 / Math.PI + 180) % 360;
     }
 }
