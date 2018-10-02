@@ -154,26 +154,37 @@ public class CodeUtils {
     }
 
     /**
-     * 取得螢幕的寬與高
-     * @param context
-     * @return
+     * get the size of device's screen by excluding embedding control panel
+     * (such as back button, home button, etc.)
+     * <p> 取得螢幕的寬與高
      */
-    public static Point getRealScreenSize (Context context) {
-        WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-
+    @Nullable
+    public static Point getRealScreenSize (@NonNull Context context) {
         try {
-            Point size = new Point();
+            final Point size = new Point();
+            final WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             manager.getDefaultDisplay().getRealSize(size);
             return size;
+        } catch (Exception e) {
+            LogWrapper.showLog(Log.ERROR, "error", "Exception on getRealScreenSize!", e);
+            return null;
         }
-        catch (NoSuchMethodError e) {
-            LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on getRealScreenSize", e);
-            Point size = new Point();
-            DisplayMetrics metrics = new DisplayMetrics();
+    }
+
+    // get the size of device's screen.
+    @Nullable
+    public static Point getScreenSize (@NonNull Context context) {
+        try {
+            final DisplayMetrics metrics = new DisplayMetrics();
+            final WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             manager.getDefaultDisplay().getMetrics(metrics);
+            final Point size = new Point();
             size.x = metrics.widthPixels;
             size.y = metrics.heightPixels;
             return size;
+        } catch (Exception e) {
+            LogWrapper.showLog(Log.ERROR, "error", "Exception on getScreenSize!", e);
+            return null;
         }
     }
 
