@@ -88,14 +88,11 @@ public final class FlingDispatchFrameLayout extends FrameLayout {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent motionEvent) {
-        final int action = motionEvent.getAction();
-        switch (action & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_DOWN:
-                //LogWrapper.showLog(Log.INFO, getLogTag(), "dispatchTouchEvent - ACTION_DOWN");
-                if (null != touchDownEventCallback) {
-                    touchDownEventCallback.onTouchDown();
-                }
-                break;
+//        final int action = motionEvent.getAction();
+//        switch (action & MotionEvent.ACTION_MASK) {
+//            case MotionEvent.ACTION_DOWN:
+//                LogWrapper.showLog(Log.INFO, getLogTag(), "dispatchTouchEvent - ACTION_DOWN");
+//                break;
 //            case MotionEvent.ACTION_MOVE:
 //                LogWrapper.showLog(Log.INFO, getLogTag(), "dispatchTouchEvent - ACTION_MOVE");
 //                break;
@@ -111,7 +108,7 @@ public final class FlingDispatchFrameLayout extends FrameLayout {
 //            case MotionEvent.ACTION_POINTER_UP:
 //                LogWrapper.showLog(Log.INFO, getLogTag(), "dispatchTouchEvent - ACTION_POINTER_UP");
 //                break;
-        }
+//        }
 
         onUpDownEvent(motionEvent);
 
@@ -209,6 +206,9 @@ public final class FlingDispatchFrameLayout extends FrameLayout {
     private void onActionDown(@NonNull MotionEvent motionEvent) {
         swipeDirection = null;
 //        LogWrapper.showLog(Log.INFO, getLogTag(), "onActionDown - reset swipeDirection");
+        if (null != touchDownEventCallback) {
+            touchDownEventCallback.onTouchDown();
+        }
         dispatchTouchEventToRecyclerViewIfNeed(motionEvent);
         dispatchTouchEventToSwipeViewIfNeed(motionEvent, SwipeDirection.NOT_DETECTED);
     }
