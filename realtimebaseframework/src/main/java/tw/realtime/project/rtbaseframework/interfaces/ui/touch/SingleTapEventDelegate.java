@@ -1,5 +1,6 @@
 package tw.realtime.project.rtbaseframework.interfaces.ui.touch;
 
+import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 
 /**
@@ -7,5 +8,5 @@ import android.view.MotionEvent;
  */
 
 public interface SingleTapEventDelegate {
-    boolean onSingleTapConfirmed(MotionEvent motionEvent);
+    boolean onSingleTapConfirmed(@NonNull MotionEvent motionEvent);
 }

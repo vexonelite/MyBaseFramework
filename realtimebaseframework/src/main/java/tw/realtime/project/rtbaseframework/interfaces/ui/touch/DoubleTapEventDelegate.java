@@ -1,5 +1,6 @@
 package tw.realtime.project.rtbaseframework.interfaces.ui.touch;
 
+import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 
 /**
@@ -13,5 +14,5 @@ public interface DoubleTapEventDelegate {
      * @param motionEvent
      * @return
      */
-    boolean onDoubleTapEvent(MotionEvent motionEvent);
+    boolean onDoubleTapEvent(@NonNull MotionEvent motionEvent);
 }

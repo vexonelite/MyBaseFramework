@@ -1,6 +1,8 @@
 package tw.realtime.project.rtbaseframework.interfaces.ui.touch;
 
 
+import android.support.annotation.NonNull;
+
 import tw.realtime.project.rtbaseframework.enumerations.SwipeDirection;
 
 /**
@@ -11,5 +13,5 @@ public interface SwipeEventDelegate {
     /**
      * the callback of a captured swipe gesture
      */
-    boolean onSwipe(SwipeDirection direction);
+    boolean onSwipe(@NonNull SwipeDirection direction);
 }
