@@ -10,7 +10,7 @@ import android.view.MotionEvent;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.enumerations.SwipeDirection;
-import tw.realtime.project.rtbaseframework.interfaces.ui.touch.SwipeEventCallback;
+import tw.realtime.project.rtbaseframework.interfaces.ui.touch.SwipeEventDelegate;
 
 
 /**
@@ -22,10 +22,10 @@ public final class RecyclerGestureDetector extends RecyclerView.OnScrollListener
 
     private int scrollState = RecyclerView.SCROLL_STATE_IDLE;
 
-    private final SwipeEventCallback swipeCallback;
+    private final SwipeEventDelegate swipeCallback;
     private final GestureDetector swipeGestureDetector;
 
-    public RecyclerGestureDetector(@NonNull Context context, @Nullable SwipeEventCallback callback) {
+    public RecyclerGestureDetector(@NonNull Context context, @Nullable SwipeEventDelegate callback) {
         swipeGestureDetector = new GestureDetector(context, new SimpleGestureCallback());
         swipeCallback = callback;
     }

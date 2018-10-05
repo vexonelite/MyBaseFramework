@@ -11,9 +11,9 @@ import android.widget.FrameLayout;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.enumerations.SwipeDirection;
-import tw.realtime.project.rtbaseframework.interfaces.ui.touch.DoubleTapEventCallback;
-import tw.realtime.project.rtbaseframework.interfaces.ui.touch.SingleTapEventCallback;
-import tw.realtime.project.rtbaseframework.interfaces.ui.touch.SwipeEventCallback;
+import tw.realtime.project.rtbaseframework.interfaces.ui.touch.DoubleTapEventDelegate;
+import tw.realtime.project.rtbaseframework.interfaces.ui.touch.SingleTapEventDelegate;
+import tw.realtime.project.rtbaseframework.interfaces.ui.touch.SwipeEventDelegate;
 
 
 /**
@@ -30,9 +30,9 @@ public class GestureEnableFrameLayout extends FrameLayout {
     private GestureDetectorCompat mSwipeGestureDetector;
     private GestureDetector.OnDoubleTapListener mInternalDoubleTapCallback;
 
-    private SingleTapEventCallback mSingleTapCallback;
-    private DoubleTapEventCallback mDoubleTapCallback;
-    private SwipeEventCallback mSwipeCallback;
+    private SingleTapEventDelegate mSingleTapCallback;
+    private DoubleTapEventDelegate mDoubleTapCallback;
+    private SwipeEventDelegate mSwipeCallback;
 
 
     private String getLogTag () {
@@ -40,15 +40,15 @@ public class GestureEnableFrameLayout extends FrameLayout {
     }
 
 
-    public void setSingleTapEventCallback (SingleTapEventCallback callback) {
+    public void setSingleTapEventCallback (SingleTapEventDelegate callback) {
         mSingleTapCallback = callback;
     }
 
-    public void setDoubleTapEventCallback (DoubleTapEventCallback callback) {
+    public void setDoubleTapEventCallback (DoubleTapEventDelegate callback) {
         mDoubleTapCallback = callback;
     }
 
-    public void setSwipeEventCallback (SwipeEventCallback callback) {
+    public void setSwipeEventCallback (SwipeEventDelegate callback) {
         mSwipeCallback = callback;
     }
 

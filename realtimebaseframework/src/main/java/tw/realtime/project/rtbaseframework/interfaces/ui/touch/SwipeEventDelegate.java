@@ -7,7 +7,7 @@ import tw.realtime.project.rtbaseframework.enumerations.SwipeDirection;
  * Created by vexonelite on 2018/2/8.
  */
 
-public interface SwipeEventCallback {
+public interface SwipeEventDelegate {
     /**
      * the callback of a captured swipe gesture
      */

@@ -8,7 +8,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 
 import tw.realtime.project.rtbaseframework.enumerations.SwipeDirection;
-import tw.realtime.project.rtbaseframework.interfaces.ui.touch.SwipeEventCallback;
+import tw.realtime.project.rtbaseframework.interfaces.ui.touch.SwipeEventDelegate;
 
 
 /**
@@ -20,7 +20,7 @@ public final class HackyRecyclerView extends RecyclerView {
 
     private final GestureDetector swipeGestureDetector;
 
-    public SwipeEventCallback swipeCallback;
+    public SwipeEventDelegate swipeCallback;
 
     public HackyRecyclerView(Context context) {
         super(context);
