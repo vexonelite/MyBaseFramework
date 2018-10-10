@@ -1,1 +1,5 @@
-include ':app', ':realtimebaseframework'
+include ':app'
+include ':realtimebaseframework'
+
+//The artifactId is set in settings.gradle:
+//rootProject.name = 'artifact'
