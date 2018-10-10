@@ -62,7 +62,10 @@ dependencies {
 
     implementation "com.squareup.retrofit2:retrofit:2.4.0"
     //implementation "com.squareup.retrofit2:converter-scalars:2.4.0"
+    // GSON
     //implementation "com.squareup.retrofit2:converter-gson:2.4.0"
+    // Moshi
+    //implementation "com.squareup.retrofit2:converter-moshi:2.4.0"
     // for using RxJava 1.x
     //implementation "com.squareup.retrofit2:adapter-rxjava:2.4.0"
     // for using RxJava 2.x

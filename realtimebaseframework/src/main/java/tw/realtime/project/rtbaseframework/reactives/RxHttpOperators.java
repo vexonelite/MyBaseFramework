@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.api.commons.ApiConstants;
 import tw.realtime.project.rtbaseframework.api.commons.AsyncApiException;
@@ -49,7 +50,7 @@ public class RxHttpOperators {
 
         @Override
         public String apply(@NonNull Response response) throws Exception {
-            String result = okHttpResponseToJsonString(response);
+            final String result = okHttpResponseToJsonString(response);
             response.close();
             return result;
         }
@@ -59,27 +60,26 @@ public class RxHttpOperators {
                     + Thread.currentThread().getId());
 
             if (!response.isSuccessful()) {
-                String message = "Something wrong - code: " + response.code() +
+                final String message = "Something wrong - code: " + response.code() +
                         ", message: " + response.message();
                 throw new AsyncApiException(ApiConstants.ExceptionCode.HTTP_RESPONSE_ERROR, message);
             }
             try {
-                String rawResponseString = response.body().string();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "okHttpResponseToJsonString - Tid: " +
-                        Thread.currentThread().getId() + ", rawResponseString: " + rawResponseString);
-
+                final String rawResponseString = response.body().string();
                 if (doesEnableAesEncoding) {
-                    CryptUtils cryptUtils = new CryptUtils();
-                    String jsonString = cryptUtils.decrypt(
+                    final CryptUtils cryptUtils = new CryptUtils();
+                    final String jsonString = cryptUtils.decrypt(
                             rawResponseString,
                             oAesKey,
                             oAesIv); //decrypt
-                    LogWrapper.showLog(Log.INFO, getLogTag(), "okHttpResponseToJsonString - Tid: "
-                            + Thread.currentThread().getId() + ", jsonString: " + jsonString);
+                    LogWrapper.showLongLog(Log.INFO, getLogTag(), "okHttpResponseToJsonString - Tid: ("
+                            + Thread.currentThread().getId() + "), jsonString: " + jsonString);
                     return jsonString;
 
                 }
                 else {
+                    LogWrapper.showLongLog(Log.INFO, getLogTag(), "okHttpResponseToJsonString - Tid: (" +
+                            Thread.currentThread().getId() + "), rawResponseString: " + rawResponseString);
                     return rawResponseString;
                 }
             }
@@ -89,6 +89,48 @@ public class RxHttpOperators {
             }
             finally {
                 response.body().close();
+            }
+        }
+    }
+
+    public static class VerifyResponse implements Function<retrofit2.Response<ResponseBody>, ResponseBody> {
+
+        private final int successCode;
+
+        public VerifyResponse (int successCode) {
+            this.successCode = successCode;
+        }
+
+        @Override
+        public ResponseBody apply(@io.reactivex.annotations.NonNull retrofit2.Response<ResponseBody> response) throws Exception {
+            final int httpCode = response.code();
+            if (successCode == httpCode) {
+                return response.body();
+            }
+            else {
+                final String message = "Something wrong - code: " + response.code() +
+                        ", message: " + response.message();
+                final String optCode = "" + response.code();
+                throw new AsyncApiException(ApiConstants.ExceptionCode.HTTP_RESPONSE_ERROR, message, optCode);
+            }
+        }
+    }
+
+    public static class ResponseBodyToString implements Function<ResponseBody, String> {
+        @Override
+        public String apply(@io.reactivex.annotations.NonNull ResponseBody responseBody) throws Exception {
+            try {
+                final String rawResponseString = responseBody.string();
+                LogWrapper.showLog(Log.INFO, getLogTag(), "ResponseBodyToString - Tid: (" +
+                        Thread.currentThread().getId() + "), rawResponseString: " + rawResponseString);
+                return rawResponseString;
+            }
+            catch (Exception e) {
+                LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on ResponseBodyToString");
+                throw new AsyncApiException(ApiConstants.ExceptionCode.HTTP_RESPONSE_PARSING_ERROR, e);
+            }
+            finally {
+                responseBody.close();
             }
         }
     }

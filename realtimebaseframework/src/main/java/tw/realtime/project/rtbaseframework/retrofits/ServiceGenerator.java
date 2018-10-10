@@ -50,7 +50,7 @@ public class ServiceGenerator {
     }
 
     /** create a Retrofit 2 service representing a asynchronized api task.  */
-    public static <S> S createService(Class<S> serviceClass, @NonNull Retrofit.Builder builder) {
+    public static <S> S createService(@NonNull Retrofit.Builder builder, Class<S> serviceClass) {
         return getInstance(builder).create(serviceClass);
     }
 }
