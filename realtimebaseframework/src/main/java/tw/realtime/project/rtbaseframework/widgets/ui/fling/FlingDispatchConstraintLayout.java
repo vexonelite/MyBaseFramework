@@ -85,6 +85,12 @@ public final class FlingDispatchConstraintLayout extends ConstraintLayout {
         }
     }
 
+    public void showSwipeView() {
+        if (null != swipeViewMovementHelper) {
+            swipeViewMovementHelper.showSwipeView();
+        }
+    }
+
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent motionEvent) {

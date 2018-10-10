@@ -25,6 +25,7 @@ public class SwipeViewMovementHelper implements TouchSwipeDirectionDelegate {
     private int maxTranslationY = -1;
     private float startY;
 
+
     public SwipeViewAppearDelegate swipeViewAppearCallback;
 
     public SwipeViewMovementHelper(@NonNull View swipeView) {
@@ -52,7 +53,7 @@ public class SwipeViewMovementHelper implements TouchSwipeDirectionDelegate {
             thresholdTranslationY = (int)( ((float) maxTranslationY) / 3f);
 //            LogWrapper.showLog(Log.INFO, getLogTag(), "swipeView localVisibleRect: " + localVisibleRect
 //                + ", maxTranslationY: " + maxTranslationY + ", thresholdTranslationY: " + thresholdTranslationY);
-            new Handler(Looper.getMainLooper()).post(this::dismissSwipeView);
+            new Handler(Looper.getMainLooper()).post(this::hideSwipeViewInitially);
         }
     }
 
@@ -115,15 +116,35 @@ public class SwipeViewMovementHelper implements TouchSwipeDirectionDelegate {
         if (direction != SwipeDirection.UP) {
             return;
         }
-
         final float currentPosition = swipeView.getTranslationY();
         final float translationY = startY - motionEvent.getY();
         final boolean hasAppeared = translationY > thresholdTranslationY;
         final float animateTo = hasAppeared ? 0f : swipeView.getHeight();
+        animateSwipeView(currentPosition, animateTo, 200L);
+    }
 
+    private void hideSwipeViewInitially () {
+        swipeView.setTranslationY(maxTranslationY);
+    }
+
+    public void dismissSwipeView () {
+
+        final float currentPosition = swipeView.getTranslationY();
+        animateSwipeView(currentPosition, swipeView.getHeight(), 200L);
+    }
+
+    public void showSwipeView() {
+        final float currentPosition = swipeView.getTranslationY();
+        if (currentPosition <= 0f) {
+            return;
+        }
+        animateSwipeView(currentPosition, 0f, 200L);
+    }
+
+    private void animateSwipeView (float currentPosition, float animateTo, long duration) {
         final ObjectAnimator animator = ObjectAnimator.ofFloat(
                 swipeView, "translationY", currentPosition, animateTo);
-        animator.setDuration(200L);
+        animator.setDuration(duration);
         animator.setInterpolator(new AccelerateInterpolator());
         animator.addListener(
                 new AnimatorListenerAdapter() {
@@ -136,10 +157,6 @@ public class SwipeViewMovementHelper implements TouchSwipeDirectionDelegate {
         animator.start();
     }
 
-    public void dismissSwipeView () {
-        swipeView.setTranslationY(maxTranslationY);
-    }
-
     private void notifySwipeViewAppearCallbackIfNeeded () {
         if (null != swipeViewAppearCallback) {
             swipeViewAppearCallback.onSwipeViewAppeared();
@@ -149,4 +166,5 @@ public class SwipeViewMovementHelper implements TouchSwipeDirectionDelegate {
     public interface SwipeViewAppearDelegate {
         void onSwipeViewAppeared();
     }
+
 }
