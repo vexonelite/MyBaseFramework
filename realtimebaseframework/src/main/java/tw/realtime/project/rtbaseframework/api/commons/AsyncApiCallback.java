@@ -1,6 +1,6 @@
 package tw.realtime.project.rtbaseframework.api.commons;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * 定義 執行 Api 過程中的介面

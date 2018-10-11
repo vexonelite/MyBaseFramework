@@ -1,6 +1,6 @@
 package tw.realtime.project.rtbaseframework.widgets.viewholders;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 /**

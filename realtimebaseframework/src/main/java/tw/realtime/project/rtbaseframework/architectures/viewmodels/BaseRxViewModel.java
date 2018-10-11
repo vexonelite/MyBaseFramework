@@ -1,8 +1,8 @@
 package tw.realtime.project.rtbaseframework.architectures.viewmodels;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import io.reactivex.disposables.Disposable;

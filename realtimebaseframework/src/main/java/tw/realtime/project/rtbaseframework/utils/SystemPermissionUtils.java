@@ -2,11 +2,11 @@ package tw.realtime.project.rtbaseframework.utils;
 
 import android.Manifest;
 import android.app.Activity;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import android.util.Log;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;

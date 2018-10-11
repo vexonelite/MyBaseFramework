@@ -1,7 +1,7 @@
 package tw.realtime.project.rtbaseframework.widgets.ui.fling;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 

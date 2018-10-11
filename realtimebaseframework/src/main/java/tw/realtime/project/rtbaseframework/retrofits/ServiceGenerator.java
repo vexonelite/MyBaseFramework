@@ -1,6 +1,6 @@
 package tw.realtime.project.rtbaseframework.retrofits;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import retrofit2.Retrofit;
 import tw.realtime.project.rtbaseframework.api.commons.OkHttpUtils;

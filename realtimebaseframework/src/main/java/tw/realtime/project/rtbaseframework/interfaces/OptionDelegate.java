@@ -1,6 +1,6 @@
 package tw.realtime.project.rtbaseframework.interfaces;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Created by vexonelite on 2017/8/23.

@@ -1,9 +1,9 @@
 package tw.realtime.project.rtbaseframework.widgets.ui.banner;
 
 import android.content.res.Resources;
-import android.support.annotation.DimenRes;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
+import androidx.annotation.DimenRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import android.view.View;
 import android.widget.LinearLayout;
 

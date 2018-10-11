@@ -1,6 +1,6 @@
 package tw.realtime.project.rtbaseframework.widgets;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 
 public abstract class CommonItemWrapper<T> {

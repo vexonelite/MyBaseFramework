@@ -2,8 +2,8 @@ package tw.realtime.project.rtbaseframework.widgets.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.view.GestureDetectorCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.view.GestureDetectorCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
