@@ -69,9 +69,10 @@ dependencies {
 
 //    implementation "com.android.support:appcompat-v7:${rootProject.supportLibVersion}"
 //    implementation "com.android.support:design:${rootProject.materialVersion}"
-    implementation "androidx.appcompat:appcompat:${rootProject.androidXversion}"
 //    implementation "com.android.support:recyclerview-v7:${rootProject.materialVersion}"
+    implementation "androidx.appcompat:appcompat:${rootProject.androidXversion}"
     implementation "com.google.android.material:material:${rootProject.materialXversion}"
+//    implementation "androidx.recyclerview:recyclerview:${rootProject.materialXversion}"
 
     // needed for glide, https://github.com/bumptech/glide/issues/3185
 //    annotationProcessor "androidx.annotation:annotation:${rootProject.annotationXversion}"
