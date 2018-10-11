@@ -7,7 +7,7 @@
     android:layout_gravity="center"
     android:background="@android:color/transparent" >
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/dialogParent"
         android:layout_width="280dp"
         android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
             android:textColor="@android:color/white"
             android:background="@android:color/holo_blue_light"/>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -53,6 +53,6 @@
             android:textColor="@android:color/white"
             android:background="@android:color/holo_blue_light"/>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
