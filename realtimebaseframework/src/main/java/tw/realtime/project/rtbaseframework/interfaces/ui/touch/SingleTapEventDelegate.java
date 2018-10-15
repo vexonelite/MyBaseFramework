@@ -1,6 +1,6 @@
 package tw.realtime.project.rtbaseframework.interfaces.ui.touch;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.MotionEvent;
 
 /**

@@ -1,6 +1,6 @@
 package tw.realtime.project.rtbaseframework.widgets.google.slidestrip;
 
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 
 /**
  * Allows complete control over the colors drawn in the tab layout. Set with

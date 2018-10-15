@@ -1,6 +1,6 @@
 package tw.realtime.project.rtbaseframework.api.commons;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import java.util.concurrent.TimeUnit;

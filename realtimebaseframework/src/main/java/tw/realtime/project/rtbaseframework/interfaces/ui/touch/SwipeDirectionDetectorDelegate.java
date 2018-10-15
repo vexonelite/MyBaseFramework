@@ -1,7 +1,7 @@
 package tw.realtime.project.rtbaseframework.interfaces.ui.touch;
 
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import tw.realtime.project.rtbaseframework.enumerations.SwipeDirection;
 

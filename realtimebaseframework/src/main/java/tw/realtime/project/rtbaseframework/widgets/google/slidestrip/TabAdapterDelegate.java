@@ -1,6 +1,6 @@
 package tw.realtime.project.rtbaseframework.widgets.google.slidestrip;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 
 import tw.realtime.project.rtbaseframework.interfaces.ui.tab.TabItemDelegate;

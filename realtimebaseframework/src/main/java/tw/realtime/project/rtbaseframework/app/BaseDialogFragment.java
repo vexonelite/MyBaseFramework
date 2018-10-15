@@ -1,7 +1,7 @@
 package tw.realtime.project.rtbaseframework.app;
 
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.view.Window;

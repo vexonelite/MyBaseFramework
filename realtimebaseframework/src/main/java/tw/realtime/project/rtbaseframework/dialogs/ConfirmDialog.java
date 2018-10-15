@@ -2,9 +2,9 @@ package tw.realtime.project.rtbaseframework.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.support.v4.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -34,7 +34,7 @@ public class ConfirmDialog extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        int style = android.support.v4.app.DialogFragment.STYLE_NO_TITLE, theme = 0;
+        int style = DialogFragment.STYLE_NO_TITLE, theme = 0;
         //int style = DialogFragment.STYLE_NO_FRAME, theme = 0;
         //int style = DialogFragment.STYLE_NO_FRAME, theme = android.R.style.Theme_Dialog;
 
