@@ -8,6 +8,7 @@ import java.util.Map;
 
 import okhttp3.ResponseBody;
 import tw.realtime.project.rtbaseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.interfaces.apis.AsyncApiCallback;
 import tw.realtime.project.rtbaseframework.reactives.ApiMapDataBuilder;
 
 

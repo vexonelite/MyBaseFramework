@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Call;
 import okhttp3.Response;
 import tw.realtime.project.rtbaseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.interfaces.apis.AsyncApiCallback;
 import tw.realtime.project.rtbaseframework.reactives.ApiDataDelegate;
 import tw.realtime.project.rtbaseframework.reactives.ApiParameterSetDelegate;
 

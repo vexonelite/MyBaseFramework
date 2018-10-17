@@ -19,7 +19,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.api.commons.ApiConstants;
-import tw.realtime.project.rtbaseframework.api.commons.AsyncApiCallback;
+import tw.realtime.project.rtbaseframework.interfaces.apis.AsyncApiCallback;
 import tw.realtime.project.rtbaseframework.api.commons.AsyncApiException;
 import tw.realtime.project.rtbaseframework.models.DateItem;
 import tw.realtime.project.rtbaseframework.utils.CodeUtils;

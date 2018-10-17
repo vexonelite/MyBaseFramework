@@ -1,12 +1,13 @@
 package tw.realtime.project.rtbaseframework.architectures.viewmodels;
 
 import android.app.Application;
-import androidx.lifecycle.AndroidViewModel;
-import androidx.annotation.NonNull;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import io.reactivex.disposables.Disposable;
 import tw.realtime.project.rtbaseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.interfaces.apis.RxDisposeDelegate;
 
 
 /**

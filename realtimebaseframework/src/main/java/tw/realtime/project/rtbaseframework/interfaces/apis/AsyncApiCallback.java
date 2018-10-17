@@ -1,6 +1,7 @@
-package tw.realtime.project.rtbaseframework.api.commons;
+package tw.realtime.project.rtbaseframework.interfaces.apis;
 
 import androidx.annotation.NonNull;
+import tw.realtime.project.rtbaseframework.api.commons.AsyncApiException;
 
 /**
  * 定義 執行 Api 過程中的介面

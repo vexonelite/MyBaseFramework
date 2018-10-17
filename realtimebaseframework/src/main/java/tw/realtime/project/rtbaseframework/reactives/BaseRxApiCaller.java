@@ -12,7 +12,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.api.commons.ApiConstants;
-import tw.realtime.project.rtbaseframework.api.commons.AsyncApiCallback;
+import tw.realtime.project.rtbaseframework.interfaces.apis.AsyncApiCallback;
 import tw.realtime.project.rtbaseframework.api.commons.AsyncApiException;
 
 /**
