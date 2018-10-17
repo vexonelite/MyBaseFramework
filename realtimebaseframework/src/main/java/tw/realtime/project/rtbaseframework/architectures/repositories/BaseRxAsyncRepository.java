@@ -6,15 +6,15 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.api.commons.ApiConstants;
-import tw.realtime.project.rtbaseframework.interfaces.apis.AsyncApiCallback;
 import tw.realtime.project.rtbaseframework.api.commons.AsyncApiException;
+import tw.realtime.project.rtbaseframework.interfaces.apis.AsyncApiCallback;
 
-public abstract class BaseRxAsnycRepository<T> extends BaseRxRepository {
+public abstract class BaseRxAsyncRepository<T> extends BaseRxRepository {
 
     private AsyncApiCallback<T> callback;
 
 
-    protected BaseRxAsnycRepository(@Nullable AsyncApiCallback<T> callback) {
+    protected BaseRxAsyncRepository(@Nullable AsyncApiCallback<T> callback) {
         this.callback = callback;
     }
 

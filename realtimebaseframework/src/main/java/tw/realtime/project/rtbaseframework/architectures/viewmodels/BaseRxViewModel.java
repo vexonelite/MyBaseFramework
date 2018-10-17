@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import io.reactivex.disposables.Disposable;
 import tw.realtime.project.rtbaseframework.LogWrapper;
@@ -16,23 +17,23 @@ import tw.realtime.project.rtbaseframework.interfaces.apis.RxDisposeDelegate;
 
 public abstract class BaseRxViewModel extends AndroidViewModel implements RxDisposeDelegate {
 
-    private Disposable mDisposable;
+    private Disposable disposable;
 
     protected BaseRxViewModel(@NonNull Application application) {
         super(application);
     }
 
-    protected void setDisposable (Disposable disposable) {
-        mDisposable = disposable;
+    protected void setDisposable (@Nullable Disposable disposable) {
+        this.disposable = disposable;
     }
 
     private void localRxDisposeIfNeeded () {
-        if (null != mDisposable) {
-            if (!mDisposable.isDisposed()) {
-                mDisposable.dispose();
+        if (null != disposable) {
+            if (!disposable.isDisposed()) {
+                disposable.dispose();
                 LogWrapper.showLog(Log.WARN, getLogTag(), "localDisposableIfNeeded - dispose");
             }
-            mDisposable = null;
+            disposable = null;
             LogWrapper.showLog(Log.WARN, getLogTag(), "localDisposableIfNeeded - reset");
         }
     }
@@ -43,7 +44,7 @@ public abstract class BaseRxViewModel extends AndroidViewModel implements RxDisp
     }
 
 
-    protected String getLogTag () {
+    protected final String getLogTag () {
         return this.getClass().getSimpleName();
     }
 

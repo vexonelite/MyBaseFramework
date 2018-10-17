@@ -1,16 +1,19 @@
 package tw.realtime.project.rtbaseframework.architectures.viewmodels;
 
 import android.app.Application;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.util.Log;
-
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.api.commons.AsyncApiException;
-import tw.realtime.project.rtbaseframework.enumerations.LiveDataState;
 import tw.realtime.project.rtbaseframework.enumerations.TaskState;
 
 
@@ -21,14 +24,12 @@ import tw.realtime.project.rtbaseframework.enumerations.TaskState;
 public abstract class BaseObjectViewModel<T> extends BaseRxViewModel {
 
     /** Used to decide if we have to show a progress dialog */
-    private MutableLiveData<TaskState> mTaskStateLiveData;
+    private MutableLiveData<TaskState> taskStateLiveData;
 
     /** Used to handle any exception happened during an async task execution call */
-    private MutableLiveData<AsyncApiException> mErrorLiveData;
+    private MutableLiveData<AsyncApiException> errorLiveData;
 
-    private MutableLiveData<T> mDataLiveData;
-    @Deprecated
-    private MutableLiveData<LiveDataState> mStateLiveData;
+    private MutableLiveData<T> dataLiveData;
 
 
     protected BaseObjectViewModel(@NonNull Application application) {
@@ -37,115 +38,58 @@ public abstract class BaseObjectViewModel<T> extends BaseRxViewModel {
 
 
     @MainThread
-    public LiveData<T> getDataLiveData () {
-        if (null == mDataLiveData) {
-            mDataLiveData = new MutableLiveData<>();
-            LogWrapper.showLog(Log.WARN, getLogTag(), "getDataLiveData");
+    public final LiveData<T> getDataLiveData () {
+        if (null == dataLiveData) {
+            dataLiveData = new MutableLiveData<>();
         }
-        return mDataLiveData;
+        return dataLiveData;
     }
 
     @MainThread
-    @Deprecated
-    public void resetDataLiveData () {
-        if (null != mDataLiveData) {
-            // this way poses problem for some case
-            //mDataLiveData.setValue(null);
-            mDataLiveData = new MutableLiveData<>();
-            LogWrapper.showLog(Log.WARN, getLogTag(), "resetDataLiveData");
-        }
-    }
-
-    @MainThread
-    protected void setDataLiveData (@Nullable T master) {
-        if (null != mDataLiveData) {
-            mDataLiveData.setValue(master);
-            LogWrapper.showLog(Log.WARN, getLogTag(), "setDataLiveData");
+    protected final void setDataLiveData (@Nullable T master) {
+        if (null != dataLiveData) {
+            dataLiveData.setValue(master);
         }
     }
 
 
     @MainThread
-    @Deprecated
-    public LiveData<LiveDataState> getStateLiveData () {
-        if (null == mStateLiveData) {
-            mStateLiveData = new MutableLiveData<>();
-            LogWrapper.showLog(Log.WARN, getLogTag(), "getStateLiveData");
+    public final LiveData<AsyncApiException> getErrorLiveData () {
+        if (null == errorLiveData) {
+            errorLiveData = new MutableLiveData<>();
         }
-        return mStateLiveData;
+        return errorLiveData;
     }
 
     @MainThread
-    @Deprecated
-    public void resetStateLiveData () {
-        if (null != mStateLiveData) {
-            // this way poses problem for some case
-            //mStateLiveData.setValue(null);
-            mStateLiveData = new MutableLiveData<>();
-            LogWrapper.showLog(Log.WARN, getLogTag(), "resetStateLiveData");
-        }
-    }
-
-    @MainThread
-    @Deprecated
-    protected void setStateLiveData (@NonNull LiveDataState dataState) {
-        if (null != mStateLiveData) {
-            mStateLiveData.setValue(dataState);
-            LogWrapper.showLog(Log.WARN, getLogTag(), "resetListOfData");
+    protected final void setErrorLiveData (@Nullable AsyncApiException exception) {
+        if (null != errorLiveData) {
+            errorLiveData.setValue(exception);
         }
     }
 
 
     @MainThread
-    public LiveData<AsyncApiException> getErrorLiveData () {
-        if (null == mErrorLiveData) {
-            mErrorLiveData = new MutableLiveData<>();
+    public final LiveData<TaskState> getTaskState () {
+        if (null == taskStateLiveData) {
+            taskStateLiveData = new MutableLiveData<>();
         }
-        return mErrorLiveData;
+        return taskStateLiveData;
     }
 
     @MainThread
-    @Deprecated
-    public void resetErrorLiveData () {
-        if (null != mErrorLiveData) {
-            // this way poses problem for some case
-            //mErrorLiveData.setValue(null);
-            mErrorLiveData = new MutableLiveData<>();
-            LogWrapper.showLog(Log.WARN, getLogTag(), "resetErrorLiveData");
+    protected final void setTaskState (@Nullable TaskState taskState) {
+        if (null != taskStateLiveData) {
+            taskStateLiveData.setValue(taskState);
         }
     }
 
-    @MainThread
-    protected void setErrorLiveData (@Nullable AsyncApiException exception) {
-        if (null != mErrorLiveData) {
-            mErrorLiveData.setValue(exception);
-        }
-    }
-
-
-    @MainThread
-    public LiveData<TaskState> getTaskState () {
-        if (null == mTaskStateLiveData) {
-            mTaskStateLiveData = new MutableLiveData<>();
-        }
-        return mTaskStateLiveData;
-    }
-
-    @MainThread
-    @Deprecated
-    public void resetTaskState () {
-        if (null != mTaskStateLiveData) {
-            // this way poses problem for some case
-            //mTaskStateLiveData.setValue(null);
-            mTaskStateLiveData = new MutableLiveData<>();
-            LogWrapper.showLog(Log.WARN, getLogTag(), "resetTaskState");
-        }
-    }
-
-    @MainThread
-    protected void setTaskState (@Nullable TaskState taskState) {
-        if (null != mTaskStateLiveData) {
-            mTaskStateLiveData.setValue(taskState);
+    public final class DoOnSubscriber implements Consumer<Disposable> {
+        @Override
+        public void accept(@io.reactivex.annotations.NonNull Disposable disposable) throws Exception {
+            LogWrapper.showLog(Log.INFO, getLogTag(), "DoOnSubscriber - accept - Tid: " + Thread.currentThread().getId());
+            new Handler(Looper.getMainLooper()).post(
+                    () -> {setTaskState(TaskState.LOADING_BEGIN); } );
         }
     }
 

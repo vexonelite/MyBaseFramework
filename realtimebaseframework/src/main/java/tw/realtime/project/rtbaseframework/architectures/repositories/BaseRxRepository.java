@@ -2,6 +2,7 @@ package tw.realtime.project.rtbaseframework.architectures.repositories;
 
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import tw.realtime.project.rtbaseframework.LogWrapper;
@@ -9,14 +10,14 @@ import tw.realtime.project.rtbaseframework.interfaces.apis.AppRxRepository;
 
 public abstract class BaseRxRepository implements AppRxRepository {
 
-    private Disposable mDisposable;
+    private Disposable disposable;
 
     protected final String getLogTag () {
         return this.getClass().getSimpleName();
     }
 
-    protected final void setDisposable (Disposable disposable) {
-        mDisposable = disposable;
+    protected final void setDisposable (@Nullable Disposable disposable) {
+        this.disposable = disposable;
     }
 
     @Override
@@ -25,12 +26,12 @@ public abstract class BaseRxRepository implements AppRxRepository {
     }
 
     private void localRxDisposeIfNeeded () {
-        if (null != mDisposable) {
-            if (!mDisposable.isDisposed()) {
-                mDisposable.dispose();
+        if (null != disposable) {
+            if (!disposable.isDisposed()) {
+                disposable.dispose();
                 LogWrapper.showLog(Log.WARN, getLogTag(), "localRxDisposableIfNeeded - dispose");
             }
-            mDisposable = null;
+            disposable = null;
             LogWrapper.showLog(Log.WARN, getLogTag(), "localRxDisposableIfNeeded - reset");
         }
     }
