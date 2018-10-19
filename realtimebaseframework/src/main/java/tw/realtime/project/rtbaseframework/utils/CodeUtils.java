@@ -233,6 +233,28 @@ public class CodeUtils {
         }
     }
 
+    /**
+     * Ref: https://magiclen.org/android-text-length/
+     * @param charSequence
+     * @return
+     */
+    public static int calculateCharSequenceLength(@NonNull CharSequence charSequence) {
+        int len = 0;
+        final int length = charSequence.length();
+        for (int i = 0; i < length; i++) {
+//            final char tmp = charSequence.charAt(i);
+//            if (tmp >= 0x20 && tmp <= 0x7E) {
+//                // 字元值 32~126 是 ASCII 半形字元的範圍
+//                len++;
+//            } else {
+//                // 非半形字元
+//                len += 2;
+//            }
+            len++;
+        }
+        return len;
+    }
+
     public static void sendEmailByIntent (Context context, String emailAddress) {
         if ( (null == context) || (null == emailAddress) ) {
             return;
