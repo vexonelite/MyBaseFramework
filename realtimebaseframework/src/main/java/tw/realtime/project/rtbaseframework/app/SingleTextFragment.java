@@ -1,13 +1,13 @@
 package tw.realtime.project.rtbaseframework.app;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import tw.realtime.project.rtbaseframework.R;
 
 /**
@@ -28,7 +28,7 @@ public final class SingleTextFragment extends BaseFragment {
 	public void onViewCreated(@NonNull View rootView, @Nullable Bundle savedInstanceState) {
 		final Bundle args = getArguments();
 		if ( (args != null) && (null != args.getString(SINGLE_TEXT_KEY)) ) {
-			TextView textView = rootView.findViewById(R.id.textView);
+			final TextView textView = rootView.findViewById(R.id.textView);
 			if (null != textView) {
 				textView.setText(args.getString(SINGLE_TEXT_KEY));
 			}

@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import tw.realtime.project.rtbaseframework.R;
 import tw.realtime.project.rtbaseframework.adapters.recyclerview.BaseRecyclerViewAdapter;
-import tw.realtime.project.rtbaseframework.interfaces.HolderCellClickListener;
+import tw.realtime.project.rtbaseframework.interfaces.HolderCellClickDelegate;
 import tw.realtime.project.rtbaseframework.widgets.CommonItemWrapper;
 
 /**
@@ -17,9 +17,9 @@ import tw.realtime.project.rtbaseframework.widgets.CommonItemWrapper;
 public class TestTextAdapter
         extends BaseRecyclerViewAdapter<String, TestTextViewHolder> {
 
-    private HolderCellClickListener<String> mHolderCellClickCallback;
+    private HolderCellClickDelegate<String> mHolderCellClickCallback;
 
-    public TestTextAdapter setHolderCellClickCallback(HolderCellClickListener<String> callback) {
+    public TestTextAdapter setHolderCellClickCallback(HolderCellClickDelegate<String> callback) {
         mHolderCellClickCallback = callback;
         return this;
     }
@@ -29,7 +29,7 @@ public class TestTextAdapter
     public TestTextViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         return new TestTextViewHolder( inflater.inflate(
-                R.layout.test_text_view_item, parent, false) );
+                R.layout.base_dev_text_view_item, parent, false) );
     }
 
     @Override

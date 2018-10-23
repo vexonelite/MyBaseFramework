@@ -229,7 +229,7 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
         }
     }
 
-    protected void showActionBar () {
+    protected final void showActionBar () {
         if (forbidSetupActionBar()) {
             return;
         }
@@ -313,7 +313,7 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
     /**
      * 預設實作好，給確定或取消選項之 Callback，點下會令目前 Fragment 被 Pop
      */
-    public class BackPressedCallback implements DialogInterface.OnClickListener {
+    public final class BackPressedCallback implements DialogInterface.OnClickListener {
         @Override
         public void onClick(DialogInterface dialogInterface, int i) {
             dialogInterface.dismiss();
@@ -329,7 +329,7 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
     /**
      * 預設實作好，給確定或取消選項之 Callback，點下會令目前 Fragment 被 Pop
      */
-    public class BackPressedCallback2 implements BaseDialogFragment.OnDecisionMadeListener {
+    public final class BackPressedCallback2 implements BaseDialogFragment.OnDecisionMadeListener {
         @Override
         public void onNotification(DialogFragment dialogFrag, BaseDialogFragment.DialogAction dialogAction) {
             dialogFrag.dismiss();
@@ -345,7 +345,7 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
     /**
      * 預設實作好，給確定或取消選項之 Callback，點下會令目前 Fragment 被 Pop
      */
-    public class DefaultDismissCallback implements BaseDialogFragment.OnDecisionMadeListener {
+    public final class DefaultDismissCallback implements BaseDialogFragment.OnDecisionMadeListener {
         @Override
         public void onNotification(DialogFragment dialogFrag, BaseDialogFragment.DialogAction dialogAction) {
             dialogFrag.dismiss();
@@ -356,7 +356,7 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
     /**
      * 呼叫 Attached Activity 的 onBackPressed 方法
      */
-    protected void backToPrevious () {
+    protected final void backToPrevious () {
         if (isAdded()) {
             Activity activity = getActivity();
             if (null != activity) {
@@ -388,7 +388,7 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
         activity.replaceOrShroudFragment(fragment, false, fragmentContainerId);
     }
 
-    public class DefaultOnViewDestroyCallback implements BaseFragment.onViewDestroyListener {
+    public final class DefaultOnViewDestroyCallback implements BaseFragment.onViewDestroyListener {
         @Override
         public void onDestroyViewGetCalled() {
             setMenuVisibility(true);

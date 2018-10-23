@@ -227,7 +227,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
                                        DialogInterface.OnClickListener positiveCallback,
                                        DialogInterface.OnClickListener negativeCallback) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         if (null != message) {
             builder.setMessage(message);
@@ -255,7 +255,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
 
         try {
             if (isAllowedToCommitFragmentTransaction() ) {
-                ConfirmDialog dialog = new ConfirmDialog();
+                final ConfirmDialog dialog = new ConfirmDialog();
                 dialog.setAlertDialogBuilder(builder);
                 dialog.show(getSupportFragmentManager(), dialog.getClass().getSimpleName());
             }
@@ -277,9 +277,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         // DialogFragment.show() will take care of adding the fragment in a transaction.
         // We also want to remove any currently showing dialog,
         // so make our own transaction and take care of that here.
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        Fragment prev = fragmentManager.findFragmentByTag(dialogFragment.getClass().getSimpleName());
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        final FragmentTransaction ft = fragmentManager.beginTransaction();
+        final Fragment prev = fragmentManager.findFragmentByTag(dialogFragment.getClass().getSimpleName());
         if (prev != null) {
             ft.remove(prev);
         }
@@ -333,14 +333,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
 
 
     public void showActionBar() {
-        ActionBar actionBar = getSupportActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (null != actionBar) {
             actionBar.show();
         }
     }
 
     public void hideActionBar() {
-        ActionBar actionBar = getSupportActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (null != actionBar) {
             actionBar.hide();
         }
@@ -354,9 +354,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
         else {
-            View decorView = getWindow().getDecorView();
+            final View decorView = getWindow().getDecorView();
             // Hide the status bar.
-            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+            final int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
             decorView.setSystemUiVisibility(uiOptions);
             // Remember that you should never show the action bar if the
             // status bar is hidden, so hide that too if necessary.
@@ -458,9 +458,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
     }
 
     public void haveAudioManagerAlterStreamVolume (boolean hasRaised) {
-        AudioManager myAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        int maxLevelVol = myAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        int currentLevelVol = myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        final AudioManager myAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        final int maxLevelVol = myAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        final int currentLevelVol = myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         int nextLevelVol = hasRaised ? (currentLevelVol + 1) : (currentLevelVol - 1);
         if (nextLevelVol < 0) {
             nextLevelVol = 0;
@@ -510,7 +510,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
 
         // The UI options currently enabled are represented by a bitfield.
         // getSystemUiVisibility() gives us that bitfield.
-        int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
+        final int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
         int newUiOptions = uiOptions;
         newUiOptions ^= View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION

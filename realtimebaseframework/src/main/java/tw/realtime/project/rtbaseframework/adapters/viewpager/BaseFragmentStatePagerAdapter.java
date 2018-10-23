@@ -17,7 +17,7 @@ public abstract class BaseFragmentStatePagerAdapter<T> extends FragmentStatePage
         super(fm);
     }
 
-    final protected String getLogTag() {
+    protected final String getLogTag() {
         return this.getClass().getSimpleName();
     }
 

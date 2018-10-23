@@ -9,5 +9,5 @@
     android:text="Label"
     android:textAppearance="?android:attr/textAppearanceMedium"
     android:textSize="20sp"
-    android:background="@drawable/test_textview_selector"/>
+    android:background="@drawable/base_dev_textview_selector"/>
 

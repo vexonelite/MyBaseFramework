@@ -19,8 +19,8 @@ public abstract class CommonItemWrapper<T> {
      * Test if the time difference between the current click event and the last click event
      * exceeds the pre-defined threshold.
      */
-    final protected boolean canHandleClickEvent() {
-        long currentTime = System.currentTimeMillis();
+    protected final boolean canHandleClickEvent() {
+        final long currentTime = System.currentTimeMillis();
         if ( (currentTime - mLastClickTime) > MIN_CLICK_TIME_DIFFERENCE) {
             mLastClickTime = currentTime;
             return true;
@@ -36,17 +36,17 @@ public abstract class CommonItemWrapper<T> {
         mPosition = position;
     }
 
-    final public int getPosition () {
+    public final int getPosition () {
         return mPosition;
     }
 
     @NonNull
-    final public String getAction () {
+    public final String getAction () {
         return mAction;
     }
 
     @NonNull
-    final public T getDataObject () {
+    public final T getDataObject () {
         return mObject;
     }
 }

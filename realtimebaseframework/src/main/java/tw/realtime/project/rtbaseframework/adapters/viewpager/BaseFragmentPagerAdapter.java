@@ -18,7 +18,7 @@ public abstract class BaseFragmentPagerAdapter<T> extends FragmentPagerAdapter {
         super(fm);
     }
 
-    final protected String getLogTag() {
+    protected final String getLogTag() {
         return this.getClass().getSimpleName();
     }
 
