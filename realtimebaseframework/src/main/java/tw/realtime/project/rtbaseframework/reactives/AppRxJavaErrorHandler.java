@@ -12,9 +12,9 @@ import tw.realtime.project.rtbaseframework.LogWrapper;
 
 /**
  * Created by vexonelite on 2017/10/12.
+ * revision in 2018/10/01.
  */
-
-public class AppRxJavaErrorHandler implements Consumer<Throwable> {
+public final class AppRxJavaErrorHandler implements Consumer<Throwable> {
 
     private final String logTag;
 
