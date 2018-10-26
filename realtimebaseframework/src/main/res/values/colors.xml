@@ -7,11 +7,11 @@
     <!-- Tint color of Progress Dialog -->
     <color name="base_progress_dialog_tint">#FFFFFF</color>
 
-    <color name="base_gray_sixty">#999999</color>
     <color name="base_description_text">#747474</color>
 
     <color name="base_gray_94">#f0f0f0</color>
     <color name="base_gray_80">#cccccc</color>
+    <color name="base_gray_187">#bbbbbb</color>
     <color name="base_gray_60">#999999</color>
     <color name="base_gray_40">#666666</color>
     <color name="base_gray_27">#454545</color>
