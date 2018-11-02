@@ -317,12 +317,7 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
         @Override
         public void onClick(DialogInterface dialogInterface, int i) {
             dialogInterface.dismiss();
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    backToPrevious();
-                }
-            });
+            new Handler(Looper.getMainLooper()).post(BaseFragment.this::backToPreviousOne);
         }
     }
 
@@ -333,12 +328,7 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
         @Override
         public void onNotification(DialogFragment dialogFrag, BaseDialogFragment.DialogAction dialogAction) {
             dialogFrag.dismiss();
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    backToPrevious();
-                }
-            });
+            new Handler(Looper.getMainLooper()).post(BaseFragment.this::backToPreviousOne);
         }
     }
 
@@ -356,12 +346,10 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
     /**
      * 呼叫 Attached Activity 的 onBackPressed 方法
      */
-    protected final void backToPrevious () {
-        if (isAdded()) {
-            Activity activity = getActivity();
-            if (null != activity) {
-                activity.onBackPressed();
-            }
+    protected final void backToPreviousOne () {
+        if (isAllowedToCommitFragmentTransaction()) {
+            final Activity activity = getActivity();
+            activity.onBackPressed();
         }
     }
 
