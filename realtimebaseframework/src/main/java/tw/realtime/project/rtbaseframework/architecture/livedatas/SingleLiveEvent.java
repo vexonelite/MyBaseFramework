@@ -1,4 +1,4 @@
-package tw.realtime.project.rtbaseframework.architectures.livedatas;
+package tw.realtime.project.rtbaseframework.architecture.livedatas;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;

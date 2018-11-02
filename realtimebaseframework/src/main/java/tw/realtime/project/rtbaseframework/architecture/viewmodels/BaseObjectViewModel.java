@@ -1,4 +1,4 @@
-package tw.realtime.project.rtbaseframework.architectures.viewmodels;
+package tw.realtime.project.rtbaseframework.architecture.viewmodels;
 
 import android.app.Application;
 import android.os.Handler;

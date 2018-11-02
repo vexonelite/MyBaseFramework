@@ -1,4 +1,4 @@
-package tw.realtime.project.rtbaseframework.architectures.repositories;
+package tw.realtime.project.rtbaseframework.architecture.repositories;
 
 import android.util.Log;
 

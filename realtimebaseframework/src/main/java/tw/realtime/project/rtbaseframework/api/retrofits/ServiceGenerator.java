@@ -1,4 +1,4 @@
-package tw.realtime.project.rtbaseframework.retrofits;
+package tw.realtime.project.rtbaseframework.api.retrofits;
 
 import androidx.annotation.NonNull;
 

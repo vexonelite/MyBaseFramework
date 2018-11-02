@@ -1,4 +1,4 @@
-package tw.realtime.project.rtbaseframework.architectures.viewmodels;
+package tw.realtime.project.rtbaseframework.architecture.viewmodels;
 
 import android.app.Application;
 import android.util.Log;
@@ -23,7 +23,7 @@ public abstract class BaseRxViewModel extends AndroidViewModel implements RxDisp
         super(application);
     }
 
-    protected void setDisposable (@Nullable Disposable disposable) {
+    protected final void setDisposable (@Nullable Disposable disposable) {
         this.disposable = disposable;
     }
 
