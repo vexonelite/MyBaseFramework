@@ -56,7 +56,7 @@ public abstract class BaseRxAsyncRepository<T> extends BaseRxRepository {
             onErrorHappened(asyncApiException);
         }
         else {
-            onErrorHappened(new AsyncApiException(ApiConstants.ExceptionCode.INTERNAL_CONVERSION_ERROR, throwable));
+            onErrorHappened(new AsyncApiException(throwable, ApiConstants.ExceptionCode.INTERNAL_CONVERSION_ERROR, "", ""));
         }
     }
 }

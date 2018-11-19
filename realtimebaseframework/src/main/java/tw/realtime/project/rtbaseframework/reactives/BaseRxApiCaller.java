@@ -80,7 +80,7 @@ public abstract class BaseRxApiCaller<T> {
                     }
                 }
                 else {
-                    mCallback.onError(new AsyncApiException(ApiConstants.ExceptionCode.INTERNAL_CONVERSION_ERROR, e));
+                    mCallback.onError(new AsyncApiException(e, ApiConstants.ExceptionCode.INTERNAL_CONVERSION_ERROR, "", ""));
                 }
             }
 
@@ -130,7 +130,7 @@ public abstract class BaseRxApiCaller<T> {
                     }
                 }
                 else {
-                    mCallback.onError(new AsyncApiException(ApiConstants.ExceptionCode.INTERNAL_CONVERSION_ERROR, e));
+                    mCallback.onError(new AsyncApiException(e, ApiConstants.ExceptionCode.INTERNAL_CONVERSION_ERROR, "", ""));
                 }
             }
 
@@ -174,7 +174,7 @@ public abstract class BaseRxApiCaller<T> {
                     }
                 }
                 else {
-                    mCallback.onError(new AsyncApiException(ApiConstants.ExceptionCode.INTERNAL_CONVERSION_ERROR, e));
+                    mCallback.onError(new AsyncApiException(e, ApiConstants.ExceptionCode.INTERNAL_CONVERSION_ERROR, "", ""));
                 }
             }
 
@@ -187,7 +187,11 @@ public abstract class BaseRxApiCaller<T> {
 
             if (null != mCallback) {
                 mCallback.onEnd();
-                mCallback.onError(new AsyncApiException(ApiConstants.ExceptionCode.RX_MAYBE_ON_COMPLETE, "filter returns negative result"));
+                mCallback.onError(new AsyncApiException(
+                        "filter returns negative result",
+                        ApiConstants.ExceptionCode.RX_MAYBE_ON_COMPLETE,
+                        "",
+                        ""));
             }
 
             rxDisposableIfNeeded();
@@ -209,5 +213,5 @@ public abstract class BaseRxApiCaller<T> {
         }
     }
 
-    public abstract void executeApiCall ();
+    public abstract void issueApiCall ();
 }

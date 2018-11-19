@@ -29,7 +29,7 @@ public abstract class BaseSQLQueryCallable<T> implements Callable<List<T>>, SQLQ
             mResultList.add(object);
         }
         catch (Exception e) {
-            throw new AsyncApiException(ApiConstants.ExceptionCode.SQLITE_QUERY_FAILURE, e);
+            throw new AsyncApiException(e, ApiConstants.ExceptionCode.SQLITE_QUERY_FAILURE, "", "");
         }
     }
 

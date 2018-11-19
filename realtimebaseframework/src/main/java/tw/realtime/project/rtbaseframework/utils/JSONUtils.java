@@ -30,7 +30,7 @@ public class JSONUtils {
         }
         catch (JSONException e) {
             LogWrapper.showLog(Log.ERROR, logTag, "Exception on jsonStringToJsonObject");
-            throw new AsyncApiException(ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, e);
+            throw new AsyncApiException(e, ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
         }
     }
 
@@ -47,7 +47,7 @@ public class JSONUtils {
         }
         catch (JSONException e) {
             LogWrapper.showLog(Log.ERROR, logTag, "Exception on jsonStringToJsonArray");
-            throw new AsyncApiException(ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, e);
+            throw new AsyncApiException(e, ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
         }
     }
 
@@ -72,7 +72,7 @@ public class JSONUtils {
             }
             catch (JSONException e) {
                 LogWrapper.showLog(Log.ERROR, logTag, "Exception on getStringFromJSON");
-                throw new AsyncApiException(ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, e);
+                throw new AsyncApiException(e, ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
             }
 
             if (null != value) {
@@ -82,14 +82,14 @@ public class JSONUtils {
                 String message = "getStringFromJSON: jsonObject.getString(" + key + ") is either null or empty!";
                 LogWrapper.showLog(Log.WARN, logTag, message);
                 if (required) {
-                    throw new AsyncApiException(ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, message);
+                    throw new AsyncApiException(message, ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
                 }
             }
         } else {
             String message = "getStringFromJSON: No key '" + key + "' in JSONobject!";
             LogWrapper.showLog(Log.WARN, logTag, message);
             if (required) {
-                throw new AsyncApiException(ApiConstants.ExceptionCode.NO_SPECIFIED_KEY_IN_JSON, message);
+                throw new AsyncApiException(message, ApiConstants.ExceptionCode.NO_SPECIFIED_KEY_IN_JSON, "", "");
             }
         }
 
@@ -116,14 +116,39 @@ public class JSONUtils {
             }
             catch (JSONException e) {
                 LogWrapper.showLog(Log.ERROR, logTag, "Exception on getIntegerFromJSON");
-                throw new AsyncApiException(ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, e);
+                throw new AsyncApiException(e, ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
             }
         }
         else {
             String message = "getIntegerFromJSON: No key '" + key + "' in JSONobject!";
             LogWrapper.showLog(Log.WARN, logTag, message);
             if (required) {
-                throw new AsyncApiException(ApiConstants.ExceptionCode.NO_SPECIFIED_KEY_IN_JSON, message);
+                throw new AsyncApiException(message, ApiConstants.ExceptionCode.NO_SPECIFIED_KEY_IN_JSON, "", "");
+            }
+        }
+
+        return returnValue;
+    }
+
+    public static long getLongFromJSON (JSONObject jsonObject,
+                                        String key,
+                                        String logTag,
+                                        boolean required) throws AsyncApiException {
+        long returnValue = -1;
+        if (jsonObject.has(key)) {
+            try {
+                returnValue = jsonObject.getLong(key);
+            }
+            catch (JSONException e) {
+                LogWrapper.showLog(Log.ERROR, logTag, "Exception on getLongFromJSON");
+                throw new AsyncApiException(e, ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
+            }
+        }
+        else {
+            String message = "getLongFromJSON: No key '" + key + "' in JSONobject!";
+            LogWrapper.showLog(Log.WARN, logTag, message);
+            if (required) {
+                throw new AsyncApiException(message, ApiConstants.ExceptionCode.NO_SPECIFIED_KEY_IN_JSON, "", "");
             }
         }
 
@@ -151,7 +176,7 @@ public class JSONUtils {
             }
             catch (JSONException e) {
                 LogWrapper.showLog(Log.ERROR, logTag, "Exception on getJSONObjectFromJSON");
-                throw new AsyncApiException(ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, e);
+                throw new AsyncApiException(e, ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
             }
 
             if (null != innerObject) {
@@ -161,14 +186,14 @@ public class JSONUtils {
                 String message = "getJSONObjectFromJSON - jsonObject.getJSONObject(" + key + ") is either null or empty!";
                 LogWrapper.showLog(Log.WARN, logTag, message);
                 if (required) {
-                    throw new AsyncApiException(ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, message);
+                    throw new AsyncApiException(message, ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
                 }
             }
         } else {
             String message = "getJSONObjectFromJSON - No key " + key + " in JSONobject!";
             LogWrapper.showLog(Log.WARN, logTag, message);
             if (required) {
-                throw new AsyncApiException(ApiConstants.ExceptionCode.NO_SPECIFIED_KEY_IN_JSON, message);
+                throw new AsyncApiException(message, ApiConstants.ExceptionCode.NO_SPECIFIED_KEY_IN_JSON, "", "");
             }
         }
 
@@ -196,7 +221,7 @@ public class JSONUtils {
             }
             catch (JSONException e) {
                 LogWrapper.showLog(Log.ERROR, logTag, "Exception on getJSONArrayFromJSON");
-                throw new AsyncApiException(ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, e);
+                throw new AsyncApiException(e, ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
             }
 
             if (null != innerArray) {
@@ -206,14 +231,14 @@ public class JSONUtils {
                 String message = "getJSONArrayFromJSON - jsonObject.getJSONArray(" + key + ") is either null or empty!";
                 LogWrapper.showLog(Log.WARN, logTag, message);
                 if (required) {
-                    throw new AsyncApiException(ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, message);
+                    throw new AsyncApiException(message, ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
                 }
             }
         } else {
             String message = "getJSONArrayFromJSON - No key " + key + " in JSONobject!";
             LogWrapper.showLog(Log.WARN, logTag, message);
             if (required) {
-                throw new AsyncApiException(ApiConstants.ExceptionCode.NO_SPECIFIED_KEY_IN_JSON, message);
+                throw new AsyncApiException(message, ApiConstants.ExceptionCode.NO_SPECIFIED_KEY_IN_JSON, "", "");
             }
         }
 
@@ -237,7 +262,7 @@ public class JSONUtils {
         catch (JSONException e) {
             LogWrapper.showLog(Log.ERROR, logTag, "Exception on getJSONObjectFromJSONArray - " +
                     "cannot getJSONObject at index: " + index);
-            throw new AsyncApiException(ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, e);
+            throw new AsyncApiException(e, ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
         }
     }
 }

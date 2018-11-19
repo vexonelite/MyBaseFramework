@@ -236,7 +236,7 @@ public abstract class BaseCacheApiCaller<T> implements AsyncApiCallback<T> {
         }
         catch (Exception e) {
             LogWrapper.showLog(Log.ERROR, getLogTag(), "executeRequestCall: HTTP_REQUEST_ERROR");
-            throw new AsyncApiException(ApiConstants.ExceptionCode.HTTP_REQUEST_ERROR, e);
+            throw new AsyncApiException(e, ApiConstants.ExceptionCode.HTTP_REQUEST_ERROR, "", "");
         }
     }
 
@@ -279,8 +279,11 @@ public abstract class BaseCacheApiCaller<T> implements AsyncApiCallback<T> {
     private String getOkHttpResponseString (Response response) throws AsyncApiException {
         if (null == response) {
             LogWrapper.showLog(Log.ERROR, getLogTag(), "getOkHttpResponseString: HTTP_RESPONSE_ERROR");
-            throw new AsyncApiException(ApiConstants.ExceptionCode.HTTP_RESPONSE_ERROR,
-                    "Http response is null!");
+            throw new AsyncApiException(
+                    "Http response is null!",
+                    ApiConstants.ExceptionCode.HTTP_RESPONSE_ERROR,
+                    "",
+                    "");
         }
 
         if (response.isSuccessful()) {
@@ -290,14 +293,17 @@ public abstract class BaseCacheApiCaller<T> implements AsyncApiCallback<T> {
             catch (Exception e) {
                 response.close();
                 LogWrapper.showLog(Log.ERROR, getLogTag(), "getOkHttpResponseString: HTTP_RESPONSE_PARSING_ERROR");
-                throw new AsyncApiException(ApiConstants.ExceptionCode.HTTP_RESPONSE_PARSING_ERROR, e);
+                throw new AsyncApiException(e, ApiConstants.ExceptionCode.HTTP_RESPONSE_PARSING_ERROR, "", "");
             }
         }
         else {
             response.close();
             LogWrapper.showLog(Log.ERROR, getLogTag(), "getOkHttpResponseString: HTTP_RESPONSE_ERROR");
-            throw new AsyncApiException(ApiConstants.ExceptionCode.HTTP_RESPONSE_ERROR,
-                    "Http response is not successful!");
+            throw new AsyncApiException(
+                    "Http response is not successful!",
+                    ApiConstants.ExceptionCode.HTTP_RESPONSE_ERROR,
+                    "",
+                    "");
         }
     }
 

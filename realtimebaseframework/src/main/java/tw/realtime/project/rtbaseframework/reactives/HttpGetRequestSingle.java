@@ -38,11 +38,11 @@ public final class HttpGetRequestSingle extends BaseApiRequestSingle {
         catch (Exception e) {
             if (e instanceof IOException) {
                 //throw new AsyncApiException(ApiConstants.ExceptionCode.HTTP_REQUEST_ERROR, e);
-                emitter.onError(new AsyncApiException(ApiConstants.ExceptionCode.HTTP_REQUEST_ERROR, e));
+                emitter.onError(new AsyncApiException(e, ApiConstants.ExceptionCode.HTTP_REQUEST_ERROR, "", ""));
             }
             else {
                 //throw new AsyncApiException(ApiConstants.ExceptionCode.FAIL_TO_EXECUTE_API_REQUEST, e);
-                emitter.onError(new AsyncApiException(ApiConstants.ExceptionCode.FAIL_TO_EXECUTE_API_REQUEST, e));
+                emitter.onError(new AsyncApiException(e, ApiConstants.ExceptionCode.FAIL_TO_EXECUTE_API_REQUEST, "", ""));
             }
         }
     }

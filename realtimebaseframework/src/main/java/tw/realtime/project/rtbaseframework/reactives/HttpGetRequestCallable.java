@@ -65,10 +65,10 @@ public final class HttpGetRequestCallable extends BaseApiRequestCallable {
         catch (Throwable e) {
             LogWrapper.showLog(Log.ERROR, "HttpGetRequestCallable", "Exception on call");
             if (e instanceof IOException) {
-                throw new AsyncApiException(ApiConstants.ExceptionCode.HTTP_REQUEST_ERROR, e);
+                throw new AsyncApiException(e, ApiConstants.ExceptionCode.HTTP_REQUEST_ERROR, "", "");
             }
             else {
-                throw new AsyncApiException(ApiConstants.ExceptionCode.FAIL_TO_EXECUTE_API_REQUEST, e);
+                throw new AsyncApiException(e, ApiConstants.ExceptionCode.FAIL_TO_EXECUTE_API_REQUEST, "", "");
             }
         }
     }

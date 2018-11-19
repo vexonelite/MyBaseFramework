@@ -124,7 +124,7 @@ public abstract class BaseApiRetrofit<T> extends BaseApiData
     public void onFailure(retrofit2.Call<ResponseBody> call, Throwable throwable) {
         LogWrapper.showLog(Log.ERROR, getLogTag(), "onFailure", throwable);
         onEnd();
-        onError(new AsyncApiException(ApiConstants.ExceptionCode.HTTP_REQUEST_ERROR, throwable));
+        onError(new AsyncApiException(throwable, ApiConstants.ExceptionCode.HTTP_REQUEST_ERROR, "", ""));
     }
 
     @Override
@@ -141,13 +141,16 @@ public abstract class BaseApiRetrofit<T> extends BaseApiData
             }
             else {
                 onError(
-                        new AsyncApiException(ApiConstants.ExceptionCode.HTTP_RESPONSE_ERROR,
-                                "Http response is not successful!")
+                        new AsyncApiException(
+                                "Http response is not successful!",
+                                ApiConstants.ExceptionCode.HTTP_RESPONSE_ERROR,
+                                "",
+                                "")
                 );
             }
         }
         catch (Exception e) {
-            onError(new AsyncApiException(ApiConstants.ExceptionCode.HTTP_RESPONSE_PARSING_ERROR, e));
+            onError(new AsyncApiException(e, ApiConstants.ExceptionCode.HTTP_RESPONSE_PARSING_ERROR, "", ""));
         }
     }
 

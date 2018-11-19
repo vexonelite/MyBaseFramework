@@ -32,7 +32,7 @@ public class ApiJSONDataBuilder implements ApiJSONObjectDelegate {
                 mJSONObject.put(key, value);
             }
             catch (Exception e) {
-                throw new AsyncApiException(ApiConstants.ExceptionCode.JSON_WRAPPING_FAILURE, e);
+                throw new AsyncApiException(e, ApiConstants.ExceptionCode.JSON_WRAPPING_FAILURE, "", "");
             }
         }
         return this;
@@ -50,7 +50,7 @@ public class ApiJSONDataBuilder implements ApiJSONObjectDelegate {
                 mJSONObject.put(key, jsonArray);
             }
             catch (Exception e) {
-                throw new AsyncApiException(ApiConstants.ExceptionCode.JSON_WRAPPING_FAILURE, e);
+                throw new AsyncApiException(e, ApiConstants.ExceptionCode.JSON_WRAPPING_FAILURE, "", "");
             }
         }
         return this;
@@ -63,7 +63,7 @@ public class ApiJSONDataBuilder implements ApiJSONObjectDelegate {
                 mJSONObject.put(key, jsonObject);
             }
             catch (Exception e) {
-                throw new AsyncApiException(ApiConstants.ExceptionCode.JSON_WRAPPING_FAILURE, e);
+                throw new AsyncApiException(e, ApiConstants.ExceptionCode.JSON_WRAPPING_FAILURE, "", "");
             }
         }
         return this;

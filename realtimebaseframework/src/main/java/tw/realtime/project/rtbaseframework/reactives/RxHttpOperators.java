@@ -62,7 +62,7 @@ public class RxHttpOperators {
             if (!response.isSuccessful()) {
                 final String message = "Something wrong - code: " + response.code() +
                         ", message: " + response.message();
-                throw new AsyncApiException(ApiConstants.ExceptionCode.HTTP_RESPONSE_ERROR, message);
+                throw new AsyncApiException(message, ApiConstants.ExceptionCode.HTTP_RESPONSE_ERROR, "", "");
             }
             try {
                 final String rawResponseString = response.body().string();
@@ -85,7 +85,7 @@ public class RxHttpOperators {
             }
             catch (Exception e) {
                 LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on okHttpResponseToJsonString");
-                throw new AsyncApiException(ApiConstants.ExceptionCode.HTTP_RESPONSE_PARSING_ERROR, e);
+                throw new AsyncApiException(e, ApiConstants.ExceptionCode.HTTP_RESPONSE_PARSING_ERROR, "", "");
             }
             finally {
                 response.body().close();
@@ -110,8 +110,8 @@ public class RxHttpOperators {
             else {
                 final String message = "Something wrong - code: " + response.code() +
                         ", message: " + response.message();
-                final String optCode = "" + response.code();
-                throw new AsyncApiException(ApiConstants.ExceptionCode.HTTP_RESPONSE_ERROR, message, optCode);
+                final String statusCode = "" + response.code();
+                throw new AsyncApiException(message, ApiConstants.ExceptionCode.HTTP_RESPONSE_ERROR, statusCode, "");
             }
         }
     }
@@ -127,7 +127,7 @@ public class RxHttpOperators {
             }
             catch (Exception e) {
                 LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on ResponseBodyToString");
-                throw new AsyncApiException(ApiConstants.ExceptionCode.HTTP_RESPONSE_PARSING_ERROR, e);
+                throw new AsyncApiException(e, ApiConstants.ExceptionCode.HTTP_RESPONSE_PARSING_ERROR, "", "");
             }
             finally {
                 responseBody.close();
@@ -180,7 +180,7 @@ public class RxHttpOperators {
             catch (Exception e) {
                 LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on JsonObjectToJsonString - Tid: " +
                         + Thread.currentThread().getId());
-                throw new AsyncApiException(ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, e);
+                throw new AsyncApiException(e, ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
             }
         }
     }
@@ -195,7 +195,7 @@ public class RxHttpOperators {
             catch (Exception e) {
                 LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on JsonArrayToJsonString - Tid: " +
                         + Thread.currentThread().getId());
-                throw new AsyncApiException(ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, e);
+                throw new AsyncApiException(e, ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
             }
         }
     }

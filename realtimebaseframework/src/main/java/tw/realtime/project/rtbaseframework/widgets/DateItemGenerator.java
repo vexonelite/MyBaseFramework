@@ -261,7 +261,7 @@ public class DateItemGenerator {
             catch (Exception e) {
                 new Handler(Looper.getMainLooper()).post(
                         new ErrorNotificationTask(
-                                new AsyncApiException(ApiConstants.ExceptionCode.INTERNAL_CONVERSION_ERROR, e)
+                                new AsyncApiException(e, ApiConstants.ExceptionCode.INTERNAL_CONVERSION_ERROR, "", "")
                         )
                 );
             }

@@ -447,7 +447,11 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
                 }
                 long tmp = mSQLiteDb.insert(tableName, null, contentValues);
                 if (tmp < 0) {
-                    throw new AsyncApiException(ApiConstants.ExceptionCode.SQLITE_INSERT_FAILURE, "cannot insert item for table: " + tableName);
+                    throw new AsyncApiException(
+                            "cannot insert item for table: " + tableName,
+                            ApiConstants.ExceptionCode.SQLITE_INSERT_FAILURE,
+                            "",
+                            "");
                 }
                 LogWrapper.showLog(Log.INFO, getLogTag(), "performSingleOperation - insert into table: " +
                         tableName + " at row: " + tmp + ", TID: " + Thread.currentThread().getId());
