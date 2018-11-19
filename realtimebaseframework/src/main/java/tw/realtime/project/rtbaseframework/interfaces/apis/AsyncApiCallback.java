@@ -16,7 +16,7 @@ public interface AsyncApiCallback<T> {
     /** Status code 為 200 時，傳為對應的資料 */
     void onSuccess(@NonNull T t);
     /** Status code 非 200 或 004 以外的例外情況 */
-    void onError(AsyncApiException e);
+    void onError(@NonNull AsyncApiException e);
     /** Status code 為 004 (Access Token 錯誤) 時會呼叫 */
     void onTokenError();
 }
