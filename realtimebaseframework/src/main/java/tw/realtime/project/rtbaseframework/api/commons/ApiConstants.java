@@ -51,5 +51,7 @@ public class ApiConstants {
         String OUT_OF_MEMORY = "99971";
         String MALFORMED_URL = "99970";
         String UNSUPPORTED_ENCODING = "99969";
+
+        String WRONG_STATUS_CODE = "99968";
     }
 }

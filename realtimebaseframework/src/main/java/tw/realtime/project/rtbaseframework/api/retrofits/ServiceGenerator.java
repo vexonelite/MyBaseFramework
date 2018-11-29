@@ -1,7 +1,6 @@
 package tw.realtime.project.rtbaseframework.api.retrofits;
 
 import androidx.annotation.NonNull;
-
 import retrofit2.Retrofit;
 import tw.realtime.project.rtbaseframework.api.commons.OkHttpUtils;
 
@@ -12,6 +11,7 @@ import tw.realtime.project.rtbaseframework.api.commons.OkHttpUtils;
  * Retrofit 2 service generator
  * <p></p>
  * Created by vexonelite on 2016/12/29.
+ * revision on 2018/10/10
  */
 public class ServiceGenerator {
 
@@ -29,8 +29,8 @@ public class ServiceGenerator {
         return instance;
     }
 
-    private static Retrofit.Builder getBasicRetrofitBuilder (@NonNull String baseApiUrl,
-                                                             boolean enableHttpLoggingInterceptor) {
+    public static Retrofit.Builder getBasicRetrofitBuilder (@NonNull String baseApiUrl,
+                                                            boolean enableHttpLoggingInterceptor) {
         return new Retrofit.Builder()
                 .baseUrl(baseApiUrl)
                 .client(OkHttpUtils.getInstance(enableHttpLoggingInterceptor));
@@ -54,4 +54,3 @@ public class ServiceGenerator {
         return getInstance(builder).create(serviceClass);
     }
 }
-

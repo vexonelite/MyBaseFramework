@@ -13,8 +13,8 @@ import tw.realtime.project.rtbaseframework.api.commons.AsyncApiException;
 
 /**
  * Created by vexonelite on 2017/6/26.
+ * revision on 2018/11/19.
  */
-
 public class JSONUtils {
 
     /**

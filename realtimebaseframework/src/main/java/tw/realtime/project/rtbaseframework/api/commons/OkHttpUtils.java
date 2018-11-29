@@ -16,8 +16,10 @@ import tw.realtime.project.rtbaseframework.LogWrapper;
 
 /**
  * 取得 OkHttpClient 的工具物件，且可以產生 OkHttp 的 Request Call
+ * <p>
+ * revision on 2018/10/10
  */
-public class OkHttpUtils {
+public final class OkHttpUtils {
 
     private volatile static OkHttpClient instance;
 

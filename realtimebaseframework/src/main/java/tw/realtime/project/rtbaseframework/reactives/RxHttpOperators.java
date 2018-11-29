@@ -18,8 +18,8 @@ import tw.realtime.project.rtbaseframework.utils.JSONUtils;
 
 /**
  * Created by vexonelite on 2017/10/3.
+ * revision on 2018/11/19.
  */
-
 public class RxHttpOperators {
 
     private static String getLogTag () {
@@ -108,10 +108,29 @@ public class RxHttpOperators {
                 return response.body();
             }
             else {
-                final String message = "Something wrong - code: " + response.code() +
-                        ", message: " + response.message();
+                final String message = "Something wrong - code: " + response.code() + ", message: " + response.message();
+                LogWrapper.showLongLog(Log.ERROR, getLogTag(), "VerifyResponse - Tid: (" +
+                        Thread.currentThread().getId() + "), message: " + message);
                 final String statusCode = "" + response.code();
-                throw new AsyncApiException(message, ApiConstants.ExceptionCode.HTTP_RESPONSE_ERROR, statusCode, "");
+                final ResponseBody errorBody = response.errorBody();
+                String jsonResponse = "";
+
+                try {
+                    final String errorResponseString = errorBody.string();
+                    LogWrapper.showLongLog(Log.INFO, getLogTag(), "VerifyResponse - Tid: (" +
+                            Thread.currentThread().getId() + "), errorResponseString: " + errorResponseString);
+                    jsonResponse = jsonResponse + errorResponseString;
+                }
+                catch (Exception e) {
+                    LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on VerifyResponse");
+                }
+                finally {
+                    if (null != errorBody) {
+                        errorBody.close();
+                    }
+                }
+
+                throw new AsyncApiException(message, ApiConstants.ExceptionCode.WRONG_STATUS_CODE, statusCode, jsonResponse);
             }
         }
     }
@@ -121,7 +140,7 @@ public class RxHttpOperators {
         public String apply(@io.reactivex.annotations.NonNull ResponseBody responseBody) throws Exception {
             try {
                 final String rawResponseString = responseBody.string();
-                LogWrapper.showLog(Log.INFO, getLogTag(), "ResponseBodyToString - Tid: (" +
+                LogWrapper.showLongLog(Log.INFO, getLogTag(), "ResponseBodyToString - Tid: (" +
                         Thread.currentThread().getId() + "), rawResponseString: " + rawResponseString);
                 return rawResponseString;
             }
@@ -130,31 +149,33 @@ public class RxHttpOperators {
                 throw new AsyncApiException(e, ApiConstants.ExceptionCode.HTTP_RESPONSE_PARSING_ERROR, "", "");
             }
             finally {
-                responseBody.close();
+                if (null != responseBody) {
+                    responseBody.close();
+                }
             }
         }
     }
 
     /**
      * This depends on the need of App, I decide to comment it, and make it serve as a template.
-    public static class DoesJsonObjectHasValidCode implements Function<JSONObject, JSONObject> {
-        @Override
-        public JSONObject apply(@NonNull JSONObject jsonObject) throws Exception {
-            final String code = JSONUtils.getStringFromJSON(
-                    jsonObject, LccConstants.UsageKey.CODE, getLogTag(), true);
-            if (LccConstants.StatusCode.INVALID_ACCESS_TOKEN.equals(code)) {
-                throw new AsyncApiException(ApiConstants.ExceptionCode.SERVER_INVALID_ACCESS_TOKEN,
-                        "Status Code = 004; " + jsonObject.toString());
-            }
-            else if (LccConstants.StatusCode.SUCCESSFUL_OPERATION.equals(code)) {
-                return jsonObject;
-            }
-            else {
-                throw new AsyncApiException(code, "Status Code != 200!", jsonObject.toString());
-            }
-        }
+     public static class DoesJsonObjectHasValidCode implements Function<JSONObject, JSONObject> {
+    @Override
+    public JSONObject apply(@NonNull JSONObject jsonObject) throws Exception {
+    final String code = JSONUtils.getStringFromJSON(
+    jsonObject, LccConstants.UsageKey.CODE, getLogTag(), true);
+    if (LccConstants.StatusCode.INVALID_ACCESS_TOKEN.equals(code)) {
+    throw new AsyncApiException(ApiConstants.ExceptionCode.SERVER_INVALID_ACCESS_TOKEN,
+    "Status Code = 004; " + jsonObject.toString());
     }
-    */
+    else if (LccConstants.StatusCode.SUCCESSFUL_OPERATION.equals(code)) {
+    return jsonObject;
+    }
+    else {
+    throw new AsyncApiException(code, "Status Code != 200!", jsonObject.toString());
+    }
+    }
+    }
+     */
 
     public static class JsonStringToJsonObject implements Function<String, JSONObject> {
         @Override
