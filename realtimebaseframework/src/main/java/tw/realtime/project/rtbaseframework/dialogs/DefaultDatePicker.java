@@ -16,7 +16,7 @@ import java.util.Calendar;
  * <p>
  * Created by vexonelite on 2017/7/10.
  */
-public class DefaultDatePicker extends DialogFragment
+public final class DefaultDatePicker extends DialogFragment
                         implements DatePickerDialog.OnDateSetListener {
 
     private Listener mCallback = null;
@@ -42,11 +42,11 @@ public class DefaultDatePicker extends DialogFragment
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         //Use the current date as the default date in the picker
         final Calendar calendar = (null != mGivenCalendar) ? mGivenCalendar : Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        final int year = calendar.get(Calendar.YEAR);
+        final int month = calendar.get(Calendar.MONTH);
+        final int day = calendar.get(Calendar.DAY_OF_MONTH);
         //Create a new instance of DatePickerDialog and return it
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(
                 getActivity(),
                 android.R.style.Theme_Holo_Light_Dialog,
                 this,

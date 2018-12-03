@@ -73,6 +73,7 @@ public class CodeUtils {
      * @param dateFormat 指定的日期格式 (若是空字串或 Null，會使用預設值)
      * @return 日期字串
      */
+    @Nullable
     public static String convertDateToString (@NonNull Date date, @NonNull String dateFormat) {
         try {
             final String internalDateFormat = (dateFormat.isEmpty()) ? "yyyy-MM-dd hh:mm:ss" : dateFormat;
