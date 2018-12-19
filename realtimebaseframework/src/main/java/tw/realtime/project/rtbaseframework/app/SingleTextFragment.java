@@ -26,11 +26,14 @@ public final class SingleTextFragment extends BaseFragment {
 
 	@Override
 	public void onViewCreated(@NonNull View rootView, @Nullable Bundle savedInstanceState) {
-		final Bundle args = getArguments();
-		if ( (args != null) && (null != args.getString(SINGLE_TEXT_KEY)) ) {
-			final TextView textView = rootView.findViewById(R.id.textView);
-			if (null != textView) {
+		final TextView textView = rootView.findViewById(R.id.textView);
+		if (null != textView) {
+			final Bundle args = getArguments();
+			if ( (args != null) && (null != args.getString(SINGLE_TEXT_KEY)) ) {
 				textView.setText(args.getString(SINGLE_TEXT_KEY));
+			}
+			else {
+				textView.setText("");
 			}
 		}
 	}
