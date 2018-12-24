@@ -457,7 +457,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         }
     }
 
-    public void haveAudioManagerAlterStreamVolume (boolean hasRaised) {
+    public final void haveAudioManagerAlterStreamVolume (boolean hasRaised) {
         final AudioManager myAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         final int maxLevelVol = myAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         final int currentLevelVol = myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -479,13 +479,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         return this.getClass().getSimpleName();
     }
 
-    protected void enableImmersiveMode () {
-        getWindow().getDecorView().setSystemUiVisibility(setSystemUiVisibility());
+    protected final void enableImmersiveMode () {
+        getWindow().getDecorView().setSystemUiVisibility(getSystemUiVisibility());
         getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
             @Override
             public void onSystemUiVisibilityChange(int visibility) {
                 if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                    getWindow().getDecorView().setSystemUiVisibility(setSystemUiVisibility());
+                    getWindow().getDecorView().setSystemUiVisibility(getSystemUiVisibility());
                 }
             }
         });
@@ -494,7 +494,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
     // https://developer.android.com/training/system-ui/immersive.html#nonsticky
     // https://developer.android.com/training/system-ui/visibility.html
     //https://developer.android.com/samples/ImmersiveMode/src/com.example.android.immersivemode/ImmersiveModeFragment.html#l75
-    protected int setSystemUiVisibility() {
+    protected final int getSystemUiVisibility() {
         return View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -506,7 +506,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
     /**
      * Detects and toggles immersive mode (also known as "hidey bar" mode).
      */
-    public void toggleHideyBar() {
+    public final void toggleHideyBar() {
 
         // The UI options currently enabled are represented by a bitfield.
         // getSystemUiVisibility() gives us that bitfield.

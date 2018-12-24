@@ -2,12 +2,13 @@ package tw.realtime.project.rtbaseframework.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import androidx.fragment.app.DialogFragment;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 
 /**
  * 系統預設樣式對話框
@@ -80,20 +81,25 @@ public class ConfirmDialog extends DialogFragment {
      * https://gist.github.com/ishitcno1/9408188
      */
     private void setWindowStyle () {
-
-        Window window = getDialog().getWindow();
-        WindowManager.LayoutParams params = window.getAttributes();
-
+        final Window window = getDialog().getWindow();
+        final WindowManager.LayoutParams params = window.getAttributes();
         // Use dimAmount to control the amount of dim
         params.dimAmount = 0.6f;
         window.setAttributes(params);
-        window.getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-//                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
-        );
+        /*
+         * if you want to enable Immersive Mode
+         * Ref: {@link tw.realtime.project.rtbaseframework.app.BaseActivity#enableImmersiveMode}
+         */
+        //window.getDecorView().setSystemUiVisibility(getSystemUiVisibility());
+    }
+
+    private int getSystemUiVisibility() {
+        return View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION  // hide nav bar
+                | View.SYSTEM_UI_FLAG_FULLSCREEN  // hide status bar
+                //| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                ;
     }
 }
