@@ -13,7 +13,11 @@ public final class CustomTabLayout extends TabLayout {
 
     private static final int WIDTH_INDEX = 0;
     private static final int DIVIDER_FACTOR = 3;
-    private static final String SCROLLABLE_TAB_MIN_WIDTH = "scrollable_tab_minimum_width";
+    // legacy support library
+    //private static final String SCROLLABLE_TAB_MIN_WIDTH = "mScrollableTabMinWidth";
+    // Android X:
+    private static final String SCROLLABLE_TAB_MIN_WIDTH = "scrollableTabMinWidth";
+
 
     public CustomTabLayout(Context context) {
         super(context);
