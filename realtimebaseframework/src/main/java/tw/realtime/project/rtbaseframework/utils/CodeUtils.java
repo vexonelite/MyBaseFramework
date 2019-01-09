@@ -9,11 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import androidx.annotation.ColorRes;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
@@ -36,6 +31,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 
 
@@ -453,14 +453,37 @@ public class CodeUtils {
     }
 
 
-    private static int integerParseInt(String input) {
+    public static int integerParseInt(@Nullable String input) {
         try {
-            return Integer.parseInt(input);
+            if (null == input) {
+                return 0;
+            }
+            else {
+                return Integer.parseInt(input);
+            }
         }
-        catch (NumberFormatException e) {
+        catch (Exception e) {
             return 0;
         }
     }
 
+    /**
+     * The timeStamp typically is a time stamp in the near future.
+     * If the time difference between timeStamp and currentTime
+     * is less than acceptableDuration, the timeStamp is treated as expired.
+     *  @param timeStamp            the time stamp in the near future!
+     * @param acceptableDuration    the expected duration between timeStamp and current time
+     * @return
+     */
+    public static boolean isTimeStampExpired(long timeStamp, long acceptableDuration) {
+        final long currentTime = System.currentTimeMillis() / 1000L;
+        final long timeDifference = timeStamp - currentTime;
+        LogWrapper.showLog(Log.INFO, "CodeUtils", "isTimeStampExpired" +
+                "\ntimeStamp:          " + timeStamp +
+                "\ncurrentTime:        " + currentTime +
+                "\nacceptableDuration: " + acceptableDuration +
+                "\ntimeDifference:     " + timeDifference);
+        return (timeDifference < acceptableDuration);
+    }
 
 }
