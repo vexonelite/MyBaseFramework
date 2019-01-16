@@ -25,6 +25,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.EnumMap;
 import java.util.Locale;
@@ -104,6 +105,43 @@ public class CodeUtils {
                 String.format(locale, "%02d", minutes) + ":" +
                 String.format(locale, "%02d", seconds);
     }
+
+    /**
+     * return a default Calendar where the properties hour, minute, and second are set to '0'
+     * @param date The specific date
+     * @return a default calendar
+     */
+    @NonNull
+    public static Calendar getTripleZeroCalendar(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        if (null != date) {
+            calendar.setTime(date);
+        }
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        return calendar;
+    }
+
+    /**
+     * The timeStamp typically is a time stamp in the near future.
+     * If the time difference between timeStamp and currentTime
+     * is less than acceptableDuration, the timeStamp is treated as expired.
+     *  @param timeStamp            the time stamp in the near future!
+     * @param acceptableDuration    the expected duration between timeStamp and current time
+     * @return
+     */
+    public static boolean isTimeStampExpired(long timeStamp, long acceptableDuration) {
+        final long currentTime = System.currentTimeMillis() / 1000L;
+        final long timeDifference = timeStamp - currentTime;
+        LogWrapper.showLog(Log.INFO, "CodeUtils", "isTimeStampExpired" +
+                "\ntimeStamp:          " + timeStamp +
+                "\ncurrentTime:        " + currentTime +
+                "\nacceptableDuration: " + acceptableDuration +
+                "\ntimeDifference:     " + timeDifference);
+        return (timeDifference < acceptableDuration);
+    }
+
 
     @NonNull
     public static String getDecimalFormatString (@NonNull String inputPrice) {
@@ -467,23 +505,5 @@ public class CodeUtils {
         }
     }
 
-    /**
-     * The timeStamp typically is a time stamp in the near future.
-     * If the time difference between timeStamp and currentTime
-     * is less than acceptableDuration, the timeStamp is treated as expired.
-     *  @param timeStamp            the time stamp in the near future!
-     * @param acceptableDuration    the expected duration between timeStamp and current time
-     * @return
-     */
-    public static boolean isTimeStampExpired(long timeStamp, long acceptableDuration) {
-        final long currentTime = System.currentTimeMillis() / 1000L;
-        final long timeDifference = timeStamp - currentTime;
-        LogWrapper.showLog(Log.INFO, "CodeUtils", "isTimeStampExpired" +
-                "\ntimeStamp:          " + timeStamp +
-                "\ncurrentTime:        " + currentTime +
-                "\nacceptableDuration: " + acceptableDuration +
-                "\ntimeDifference:     " + timeDifference);
-        return (timeDifference < acceptableDuration);
-    }
 
 }
