@@ -6,9 +6,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
+import androidx.annotation.NonNull;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.api.commons.ApiConstants;
 import tw.realtime.project.rtbaseframework.api.commons.AsyncApiException;
+import tw.realtime.project.rtbaseframework.reactives.ApiDataDelegate;
 
 
 /**
@@ -263,6 +267,22 @@ public class JSONUtils {
             LogWrapper.showLog(Log.ERROR, logTag, "Exception on getJSONObjectFromJSONArray - " +
                     "cannot getJSONObject at index: " + index);
             throw new AsyncApiException(e, ApiConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
+        }
+    }
+
+    @NonNull
+    public static String convertIntoJsonString(@NonNull List<ApiDataDelegate> builderList) {
+        try {
+            final JSONArray jsonArray = new JSONArray();
+            for (final ApiDataDelegate builder : builderList) {
+                final JSONObject jsonObject = builder.convertIntoJSON();
+                jsonArray.put(jsonObject);
+            }
+            return jsonArray.toString();
+        }
+        catch (Exception e) {
+            LogWrapper.showLog(Log.ERROR, "JSONUtils", "JSON Exception on convertIntoJsonString", e);
+            return "";
         }
     }
 }
