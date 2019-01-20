@@ -2,6 +2,7 @@ package tw.realtime.project.rtbaseframework.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -341,6 +342,16 @@ public class CodeUtils {
         }
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         context.startActivity(browserIntent);
+    }
+
+    public static boolean hasPackageInstalled(String packageName, PackageManager packageManager) {
+        try {
+            packageManager.getPackageInfo(packageName, 0);
+            return true;
+        } catch (Exception e) {
+            LogWrapper.showLog(Log.INFO, "CodeUtils", "hasPackageInstalled", e);
+            return false;
+        }
     }
 
     @SuppressWarnings({"MissingPermission"})
