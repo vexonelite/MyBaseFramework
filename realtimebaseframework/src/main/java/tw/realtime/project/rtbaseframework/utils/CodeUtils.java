@@ -2,7 +2,6 @@ package tw.realtime.project.rtbaseframework.utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
