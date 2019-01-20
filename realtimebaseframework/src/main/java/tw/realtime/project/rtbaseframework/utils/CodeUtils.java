@@ -344,16 +344,6 @@ public class CodeUtils {
         context.startActivity(browserIntent);
     }
 
-    public static boolean hasPackageInstalled(String packageName, PackageManager packageManager) {
-        try {
-            packageManager.getPackageInfo(packageName, 0);
-            return true;
-        } catch (Exception e) {
-            LogWrapper.showLog(Log.INFO, "CodeUtils", "hasPackageInstalled", e);
-            return false;
-        }
-    }
-
     @SuppressWarnings({"MissingPermission"})
     public static boolean hasInterNet (Context context) {
         ConnectivityManager connMgr =
