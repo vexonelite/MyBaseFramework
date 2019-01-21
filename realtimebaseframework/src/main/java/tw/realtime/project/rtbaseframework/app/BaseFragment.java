@@ -5,18 +5,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
+import android.view.View;
+
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
-
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.dialogs.ProgressDialog;
 import tw.realtime.project.rtbaseframework.interfaces.ActionBarDelegate;
@@ -317,7 +317,10 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
         @Override
         public void onClick(DialogInterface dialogInterface, int i) {
             dialogInterface.dismiss();
-            new Handler(Looper.getMainLooper()).post(BaseFragment.this::backToPreviousOne);
+            // inner class use method reference/ lambda might encounter IllegalAccessError
+            // for some old android devices
+            //new Handler(Looper.getMainLooper()).post(BaseFragment.this::backToPreviousOne);
+            new Handler(Looper.getMainLooper()).post(new BackToPreviousOneTask());
         }
     }
 
@@ -328,7 +331,10 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
         @Override
         public void onNotification(DialogFragment dialogFrag, BaseDialogFragment.DialogAction dialogAction) {
             dialogFrag.dismiss();
-            new Handler(Looper.getMainLooper()).post(BaseFragment.this::backToPreviousOne);
+            // inner class use method reference/ lambda might encounter IllegalAccessError
+            // for some old android devices
+            //new Handler(Looper.getMainLooper()).post(BaseFragment.this::backToPreviousOne);
+            new Handler(Looper.getMainLooper()).post(new BackToPreviousOneTask());
         }
     }
 
@@ -350,6 +356,30 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
         if (isAllowedToCommitFragmentTransaction()) {
             final Activity activity = getActivity();
             activity.onBackPressed();
+        }
+    }
+
+    public final class BackToPreviousOneTask implements Runnable {
+        @Override
+        public void run() {
+            backToPreviousOne();
+        }
+    }
+
+    /**
+     * 呼叫 Attached BaseActivity 的 popFragmentIfNeeded 方法
+     */
+    protected final void involvePopFragmentIfNeeded () {
+        if (isAllowedToCommitFragmentTransaction()) {
+            final BaseActivity activity = (BaseActivity) getActivity();
+            activity.popFragmentIfNeeded();
+        }
+    }
+
+    public final class InvolvePopFragmentTask implements Runnable {
+        @Override
+        public void run() {
+            involvePopFragmentIfNeeded();
         }
     }
 

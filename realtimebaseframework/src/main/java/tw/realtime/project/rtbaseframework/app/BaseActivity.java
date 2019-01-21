@@ -6,25 +6,25 @@ import android.content.DialogInterface;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.ColorInt;
-import androidx.annotation.ColorRes;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.IdRes;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.dialogs.ConfirmDialog;
 import tw.realtime.project.rtbaseframework.dialogs.ProgressDialog;
@@ -36,7 +36,7 @@ import tw.realtime.project.rtbaseframework.interfaces.fragment.FragmentManipulat
  */
 public abstract class BaseActivity extends AppCompatActivity implements FragmentManipulationDelegate {
 
-    private Toolbar mToolbar;
+    private Toolbar toolbar;
 
     private ProgressDialog mProgressDialog;
 
@@ -371,7 +371,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
                                                   final boolean enableDefault,
                                                   final int logoResourceId,
                                                   final int navigationIconResourceId) {
-        mToolbar = toolbar;
+        this.toolbar = toolbar;
         if (enableDefault) {
             try {
                 toolbar.setLogo(logoResourceId);
@@ -386,10 +386,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         setSupportActionBar(toolbar);
     }
 
-    public final void setToolbarTextColor (@ColorInt final int textColor) {
+    public final void setToolbarTextColor (@ColorInt int textColor) {
         try {
-            if (null != mToolbar) {
-                mToolbar.setTitleTextColor(textColor);
+            if (null != toolbar) {
+                toolbar.setTitleTextColor(textColor);
             }
         }
         catch (Exception e) {
@@ -397,10 +397,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         }
     }
 
-    public final void setToolbarTextColorResourceId (@ColorRes final int textColorResId) {
+    public final void setToolbarTextColorResourceId(@ColorRes int textColorResId) {
         try {
-            if (null != mToolbar) {
-                mToolbar.setTitleTextColor(ContextCompat.getColor(this, textColorResId) );
+            if (null != toolbar) {
+                toolbar.setTitleTextColor(ContextCompat.getColor(this, textColorResId) );
             }
         }
         catch (Exception e) {
@@ -408,10 +408,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         }
     }
 
-    public final void setToolbarBackgroundColor (@ColorInt final int backgroundColor) {
+    public final void setToolbarBackgroundColor(@ColorInt int backgroundColor) {
         try {
-            if (null != mToolbar) {
-                mToolbar.setBackgroundColor(backgroundColor);
+            if (null != toolbar) {
+                toolbar.setBackgroundColor(backgroundColor);
             }
         }
         catch (Exception e) {
@@ -419,10 +419,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         }
     }
 
-    public final void setToolbarBackgroundDrawable (@DrawableRes final int backgroundDrawable) {
+    public final void setToolbarBackgroundDrawable(@DrawableRes int backgroundDrawable) {
         try {
-            if (null != mToolbar) {
-                mToolbar.setBackgroundResource(backgroundDrawable);
+            if (null != toolbar) {
+                toolbar.setBackgroundResource(backgroundDrawable);
             }
         }
         catch (Exception e) {
@@ -430,10 +430,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         }
     }
 
-    public final void setToolbarNavigationIcon (@DrawableRes final int navigationIconResourceId) {
+    public final void setToolbarNavigationIcon(@DrawableRes int navigationIconResourceId) {
         try {
-            if (null != mToolbar) {
-                mToolbar.setNavigationIcon(navigationIconResourceId);
+            if (null != toolbar) {
+                toolbar.setNavigationIcon(navigationIconResourceId);
             }
         }
         catch (Exception e) {
