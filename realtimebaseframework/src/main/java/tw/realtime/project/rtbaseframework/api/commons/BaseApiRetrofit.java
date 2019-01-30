@@ -8,7 +8,7 @@ import java.util.Map;
 
 import okhttp3.ResponseBody;
 import tw.realtime.project.rtbaseframework.LogWrapper;
-import tw.realtime.project.rtbaseframework.interfaces.apis.AsyncApiCallback;
+import tw.realtime.project.rtbaseframework.interfaces.apis.RtAsyncApiCallback;
 import tw.realtime.project.rtbaseframework.reactives.ApiMapDataBuilder;
 
 
@@ -19,11 +19,11 @@ import tw.realtime.project.rtbaseframework.reactives.ApiMapDataBuilder;
  * Created by vexonelite on 2017/5/25.
  */
 public abstract class BaseApiRetrofit<T> extends BaseApiData
-        implements retrofit2.Callback<ResponseBody>, AsyncApiCallback<T> {
+        implements retrofit2.Callback<ResponseBody>, RtAsyncApiCallback<T> {
 
     private retrofit2.Call<ResponseBody> mCurrentCall;
 
-    private AsyncApiCallback<T> mCallback;
+    private RtAsyncApiCallback<T> mCallback;
     private String mAccessToken;
     private String mDeviceToken;
 
@@ -40,11 +40,11 @@ public abstract class BaseApiRetrofit<T> extends BaseApiData
 
     public static class BaseBuilder<T> extends ApiMapDataBuilder {
 
-        private AsyncApiCallback<T> bCallback;
+        private RtAsyncApiCallback<T> bCallback;
         private String bAccessToken;
         private String bDeviceToken;
 
-        public BaseBuilder<T> setAsyncApiCallback (AsyncApiCallback<T> callback) {
+        public BaseBuilder<T> setAsyncApiCallback (RtAsyncApiCallback<T> callback) {
             bCallback = callback;
             return this;
         }

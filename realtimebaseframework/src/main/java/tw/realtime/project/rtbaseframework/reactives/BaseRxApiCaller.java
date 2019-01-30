@@ -12,7 +12,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.api.commons.ApiConstants;
-import tw.realtime.project.rtbaseframework.interfaces.apis.AsyncApiCallback;
+import tw.realtime.project.rtbaseframework.interfaces.apis.RtAsyncApiCallback;
 import tw.realtime.project.rtbaseframework.api.commons.AsyncApiException;
 
 /**
@@ -23,10 +23,10 @@ public abstract class BaseRxApiCaller<T> {
 
     private Disposable mDisposable;
 
-    private AsyncApiCallback<T> mCallback;
+    private RtAsyncApiCallback<T> mCallback;
 
 
-    protected BaseRxApiCaller(AsyncApiCallback<T> callback) {
+    protected BaseRxApiCaller(RtAsyncApiCallback<T> callback) {
         mCallback = callback;
     }
 
@@ -34,7 +34,7 @@ public abstract class BaseRxApiCaller<T> {
         return this.getClass().getSimpleName();
     }
 
-    protected AsyncApiCallback<T> getCallback () {
+    protected RtAsyncApiCallback<T> getCallback () {
         return mCallback;
     }
 

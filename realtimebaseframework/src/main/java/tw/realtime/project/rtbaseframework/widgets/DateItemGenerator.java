@@ -19,7 +19,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.api.commons.ApiConstants;
-import tw.realtime.project.rtbaseframework.interfaces.apis.AsyncApiCallback;
+import tw.realtime.project.rtbaseframework.interfaces.apis.RtAsyncApiCallback;
 import tw.realtime.project.rtbaseframework.api.commons.AsyncApiException;
 import tw.realtime.project.rtbaseframework.models.DateItem;
 import tw.realtime.project.rtbaseframework.utils.CodeUtils;
@@ -41,7 +41,7 @@ public class DateItemGenerator {
 
     private ExecutorService mExecutorService;
 
-    private AsyncApiCallback<List<String>> mCallback;
+    private RtAsyncApiCallback<List<String>> mCallback;
     private boolean doesNotNotifyCallback = false;
 
     private final ReadWriteLock mDataUpdateLock;
@@ -189,7 +189,7 @@ public class DateItemGenerator {
         }
     }
 
-    public void generate (AsyncApiCallback<List<String>> callback) {
+    public void generate (RtAsyncApiCallback<List<String>> callback) {
 
         mCallback = callback;
 

@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Call;
 import okhttp3.Response;
 import tw.realtime.project.rtbaseframework.LogWrapper;
-import tw.realtime.project.rtbaseframework.interfaces.apis.AsyncApiCallback;
+import tw.realtime.project.rtbaseframework.interfaces.apis.RtAsyncApiCallback;
 import tw.realtime.project.rtbaseframework.reactives.ApiDataDelegate;
 import tw.realtime.project.rtbaseframework.reactives.ApiParameterSetDelegate;
 
@@ -25,7 +25,7 @@ import tw.realtime.project.rtbaseframework.reactives.ApiParameterSetDelegate;
  * <p>
  * Created by vexonelite on 2017/5/25.
  */
-public abstract class BaseCacheApiCaller<T> implements AsyncApiCallback<T> {
+public abstract class BaseCacheApiCaller<T> implements RtAsyncApiCallback<T> {
 
     private ExecutorService mExecutorService;
 
@@ -33,11 +33,11 @@ public abstract class BaseCacheApiCaller<T> implements AsyncApiCallback<T> {
 
     private boolean doesNotNotifyCallback = false;
 
-    private AsyncApiCallback<T> mCallback;
+    private RtAsyncApiCallback<T> mCallback;
 
     private ApiParameterSetDelegate mApiParameter;
 
-    protected BaseCacheApiCaller(ApiParameterSetDelegate apiParameter, AsyncApiCallback<T> callback) {
+    protected BaseCacheApiCaller(ApiParameterSetDelegate apiParameter, RtAsyncApiCallback<T> callback) {
         mApiParameter = apiParameter;
         mCallback = callback;
     }
