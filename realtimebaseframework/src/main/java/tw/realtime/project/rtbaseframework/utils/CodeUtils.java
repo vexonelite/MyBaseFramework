@@ -161,6 +161,37 @@ public class CodeUtils {
         }
     }
 
+    @NonNull
+    public static Long getTimestampFromString(@NonNull String given) {
+        return Long.parseLong(given) * 1000L;
+    }
+
+    @NonNull
+    public static Date timestampToDate(@NonNull Long timestamp) {
+        return new Date(timestamp);
+    }
+
+    @NonNull
+    public static String timestampToDateFormattedString(@NonNull Date date,
+                                                        @NonNull String formatPattern) {
+        return formatPattern.isEmpty()
+                ? new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(date)
+                : new SimpleDateFormat(formatPattern, Locale.getDefault()).format(date);
+    }
+
+    @NonNull
+    public static String parseTimestampString(@Nullable String timestampString) {
+        try {
+            final Long timestamp = getTimestampFromString(timestampString);
+            final Date date = timestampToDate(timestamp);
+            return timestampToDateFormattedString(date, "yyyy/MM/dd HH:mm:ss");
+        }
+        catch (Exception e) {
+            Log.e("CodeUtil", "Exception on parseTimestampString", e);
+            return "";
+        }
+    }
+
     /**
      * Deprecated!
      * <p>
