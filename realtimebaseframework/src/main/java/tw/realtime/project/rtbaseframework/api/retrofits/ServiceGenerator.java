@@ -1,6 +1,10 @@
 package tw.realtime.project.rtbaseframework.api.retrofits;
 
+import java.io.File;
+
 import androidx.annotation.NonNull;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import tw.realtime.project.rtbaseframework.api.commons.OkHttpUtils;
 
@@ -50,7 +54,21 @@ public class ServiceGenerator {
     }
 
     /** create a Retrofit 2 service representing a asynchronized api task.  */
+    @NonNull
     public static <S> S createService(@NonNull Retrofit.Builder builder, Class<S> serviceClass) {
         return getInstance(builder).create(serviceClass);
+    }
+
+    @NonNull
+    public static RequestBody getStringRequestBody(@NonNull String value) {
+        return RequestBody.create(MultipartBody.FORM, value);
+    }
+
+    @NonNull
+    public static MultipartBody.Part getMultipartBodyFromFile(@NonNull File file,
+                                                              @NonNull String parameterName) {
+        final RequestBody fileRequestBody = RequestBody.create(null, file);
+        // MultipartBody.Part is used to send also the actual file name
+        return MultipartBody.Part.createFormData(parameterName, file.getName(), fileRequestBody);
     }
 }
