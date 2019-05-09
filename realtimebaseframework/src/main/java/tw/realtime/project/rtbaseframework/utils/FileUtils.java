@@ -12,12 +12,23 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
+import androidx.annotation.NonNull;
+import okhttp3.ResponseBody;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 
 
@@ -208,6 +219,133 @@ public class FileUtils {
             context.sendBroadcast(new Intent(
                     Intent.ACTION_MEDIA_MOUNTED,
                     Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+        }
+    }
+
+    // https://www.mkyong.com/java/how-to-convert-file-into-an-array-of-bytes/
+    @NonNull
+    public static byte[] fileToByteArray(@NonNull File file) throws Exception {
+        final FileInputStream fileInputStream = new FileInputStream(file);
+        //init array with file length
+        final byte[] bytesArray = new byte[(int) file.length()];
+        //read file into bytes[]
+        fileInputStream.read(bytesArray);
+        fileInputStream.close();
+        return bytesArray;
+    }
+
+    public static void writeResponseBodyToDisk(@NonNull ResponseBody responseBody,
+                                               @NonNull File savedFile) throws IOException {
+
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+        try {
+            byte[] fileReader = new byte[4096];
+
+            final long fileSize = responseBody.contentLength();
+            long fileSizeDownloaded = 0;
+
+            inputStream = responseBody.byteStream();
+            outputStream = new FileOutputStream(savedFile);
+
+            while (true) {
+                final int read = inputStream.read(fileReader);
+                if (read == -1) {
+                    break;
+                }
+                outputStream.write(fileReader, 0, read);
+                fileSizeDownloaded += read;
+                Log.d("IeUtils", "file download: " + fileSizeDownloaded + " of " + fileSize);
+            }
+            outputStream.flush();
+        }
+        finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+            if (outputStream != null) {
+                outputStream.close();
+            }
+        }
+
+        /*
+        try {
+            // todo change the file location/name according to your needs
+
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+            try {
+                byte[] fileReader = new byte[4096];
+
+                final long fileSize = responseBody.contentLength();
+                long fileSizeDownloaded = 0;
+
+                inputStream = responseBody.byteStream();
+                outputStream = new FileOutputStream(savedFile);
+
+                while (true) {
+                    final int read = inputStream.read(fileReader);
+                    if (read == -1) {
+                        break;
+                    }
+                    outputStream.write(fileReader, 0, read);
+                    fileSizeDownloaded += read;
+                    Log.d("IeUtils", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                }
+                outputStream.flush();
+                return true;
+            }
+            catch (IOException e) {
+                Log.e("IeUtils", "IOException on save downloaded file", e);
+                return false;
+            }
+            finally {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            }
+        } catch (IOException e) {
+            Log.e("IeUtils", "IOException on inputStream | outputStream#close()", e);
+            return false;
+        }
+        */
+    }
+
+    public static void unzipFile(@NonNull File zipFile, @NonNull File targetDirectory) throws IOException {
+        final FileInputStream zipFileInputStream = new FileInputStream(zipFile);
+        final BufferedInputStream zipBufferedInputStream = new BufferedInputStream(zipFileInputStream);
+        final ZipInputStream zipInputStream = new ZipInputStream(zipBufferedInputStream);
+
+        try {
+            ZipEntry zipEntry;
+            int count;
+            byte[] buffer = new byte[8192];
+            while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+                final File file = new File(targetDirectory, zipEntry.getName());
+                final File dir = zipEntry.isDirectory() ? file : file.getParentFile();
+                if (!dir.isDirectory() && !dir.mkdirs())
+                    throw new FileNotFoundException("Failed to ensure directory: " +
+                            dir.getAbsolutePath());
+                if (zipEntry.isDirectory())
+                    continue;
+                final FileOutputStream fileOutputStream = new FileOutputStream(file);
+                try {
+                    while ((count = zipInputStream.read(buffer)) != -1)
+                        fileOutputStream.write(buffer, 0, count);
+                } finally {
+                    fileOutputStream.close();
+                }
+            /* if time should be restored as well
+            long time = ze.getTime();
+            if (time > 0)
+                file.setLastModified(time);
+            */
+            }
+        } finally {
+            zipInputStream.close();
         }
     }
 }
