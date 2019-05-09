@@ -46,6 +46,7 @@ public class CryptUtils {
      * @return              加密字串
      * @throws Exception    例外物件
      */
+    @NonNull
     public String encrypt (String plainText, String aesKey, String aesIv) throws Exception {
         init (aesKey, aesIv);
         mCipher.init(Cipher.ENCRYPT_MODE, mSecretKeySpec, mAlgorithmParameterSpec);
@@ -62,6 +63,7 @@ public class CryptUtils {
      * @return                  明文字串
      * @throws Exception        例外物件
      */
+    @NonNull
     public String decrypt (String encryptedText, String aesKey, String aesIv) throws Exception {
         init (aesKey, aesIv);
         mCipher.init(Cipher.DECRYPT_MODE, mSecretKeySpec, mAlgorithmParameterSpec);
@@ -141,16 +143,33 @@ public class CryptUtils {
      * @param data  The given byte array.
      * @return A fixed-length hashed byte array.
      */
-    @Nullable
-    public static byte[] messageDigestSHA256 (@NonNull byte[] data) {
+    @NonNull
+    public static byte[] messageDigestSHA256 (@NonNull byte[] data) throws Exception {
         try {
             final MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(data);
             return md.digest();
         }
-        catch (NoSuchAlgorithmException e) {
+        catch (Exception e) {
             LogWrapper.showLog(Log.ERROR, "CryptUtils", "Exception on messageDigestSHA256", e);
-            return null;
+            throw e;
+        }
+    }
+
+    @NonNull
+    public static String computeMD5(@NonNull byte[] byteArray) throws Exception {
+        try {
+            final MessageDigest md5 = MessageDigest.getInstance("MD5");
+            md5.update(byteArray);
+            final byte[] md5Digest = md5.digest();
+            String md5Result = "";
+            for (int i = 0; i < md5Digest.length; i++) {
+                md5Result += Integer.toString( ( md5Digest[i] & 0xff ) + 0x100, 16).substring( 1 );
+            }
+            return md5Result;
+        } catch (Exception e) {
+            Log.e("CryptUtils", "Exception on computeMD5", e);
+            throw e;
         }
     }
 
