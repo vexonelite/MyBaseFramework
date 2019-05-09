@@ -1,16 +1,29 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    //buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion deps.versions.compileSdkVersion
+    //buildToolsVersion deps.versions.buildToolsVersion
+
+    // Enable Java 1.8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        // Manifest GoogleAppIndexingWarning
+        disable 'GoogleAppIndexingWarning'
+        //abortOnError false
+        //checkReleaseBuilds false
+    }
 
     defaultConfig {
         applicationId "tw.realtime.project.mybaseframework"
 
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
+        minSdkVersion deps.versions.minSdkVersion
+        targetSdkVersion deps.versions.targetSdkVersion
+        versionCode deps.versions.versionCode
+        versionName deps.versions.versionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         // AGPBI: {"kind":"error","text":"Program type already present: androidx.annotation.BoolRes","sources":[{}],"tool":"D8"}
@@ -18,7 +31,28 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField(
+                    deps.ieBuildConfig.types.boolean,
+                    deps.ieBuildConfig.keys.debugMode,
+                    deps.ieBuildConfig.values.true)
+            resValue(
+                    deps.ieAppResource.types.string,
+                    deps.ieAppResource.keys.appVersion,
+                    deps.versions.versionName)
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
         release {
+            buildConfigField(
+                    deps.ieBuildConfig.types.boolean,
+                    deps.ieBuildConfig.keys.debugMode,
+                    deps.ieBuildConfig.values.false)
+            resValue(
+                    deps.ieAppResource.types.string,
+                    deps.ieAppResource.keys.appVersion,
+                    deps.versions.versionName)
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -30,9 +64,9 @@ dependencies {
 
     implementation project(':realtimebaseframework')
 
-    testImplementation "junit:junit:${rootProject.junitVersion}"
-    androidTestImplementation "androidx.test:runner:${rootProject.runnerVersion}"
-    androidTestImplementation "androidx.test.espresso:espresso-core:${rootProject.espressoVersion}"
+    testImplementation "junit:junit:${deps.versions.junit}"
+    androidTestImplementation "androidx.test:runner:${deps.versions.runner}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${deps.versions.espresso}"
 
-    implementation "androidx.appcompat:appcompat:${rootProject.androidXversion}"
+    implementation "androidx.appcompat:appcompat:${deps.versions.androidX}"
 }

@@ -47,7 +47,14 @@ versions.facebook = "4.37.0"
 versions.twitter = "3.1.1"
 
 versions.crashlytics = "2.9.1"
+
 versions.flurry = "8.2.0"
+
+versions.photoView = "1.3.0"
+
+versions.leakcanary = "1.6.1"
+
+versions.zxing = "3.3.3"
 
 versions.atAAR = "@aar"
 
