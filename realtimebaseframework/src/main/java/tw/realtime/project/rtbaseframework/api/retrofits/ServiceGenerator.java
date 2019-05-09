@@ -4,6 +4,7 @@ import java.io.File;
 
 import androidx.annotation.NonNull;
 import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import tw.realtime.project.rtbaseframework.api.commons.OkHttpUtils;
@@ -34,10 +35,10 @@ public class ServiceGenerator {
     }
 
     public static Retrofit.Builder getBasicRetrofitBuilder (@NonNull String baseApiUrl,
-                                                            boolean enableHttpLoggingInterceptor) {
+                                                            @NonNull OkHttpClient.Builder okHttpBuilder) {
         return new Retrofit.Builder()
                 .baseUrl(baseApiUrl)
-                .client(OkHttpUtils.getInstance(enableHttpLoggingInterceptor));
+                .client(OkHttpUtils.getInstance(okHttpBuilder));
 
 //        if (enableGsonConver) {
 //            builder.addConverterFactory(GsonConverterFactory.create());
