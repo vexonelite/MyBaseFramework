@@ -26,11 +26,11 @@ public final class OkHttpUtils {
     /**
      * 取得 OkHttpClient 實體
      */
-    public static OkHttpClient getInstance(boolean enableHttpLoggingInterceptor) {
+    public static OkHttpClient getInstance(@NonNull OkHttpClient.Builder builder) {
         if (instance == null) {
             synchronized (OkHttpClient.class) {
                 if (instance == null) {
-                    instance = getOkHttpClient(enableHttpLoggingInterceptor);
+                    instance = builder.build();
                 }
             }
         }
@@ -41,7 +41,8 @@ public final class OkHttpUtils {
      * 初始化一個 OkHttpClient
      * @return
      */
-    private static OkHttpClient getOkHttpClient (boolean enableHttpLoggingInterceptor) {
+    @NonNull
+    public static OkHttpClient.Builder defaultOkHttpClientBuilder(boolean enableHttpLoggingInterceptor) {
 
         final OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(ApiConstants.OkHttpSetting.CONNECTION_TIME, TimeUnit.MILLISECONDS)
@@ -55,7 +56,7 @@ public final class OkHttpUtils {
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             builder.addInterceptor(interceptor);
         }
-        return builder.build();
+        return builder;
     }
 
     /*
@@ -76,6 +77,7 @@ public final class OkHttpUtils {
      * @param apiUrl        Request 的網址
      * @return
      */
+    @NonNull
     public static okhttp3.Call generateRequestCall (@NonNull RequestBody requestBody,
                                                     @NonNull String apiUrl,
                                                     boolean enableHttpLoggingInterceptor) {
@@ -86,9 +88,11 @@ public final class OkHttpUtils {
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .build();
         LogWrapper.showLog(Log.INFO, "okHttpUtils", "generateRequestCall - apiUrl: " + apiUrl);
-        return getInstance(enableHttpLoggingInterceptor).newCall(request);
+        return getInstance(defaultOkHttpClientBuilder(enableHttpLoggingInterceptor))
+                .newCall(request);
     }
 
+    @NonNull
     public static FormBody.Builder getFormBodyBuilder (@NonNull String key, @NonNull String outString) {
         final FormBody.Builder formBodyBuilder = new okhttp3.FormBody.Builder();
         //if ( (null != key) && (!key.isEmpty()) && (null != outString) && (!outString.isEmpty()) ) {
@@ -99,6 +103,7 @@ public final class OkHttpUtils {
         return formBodyBuilder;
     }
 
+    @NonNull
     public static MultipartBody.Builder getMultipartBodyBuilder (@NonNull String key, @NonNull String outString) {
         final MultipartBody.Builder multiPartBuilder = new MultipartBody.Builder();
         multiPartBuilder.setType(MultipartBody.FORM);
@@ -119,7 +124,8 @@ public final class OkHttpUtils {
             builder.addHeader("Content-Type", "application/json");
         }
         LogWrapper.showLog(Log.INFO, "okHttpUtils", "generateHttpGetRequestCall - apiUrl: " + apiUrl);
-        return getInstance(enableHttpLoggingInterceptor).newCall(builder.build());
+        return getInstance(defaultOkHttpClientBuilder(enableHttpLoggingInterceptor))
+                .newCall(builder.build());
     }
 
 }
