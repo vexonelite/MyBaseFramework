@@ -3,6 +3,7 @@ package tw.realtime.project.rtbaseframework.widgets.ui.fling;
 import android.content.Context;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -35,15 +36,15 @@ public final class FlingDispatchFrameLayout extends FrameLayout {
     public TouchDownEventDelegate touchDownEventCallback;
 
 
-    public FlingDispatchFrameLayout(Context context) {
+    public FlingDispatchFrameLayout(@NonNull Context context) {
         super(context);
     }
 
-    public FlingDispatchFrameLayout(Context context, AttributeSet attrs) {
+    public FlingDispatchFrameLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public FlingDispatchFrameLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public FlingDispatchFrameLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

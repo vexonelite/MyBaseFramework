@@ -3,6 +3,7 @@ package tw.realtime.project.rtbaseframework.widgets.ui.fling;
 import android.content.Context;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -35,15 +36,15 @@ public final class FlingDispatchConstraintLayout extends ConstraintLayout {
     public TouchDownEventDelegate touchDownEventCallback;
 
 
-    public FlingDispatchConstraintLayout(Context context) {
+    public FlingDispatchConstraintLayout(@NonNull Context context) {
         super(context);
     }
 
-    public FlingDispatchConstraintLayout(Context context, AttributeSet attrs) {
+    public FlingDispatchConstraintLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public FlingDispatchConstraintLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public FlingDispatchConstraintLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
