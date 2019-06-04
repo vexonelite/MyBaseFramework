@@ -28,6 +28,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import okhttp3.ResponseBody;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 
@@ -40,38 +41,59 @@ public class FileUtils {
      *
      *  @return A file object pointing to the newly created file.
      */
-    public static File getOutputImageFile (String fileName, String folderName) {
+    @Nullable
+    public static String getOutputFileName(@NonNull String givenFileName,
+                                           @NonNull String givenFileExtension,
+                                           @Nullable String givenFolderName,
+                                           @Nullable String givenEnvironmentFolder) {
 
-        // To be safe, you should check if the SDCard is mounted
-        // by using Environment.getExternalStorageState() before doing this.
-        if (!Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
-            return  null;
+        final File mediaStorageDir = getOutputFolder(givenFolderName, givenEnvironmentFolder);
+        if (null == mediaStorageDir) {
+            return null;
         }
-
-        // This location works best if you want the created images to be shared
-        // between applications and persist after your app has been uninstalled.
-
-        if ( (null == folderName) || (folderName.isEmpty()) ) {
-            folderName = "APP_CACHE";
-        }
-        // file path: storage/sdcard#/Pictures/folderName/
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), folderName);
 
         // Create the storage directory if it does not exist
-        if (! mediaStorageDir.exists()){
-            if (! mediaStorageDir.mkdirs()) {
-                LogWrapper.showLog(Log.WARN, "FileUtils", "getOutputImageFile() - failed to create the directory!");
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.w("FileUtils", "getOutputFile() - failed to create the directory!");
                 return null;
             }
         }
 
-        // Create a media file name
-        if ( (null == fileName) || (fileName.isEmpty()) ) {
-            fileName = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        final String fileName = (givenFileName.length() > 0)
+                ? givenFileName
+                : new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+
+        return (givenFileExtension.isEmpty())
+                ? mediaStorageDir.getPath() + File.separator + fileName
+                : mediaStorageDir.getPath() + File.separator + fileName + "." + givenFileExtension;
+    }
+
+    @Nullable
+    public static File getOutputFolder(@Nullable String givenFolderName,
+                                       @Nullable String givenEnvironmentFolder) {
+
+        // To be safe, you should check if the SDCard is mounted
+        // by using Environment.getExternalStorageState() before doing this.
+        if (!Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
+            return null;
         }
-        File mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_"+ fileName + ".jpg");
-        return mediaFile;
+
+        final String folderName =
+                ((null != givenFolderName) && (givenFolderName.length() > 0))
+                        ? givenFolderName : "APP_CACHE";
+
+//        final String fileExtension = (null != givenFileExtension) ? givenFileExtension : "";
+        final String environmentFolder =
+                ((null != givenEnvironmentFolder) && (givenEnvironmentFolder.length() > 0))
+                        ? givenEnvironmentFolder : Environment.DIRECTORY_DOWNLOADS;
+
+        // file path: storage/sdcard#/Pictures/folderName/
+        final File mediaStorageDir = new File(
+                Environment.getExternalStoragePublicDirectory(environmentFolder),
+                folderName);
+        return mediaStorageDir;
+
     }
 
     public static String getRealImageFilePath (Context context, final Uri imageUri) {
@@ -255,7 +277,7 @@ public class FileUtils {
                 }
                 outputStream.write(fileReader, 0, read);
                 fileSizeDownloaded += read;
-                Log.d("IeUtils", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                Log.d("FileUtils", "file download: " + fileSizeDownloaded + " of " + fileSize);
             }
             outputStream.flush();
         }
