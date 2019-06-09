@@ -5,7 +5,7 @@ def deps = [:]
 def versions = [:]
 
 versions.kotlinCoroutines = "1.1.1"
-versions.kotlinCoreKtx = "1.0.1"
+versions.kotlinCoreKtx = "1.0.2"
 
 versions.androidX = "1.0.2"
 // needed for glide
@@ -42,11 +42,14 @@ versions.glide = "4.8.0"
 
 versions.moshi = "1.8.0"
 
-versions.facebook = "4.37.0"
+//versions.facebook = "4.37.0"
+versions.facebook = "5.0.0"
 
-versions.twitter = "3.1.1"
+//versions.twitter = "3.1.1"
+versions.twitter = "3.3.0"
 
 versions.crashlytics = "2.9.1"
+versions.fabricTool = "1.28.0"
 
 versions.flurry = "8.2.0"
 
