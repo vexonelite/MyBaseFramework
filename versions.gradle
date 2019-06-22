@@ -62,8 +62,8 @@ versions.zxing = "3.3.3"
 versions.atAAR = "@aar"
 
 versions.junit = "4.12"
-versions.runner = "1.1.1"
-versions.espresso = "3.1.1"
+versions.runner = "1.2.0"
+versions.espresso = "3.2.0"
 
 // next would be 2 (2019/03/18)
 versions.versionCode = 1
