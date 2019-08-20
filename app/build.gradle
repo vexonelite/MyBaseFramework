@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion deps.versions.compileSdkVersion
-    //buildToolsVersion deps.versions.buildToolsVersion
+    compileSdkVersion deps.versions.compileSdk
+    //buildToolsVersion deps.versions.buildTools
 
     // Enable Java 1.8
     compileOptions {
@@ -20,8 +20,8 @@ android {
     defaultConfig {
         applicationId "tw.realtime.project.mybaseframework"
 
-        minSdkVersion deps.versions.minSdkVersion
-        targetSdkVersion deps.versions.targetSdkVersion
+        minSdkVersion deps.versions.minSdk
+        targetSdkVersion deps.versions.targetSdk
         versionCode deps.versions.versionCode
         versionName deps.versions.versionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -62,7 +62,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation project(':realtimebaseframework')
+    implementation project(':ie_java_baseframework')
 
     testImplementation "junit:junit:${deps.versions.junit}"
     androidTestImplementation "androidx.test:runner:${deps.versions.runner}"
