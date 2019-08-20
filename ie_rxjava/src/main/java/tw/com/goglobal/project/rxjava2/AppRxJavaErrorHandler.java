@@ -8,7 +8,7 @@ import java.net.SocketException;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.exceptions.UndeliverableException;
 import io.reactivex.functions.Consumer;
-import tw.com.goglobal.project.baseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.LogWrapper;
 
 
 public final class AppRxJavaErrorHandler implements Consumer<Throwable> {

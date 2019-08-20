@@ -8,7 +8,7 @@ import com.squareup.moshi.Moshi;
 
 import java.lang.reflect.Type;
 
-import tw.com.goglobal.project.baseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.LogWrapper;
 
 
 public final class MoshiUtil {

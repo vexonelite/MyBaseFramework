@@ -15,8 +15,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
-import tw.com.goglobal.project.baseframework.LogWrapper;
-import tw.com.goglobal.project.baseframework.instances.factories.ParameterFactory;
+import tw.realtime.project.rtbaseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.factories.ParameterFactory;
 
 
 /**

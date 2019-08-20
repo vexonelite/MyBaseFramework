@@ -18,7 +18,8 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
-import tw.realtime.project.rtbaseframework.apis.ApiConstants;
+import tw.realtime.project.rtbaseframework.apis.BaseConstants;
+import tw.realtime.project.rtbaseframework.apis.IeRuntimeException;
 import tw.realtime.project.rtbaseframework.delegates.apis.RtAsyncApiCallback;
 import tw.realtime.project.rtbaseframework.models.DateItem;
 import tw.realtime.project.rtbaseframework.utils.CodeUtils;
@@ -260,7 +261,7 @@ public class DateItemGenerator {
             catch (Exception e) {
                 new Handler(Looper.getMainLooper()).post(
                         new ErrorNotificationTask(
-                                new AsyncApiException(e, ApiConstants.ExceptionCode.INTERNAL_CONVERSION_ERROR, "", "")
+                                new IeRuntimeException(e, BaseConstants.ExceptionCode.INTERNAL_CONVERSION_ERROR, "", "")
                         )
                 );
             }
@@ -414,9 +415,9 @@ public class DateItemGenerator {
 
     private class ErrorNotificationTask implements Runnable {
 
-        private AsyncApiException mException;
+        private IeRuntimeException mException;
 
-        private ErrorNotificationTask (AsyncApiException e) {
+        private ErrorNotificationTask(IeRuntimeException e) {
             mException = e;
         }
 

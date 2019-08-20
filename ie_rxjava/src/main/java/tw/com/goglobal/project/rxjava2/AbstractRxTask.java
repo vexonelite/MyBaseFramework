@@ -9,10 +9,10 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
-import tw.com.goglobal.project.baseframework.BaseConstants;
-import tw.com.goglobal.project.baseframework.LogWrapper;
-import tw.com.goglobal.project.baseframework.apis.IeApiResult;
-import tw.com.goglobal.project.baseframework.apis.IeRuntimeException;
+import tw.realtime.project.rtbaseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.apis.BaseConstants;
+import tw.realtime.project.rtbaseframework.apis.IeRuntimeException;
+import tw.realtime.project.rtbaseframework.delegates.apis.IeApiResult;
 
 
 public abstract class AbstractRxTask<T> implements RxDisposeDelegate {

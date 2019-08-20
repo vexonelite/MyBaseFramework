@@ -33,12 +33,17 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation project(path: ':ie_java_baseframework')
+    implementation project(path: ':ie_java_httpstuff')
 
     testImplementation "junit:junit:${deps.versions.junit}"
     androidTestImplementation "androidx.test:runner:${deps.versions.runner}"
     androidTestImplementation "androidx.test.espresso:espresso-core:${deps.versions.espresso}"
 
-    //implementation "com.squareup.retrofit2:retrofit:${deps.versions.retrofit}"
+    implementation "androidx.appcompat:appcompat:${deps.versions.androidX}"
+
+    implementation "com.squareup.okhttp3:okhttp:${deps.versions.okHttp}"
+
+    implementation "com.squareup.retrofit2:retrofit:${deps.versions.retrofit}"
 
     // RxJava 2.X
     implementation "io.reactivex.rxjava2:rxjava:${deps.versions.rxJava2}"

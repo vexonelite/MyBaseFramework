@@ -3,13 +3,9 @@ package tw.com.goglobal.project.httpstuff;
 
 import androidx.annotation.NonNull;
 
-import java.io.File;
-
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
 import retrofit2.Retrofit;
-import tw.com.goglobal.project.baseframework.instances.factories.ParameterFactory;
+import tw.realtime.project.rtbaseframework.factories.ParameterFactory;
 
 
 public final class RetrofitUtil {

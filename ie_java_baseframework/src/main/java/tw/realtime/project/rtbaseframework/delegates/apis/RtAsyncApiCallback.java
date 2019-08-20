@@ -7,7 +7,7 @@ package tw.realtime.project.rtbaseframework.delegates.apis;
  * <p>
  * revision on 2018/11/19, 2019/01/30
  */
-public interface RtAsyncApiCallback<T> extends AsyncApiCallback<T> {
+public interface RtAsyncApiCallback<T> extends IeApiResult<T> {
     /** 通知 Api 開啟執行 */
     void onStart();
     /** 通知 Api 已執行結束; 之後 onSuccess(), onError() 或 onTokenError() 其中一個會被呼叫 */
