@@ -1,0 +1,52 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion deps.versions.compileSdk
+    //buildToolsVersion deps.versions.buildTools
+
+    //Set Compiler Option to Java 1.8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        minSdkVersion deps.versions.minSdk
+        targetSdkVersion deps.versions.targetSdk
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation project(path: ':ie_java_baseframework')
+
+    implementation "com.squareup.okhttp3:okhttp:${deps.versions.okHttp}"
+    implementation "com.squareup.okhttp3:logging-interceptor:${deps.versions.okHttp}"
+
+    implementation "com.squareup.retrofit2:retrofit:${deps.versions.retrofit}"
+    //implementation "com.squareup.retrofit2:converter-moshi:${deps.versions.retrofit}"
+    //implementation "com.squareup.retrofit2:converter-gson:${deps.versions.retrofit}"
+    //implementation "com.squareup.retrofit2:adapter-rxjava2:${deps.versions.retrofit}"
+
+    implementation "com.squareup.moshi:moshi:${deps.versions.moshi}"
+
+    testImplementation "junit:junit:${deps.versions.junit}"
+    androidTestImplementation "androidx.test:runner:${deps.versions.runner}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${deps.versions.espresso}"
+
+    implementation "androidx.annotation:annotation:${deps.versions.annotationX}"
+}
