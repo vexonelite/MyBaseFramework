@@ -1,0 +1,105 @@
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+
+//group='com.github.vexonelite'
+//version = '1.0'
+
+android {
+    compileSdkVersion deps.versions.compileSdk
+    //buildToolsVersion deps.versions.buildTools
+
+    // Enable Java 1.8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        minSdkVersion deps.versions.minSdk
+        targetSdkVersion deps.versions.targetSdk
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // AGPBI: {"kind":"error","text":"Program type already present: androidx.annotation.BoolRes","sources":[{}],"tool":"D8"}
+        //renderscriptSupportModeEnabled true
+    }
+
+    buildTypes {
+        debug {
+            buildConfigField(
+                    deps.ieBuildConfig.types.boolean,
+                    deps.ieBuildConfig.keys.debugMode,
+                    deps.ieBuildConfig.values.true)
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            buildConfigField(
+                    deps.ieBuildConfig.types.boolean,
+                    deps.ieBuildConfig.keys.debugMode,
+                    deps.ieBuildConfig.values.false)
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    testImplementation "junit:junit:${deps.versions.junit}"
+    androidTestImplementation "androidx.test:runner:${deps.versions.runner}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${deps.versions.espresso}"
+
+//    implementation "com.android.support:support-v4:28.0.0"
+//    implementation "com.android.support:support-compat:28.0.0"
+//    implementation "com.android.support:support-fragment:28.0.0"
+
+//    implementation "com.android.support:appcompat-v7:${deps.versions.supportLib}"
+//    implementation "com.android.support:design:${deps.versions.material}"
+//    implementation "com.android.support:recyclerview-v7:${deps.versions.material}"
+    implementation "androidx.appcompat:appcompat:${deps.versions.androidX}"
+    implementation "com.google.android.material:material:${deps.versions.materialX}"
+//    implementation "androidx.recyclerview:recyclerview:${deps.versions.materialX}"
+
+    // needed for glide, https://github.com/bumptech/glide/issues/3185
+//    annotationProcessor "androidx.annotation:annotation:${deps.version.annotationX}"
+
+    implementation "androidx.constraintlayout:constraintlayout:${deps.versions.constraintLayoutX}"
+
+    implementation "com.squareup.okhttp3:okhttp:${deps.versions.okHttp}"
+    implementation "com.squareup.okhttp3:logging-interceptor:${deps.versions.okHttp}"
+//    implementation "com.squareup.okhttp3:okhttp-urlconnection:${deps.versions.okHttp}"
+
+    // RxJava 2.X
+    implementation "io.reactivex.rxjava2:rxjava:${deps.versions.rxJava2}"
+    // RxAndroid 2.X
+    implementation "io.reactivex.rxjava2:rxandroid:${deps.versions.rxAndroid2}"
+
+    implementation "com.squareup.retrofit2:retrofit:${deps.versions.retrofit}"
+//    implementation "com.squareup.retrofit2:converter-scalars:${deps.versions.retrofit}"
+    // for using GSON json converter
+//    implementation "com.squareup.retrofit2:converter-gson:${deps.versions.retrofit}"
+    // for using Moshi json converter
+//    implementation "com.squareup.retrofit2:converter-moshi:${deps.versions.retrofit}"
+    // for using RxJava 1.x
+//    implementation "com.squareup.retrofit2:adapter-rxjava:${deps.versions.retrofit}"
+    // for using RxJava 2.x
+//    implementation "com.squareup.retrofit2:adapter-rxjava2:${deps.versions.retrofit}"
+
+    // 產生 QrCode 影像
+    implementation "com.google.zxing:core:${deps.versions.zxing}"
+}
