@@ -1,0 +1,47 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion deps.versions.compileSdk
+    //buildToolsVersion deps.versions.buildTools
+
+    //Set Compiler Option to Java 1.8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        minSdkVersion deps.versions.minSdk
+        targetSdkVersion deps.versions.targetSdk
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation project(path: ':ie_java_baseframework')
+
+    testImplementation "junit:junit:${deps.versions.junit}"
+    androidTestImplementation "androidx.test:runner:${deps.versions.runner}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${deps.versions.espresso}"
+
+    //implementation "com.squareup.retrofit2:retrofit:${deps.versions.retrofit}"
+
+    // RxJava 2.X
+    implementation "io.reactivex.rxjava2:rxjava:${deps.versions.rxJava2}"
+    // RxAndroid 2.X
+    //implementation "io.reactivex.rxjava2:rxandroid:${deps.versions.rxAndroid2}"
+}
