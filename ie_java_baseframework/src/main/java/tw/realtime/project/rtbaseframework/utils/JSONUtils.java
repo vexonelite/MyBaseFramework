@@ -32,9 +32,9 @@ public final class JSONUtils {
         try {
             return new JSONObject(jsonString);
         }
-        catch (JSONException e) {
+        catch (Exception cause) {
             LogWrapper.showLog(Log.ERROR, logTag, "Exception on jsonStringToJsonObject");
-            throw new IeRuntimeException(e, BaseConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
+            throw new IeRuntimeException(cause, BaseConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
         }
     }
 
@@ -275,10 +275,10 @@ public final class JSONUtils {
         try {
             return jsonArray.getJSONObject(index);
         }
-        catch (JSONException e) {
+        catch (Exception cause) {
             LogWrapper.showLog(Log.ERROR, logTag, "Exception on getJSONObjectFromJSONArray - " +
                     "cannot getJSONObject at index: " + index);
-            throw new IeRuntimeException(e, BaseConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
+            throw new IeRuntimeException(cause, BaseConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
         }
     }
 
