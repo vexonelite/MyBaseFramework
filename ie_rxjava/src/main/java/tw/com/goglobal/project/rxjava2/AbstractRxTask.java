@@ -2,15 +2,14 @@ package tw.com.goglobal.project.rxjava2;
 
 import android.util.Log;
 
-import java.io.IOException;
-
 import io.reactivex.MaybeObserver;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import tw.realtime.project.rtbaseframework.LogWrapper;
-import tw.realtime.project.rtbaseframework.apis.BaseConstants;
+import tw.realtime.project.rtbaseframework.apis.ErrorCodes;
+import tw.realtime.project.rtbaseframework.apis.ExceptionHelper;
 import tw.realtime.project.rtbaseframework.apis.IeRuntimeException;
 import tw.realtime.project.rtbaseframework.delegates.apis.IeApiResult;
 
@@ -21,16 +20,20 @@ public abstract class AbstractRxTask<T> implements RxDisposeDelegate {
 
     public IeApiResult<T> callback;
 
-    protected final String getLogTag () {
+    protected boolean isForHttp() {
+        return false;
+    }
+
+    protected final String getLogTag() {
         return this.getClass().getSimpleName();
     }
 
-    protected final void setDisposable (@NonNull Disposable disposable) {
+    protected final void setDisposable(@NonNull Disposable disposable) {
         this.disposable = disposable;
     }
 
     @Override
-    public final void rxDisposeIfNeeded () {
+    public final void rxDisposeIfNeeded() {
         if (null != disposable) {
             if (!disposable.isDisposed()) {
                 disposable.dispose();
@@ -92,23 +95,17 @@ public abstract class AbstractRxTask<T> implements RxDisposeDelegate {
 
     protected final void notifyCallbackOnError(@NonNull Throwable cause) {
         if (null != callback) {
-            if (cause instanceof IeRuntimeException) {
-                final IeRuntimeException exception = (IeRuntimeException) cause;
-                callback.onError(exception);
-            }
-            else if (cause instanceof IOException) {
-                callback.onError(new IeRuntimeException(cause, BaseConstants.ExceptionCode.HTTP_REQUEST_ERROR, "", ""));
-            }
-            else {
-                callback.onError(new IeRuntimeException(cause, BaseConstants.ExceptionCode.INTERNAL_CONVERSION_ERROR, "", ""));
-            }
+            final IeRuntimeException exception = isForHttp()
+                    ? ExceptionHelper.toIeHttpException(cause)
+                    : ExceptionHelper.toIeRuntimeException(cause);
+            callback.onError(exception);
         }
     }
 
     public final class ApiMaybeObserver implements MaybeObserver<T> {
 
         @Override
-        public void onSubscribe (Disposable disposable) {
+        public void onSubscribe(Disposable disposable) {
             LogWrapper.showLog(Log.INFO, getLogTag(), "ApiMaybeObserver - onSubscribe - Tid: " + Thread.currentThread().getId());
             setDisposable(disposable);
         }
@@ -133,7 +130,7 @@ public abstract class AbstractRxTask<T> implements RxDisposeDelegate {
             rxDisposeIfNeeded();
             if (null != callback) {
                 callback.onError(new IeRuntimeException(
-                        "filter returns negative result", BaseConstants.ExceptionCode.RX_MAYBE_ON_COMPLETE, "", ""));
+                        "filter returns negative result", ErrorCodes.Base.RX_MAYBE_ON_COMPLETE));
             }
         }
     }

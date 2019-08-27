@@ -18,7 +18,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
-import tw.realtime.project.rtbaseframework.apis.BaseConstants;
+import tw.realtime.project.rtbaseframework.apis.ErrorCodes;
 import tw.realtime.project.rtbaseframework.apis.IeRuntimeException;
 import tw.realtime.project.rtbaseframework.delegates.apis.RtAsyncApiCallback;
 import tw.realtime.project.rtbaseframework.models.DateItem;
@@ -258,11 +258,10 @@ public class DateItemGenerator {
                 mDateItemIdList = dateItemIdList;
                 new Handler(Looper.getMainLooper()).post(new SuccessNotificationTask(dateItemIdList));
             }
-            catch (Exception e) {
+            catch (Exception cause) {
                 new Handler(Looper.getMainLooper()).post(
                         new ErrorNotificationTask(
-                                new IeRuntimeException(e, BaseConstants.ExceptionCode.INTERNAL_CONVERSION_ERROR, "", "")
-                        )
+                                new IeRuntimeException(cause, ErrorCodes.Base.INTERNAL_CONVERSION_ERROR))
                 );
             }
             new Handler(Looper.getMainLooper()).post(new TerminationTask());

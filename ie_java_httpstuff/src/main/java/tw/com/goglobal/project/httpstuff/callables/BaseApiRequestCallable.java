@@ -23,7 +23,7 @@ public abstract class BaseApiRequestCallable implements ApiParameterDelegate, Ca
 
 
     @Override
-    public boolean doesEnableAesEncoding () {
+    public boolean doesEnableAesEncoding() {
         return mAesEncodingEnable;
     }
 

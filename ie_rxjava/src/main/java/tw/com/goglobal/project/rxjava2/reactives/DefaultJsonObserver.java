@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.observers.DisposableObserver;
 import tw.realtime.project.rtbaseframework.LogWrapper;
-import tw.realtime.project.rtbaseframework.apis.IeRuntimeException;
+import tw.realtime.project.rtbaseframework.apis.IeHttpException;
 
 
 public final class DefaultJsonObserver extends DisposableObserver<JSONObject> {
@@ -22,8 +22,8 @@ public final class DefaultJsonObserver extends DisposableObserver<JSONObject> {
     public void onError(Throwable cause) {
         LogWrapper.showLog(Log.ERROR, mTag, "onError");
 
-        if (cause instanceof IeRuntimeException) {
-            final String code = ((IeRuntimeException) cause).getStatusCode();
+        if (cause instanceof IeHttpException) {
+            final String code = ((IeHttpException) cause).getStatusCode();
             final String message = cause.getLocalizedMessage();
             LogWrapper.showLog(Log.ERROR, mTag, "code: " + code + ", message: " + message);
         }

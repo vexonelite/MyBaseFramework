@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import tw.realtime.project.rtbaseframework.apis.BaseConstants;
+import tw.realtime.project.rtbaseframework.apis.ErrorCodes;
 import tw.realtime.project.rtbaseframework.apis.IeRuntimeException;
 import tw.realtime.project.rtbaseframework.utils.JSONUtils;
 
@@ -35,8 +35,8 @@ public class ApiJSONDataBuilder implements ApiJSONObjectDelegate {
             try {
                 mJSONObject.put(key, value);
             }
-            catch (Exception e) {
-                throw new IeRuntimeException(e, BaseConstants.ExceptionCode.JSON_WRAPPING_FAILURE, "", "");
+            catch (Exception cause) {
+                throw new IeRuntimeException(cause, ErrorCodes.Base.JSON_WRAPPING_FAILURE);
             }
         }
         return this;
@@ -55,8 +55,8 @@ public class ApiJSONDataBuilder implements ApiJSONObjectDelegate {
             try {
                 mJSONObject.put(key, jsonArray);
             }
-            catch (Exception e) {
-                throw new IeRuntimeException(e, BaseConstants.ExceptionCode.JSON_WRAPPING_FAILURE, "", "");
+            catch (Exception cause) {
+                throw new IeRuntimeException(cause, ErrorCodes.Base.JSON_WRAPPING_FAILURE);
             }
         }
         return this;
@@ -69,8 +69,8 @@ public class ApiJSONDataBuilder implements ApiJSONObjectDelegate {
             try {
                 mJSONObject.put(key, jsonObject);
             }
-            catch (Exception e) {
-                throw new IeRuntimeException(e, BaseConstants.ExceptionCode.JSON_WRAPPING_FAILURE, "", "");
+            catch (Exception cause) {
+                throw new IeRuntimeException(cause, ErrorCodes.Base.JSON_WRAPPING_FAILURE);
             }
         }
         return this;

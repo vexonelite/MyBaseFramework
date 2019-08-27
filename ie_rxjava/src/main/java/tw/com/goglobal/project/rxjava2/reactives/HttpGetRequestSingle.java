@@ -6,8 +6,8 @@ import io.reactivex.SingleEmitter;
 import io.reactivex.annotations.NonNull;
 import okhttp3.Response;
 import tw.com.goglobal.project.httpstuff.OkHttpUtil;
-import tw.realtime.project.rtbaseframework.apis.BaseConstants;
-import tw.realtime.project.rtbaseframework.apis.IeRuntimeException;
+import tw.realtime.project.rtbaseframework.apis.ErrorCodes;
+import tw.realtime.project.rtbaseframework.apis.IeHttpException;
 import tw.realtime.project.rtbaseframework.parameters.ApiParameterSetDelegate;
 
 
@@ -37,16 +37,16 @@ public final class HttpGetRequestSingle extends BaseApiRequestSingle {
         }
         catch (Exception cause) {
             if (cause instanceof IOException) {
-                emitter.onError(new IeRuntimeException(cause, BaseConstants.ExceptionCode.HTTP_REQUEST_ERROR, "", ""));
+                emitter.onError(new IeHttpException(cause, ErrorCodes.HTTP.REQUEST_ERROR, "", ""));
             }
             else {
-                emitter.onError(new IeRuntimeException(cause, BaseConstants.ExceptionCode.FAIL_TO_EXECUTE_API_REQUEST, "", ""));
+                emitter.onError(new IeHttpException(cause, ErrorCodes.HTTP.FAIL_TO_EXECUTE_API_REQUEST, "", ""));
             }
         }
     }
 
     @Override
-    public boolean doesEnableAesEncoding () {
+    public boolean doesEnableAesEncoding() {
         return false;
     }
 

@@ -9,8 +9,8 @@ import java.io.IOException;
 import okhttp3.Response;
 import tw.com.goglobal.project.httpstuff.OkHttpUtil;
 import tw.realtime.project.rtbaseframework.LogWrapper;
-import tw.realtime.project.rtbaseframework.apis.BaseConstants;
-import tw.realtime.project.rtbaseframework.apis.IeRuntimeException;
+import tw.realtime.project.rtbaseframework.apis.ErrorCodes;
+import tw.realtime.project.rtbaseframework.apis.IeHttpException;
 import tw.realtime.project.rtbaseframework.parameters.ApiParameterSetDelegate;
 
 
@@ -32,7 +32,7 @@ public final class HttpGetRequestCallable extends BaseApiRequestCallable {
 
 
     @Override
-    public boolean doesEnableAesEncoding () {
+    public boolean doesEnableAesEncoding() {
         return false;
     }
 
@@ -68,10 +68,10 @@ public final class HttpGetRequestCallable extends BaseApiRequestCallable {
         catch (Throwable cause) {
             LogWrapper.showLog(Log.ERROR, "HttpGetRequestCallable", "Exception on call");
             if (cause instanceof IOException) {
-                throw new IeRuntimeException(cause, BaseConstants.ExceptionCode.HTTP_REQUEST_ERROR, "", "");
+                throw new IeHttpException(cause, ErrorCodes.HTTP.REQUEST_ERROR, "", "");
             }
             else {
-                throw new IeRuntimeException(cause, BaseConstants.ExceptionCode.FAIL_TO_EXECUTE_API_REQUEST, "", "");
+                throw new IeHttpException(cause, ErrorCodes.HTTP.FAIL_TO_EXECUTE_API_REQUEST, "", "");
             }
         }
     }

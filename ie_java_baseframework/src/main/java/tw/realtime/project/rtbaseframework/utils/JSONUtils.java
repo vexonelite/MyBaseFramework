@@ -2,14 +2,13 @@ package tw.realtime.project.rtbaseframework.utils;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import androidx.annotation.NonNull;
 import tw.realtime.project.rtbaseframework.LogWrapper;
-
-import tw.realtime.project.rtbaseframework.apis.BaseConstants;
+import tw.realtime.project.rtbaseframework.apis.ErrorCodes;
 import tw.realtime.project.rtbaseframework.apis.IeRuntimeException;
 
 
@@ -34,7 +33,7 @@ public final class JSONUtils {
         }
         catch (Exception cause) {
             LogWrapper.showLog(Log.ERROR, logTag, "Exception on jsonStringToJsonObject");
-            throw new IeRuntimeException(cause, BaseConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
+            throw new IeRuntimeException(cause, ErrorCodes.Base.JSON_PARSING_FAILURE);
         }
     }
 
@@ -51,9 +50,9 @@ public final class JSONUtils {
         try {
             return new JSONArray(jsonString);
         }
-        catch (JSONException e) {
+        catch (Exception cause) {
             LogWrapper.showLog(Log.ERROR, logTag, "Exception on jsonStringToJsonArray");
-            throw new IeRuntimeException(e, BaseConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
+            throw new IeRuntimeException(cause, ErrorCodes.Base.JSON_PARSING_FAILURE);
         }
     }
 
@@ -81,7 +80,7 @@ public final class JSONUtils {
             catch (Exception cause) {
                 LogWrapper.showLog(Log.ERROR, logTag, "Exception on getStringFromJSON");
                 if (required) {
-                    throw new IeRuntimeException(cause, BaseConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
+                    throw new IeRuntimeException(cause, ErrorCodes.Base.JSON_PARSING_FAILURE);
                 }
                 else {
                     return "";
@@ -92,7 +91,7 @@ public final class JSONUtils {
             final String message = "getStringFromJSON: No key '" + key + "' in JSONObject!";
             LogWrapper.showLog(Log.WARN, logTag, message);
             if (required) {
-                throw new IeRuntimeException(message, BaseConstants.ExceptionCode.NO_SPECIFIED_KEY_IN_JSON, "", "");
+                throw new IeRuntimeException(message, ErrorCodes.Base.NO_SPECIFIED_KEY_IN_JSON);
             }
             else {
                 return "";
@@ -123,7 +122,7 @@ public final class JSONUtils {
             catch (Exception cause) {
                 LogWrapper.showLog(Log.ERROR, logTag, "Exception on getIntegerFromJSON");
                 if (required) {
-                    throw new IeRuntimeException(cause, BaseConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
+                    throw new IeRuntimeException(cause, ErrorCodes.Base.JSON_PARSING_FAILURE);
                 }
                 else {
                     return -1;
@@ -134,7 +133,7 @@ public final class JSONUtils {
             final String message = "getIntegerFromJSON: No key '" + key + "' in JSONObject!";
             LogWrapper.showLog(Log.WARN, logTag, message);
             if (required) {
-                throw new IeRuntimeException(message, BaseConstants.ExceptionCode.NO_SPECIFIED_KEY_IN_JSON, "", "");
+                throw new IeRuntimeException(message, ErrorCodes.Base.NO_SPECIFIED_KEY_IN_JSON);
             }
             else {
                 return -1;
@@ -156,7 +155,7 @@ public final class JSONUtils {
             catch (Exception cause) {
                 LogWrapper.showLog(Log.ERROR, logTag, "Exception on getLongFromJSON");
                 if (required) {
-                    throw new IeRuntimeException(cause, BaseConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
+                    throw new IeRuntimeException(cause, ErrorCodes.Base.JSON_PARSING_FAILURE);
                 }
                 else {
                     return -1L;
@@ -167,7 +166,7 @@ public final class JSONUtils {
             final String message = "getLongFromJSON: No key '" + key + "' in JSONObject!";
             LogWrapper.showLog(Log.WARN, logTag, message);
             if (required) {
-                throw new IeRuntimeException(message, BaseConstants.ExceptionCode.NO_SPECIFIED_KEY_IN_JSON, "", "");
+                throw new IeRuntimeException(message, ErrorCodes.Base.NO_SPECIFIED_KEY_IN_JSON);
             }
             else {
                 return -1L;
@@ -199,7 +198,7 @@ public final class JSONUtils {
             catch (Exception cause) {
                 LogWrapper.showLog(Log.ERROR, logTag, "Exception on getJSONObjectFromJSON");
                 if (required) {
-                    throw new IeRuntimeException(cause, BaseConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
+                    throw new IeRuntimeException(cause, ErrorCodes.Base.JSON_PARSING_FAILURE);
                 }
                 else {
                     return new JSONObject();
@@ -210,7 +209,7 @@ public final class JSONUtils {
             final String message = "getJSONObjectFromJSON - No key " + key + " in JSONobject!";
             LogWrapper.showLog(Log.WARN, logTag, message);
             if (required) {
-                throw new IeRuntimeException(message, BaseConstants.ExceptionCode.NO_SPECIFIED_KEY_IN_JSON, "", "");
+                throw new IeRuntimeException(message, ErrorCodes.Base.NO_SPECIFIED_KEY_IN_JSON);
             }
             else {
                 return new JSONObject();
@@ -242,7 +241,7 @@ public final class JSONUtils {
             catch (Exception cause) {
                 LogWrapper.showLog(Log.ERROR, logTag, "Exception on getJSONArrayFromJSON");
                 if (required) {
-                    throw new IeRuntimeException(cause, BaseConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
+                    throw new IeRuntimeException(cause, ErrorCodes.Base.JSON_PARSING_FAILURE);
                 }
                 else {
                     return new JSONArray();
@@ -253,7 +252,7 @@ public final class JSONUtils {
             final String message = "getJSONArrayFromJSON - No key " + key + " in JSONobject!";
             LogWrapper.showLog(Log.WARN, logTag, message);
             if (required) {
-                throw new IeRuntimeException(message, BaseConstants.ExceptionCode.NO_SPECIFIED_KEY_IN_JSON, "", "");
+                throw new IeRuntimeException(message, ErrorCodes.Base.NO_SPECIFIED_KEY_IN_JSON);
             }
             else {
                 return new JSONArray();
@@ -278,7 +277,7 @@ public final class JSONUtils {
         catch (Exception cause) {
             LogWrapper.showLog(Log.ERROR, logTag, "Exception on getJSONObjectFromJSONArray - " +
                     "cannot getJSONObject at index: " + index);
-            throw new IeRuntimeException(cause, BaseConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
+            throw new IeRuntimeException(cause, ErrorCodes.Base.JSON_PARSING_FAILURE);
         }
     }
 

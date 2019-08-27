@@ -21,7 +21,7 @@ public abstract class BaseApiRequestSingle implements ApiParameterDelegate, Sing
     private ApiDataDelegate mApiDataDelegate;
 
     @Override
-    public boolean doesEnableAesEncoding () {
+    public boolean doesEnableAesEncoding() {
         return mAesEncodingEnable;
     }
 

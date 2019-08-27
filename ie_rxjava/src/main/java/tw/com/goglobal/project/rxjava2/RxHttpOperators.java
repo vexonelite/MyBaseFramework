@@ -10,7 +10,8 @@ import io.reactivex.functions.Function;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import tw.realtime.project.rtbaseframework.LogWrapper;
-import tw.realtime.project.rtbaseframework.apis.BaseConstants;
+import tw.realtime.project.rtbaseframework.apis.ErrorCodes;
+import tw.realtime.project.rtbaseframework.apis.IeHttpException;
 import tw.realtime.project.rtbaseframework.apis.IeRuntimeException;
 import tw.realtime.project.rtbaseframework.utils.CryptUtils;
 import tw.realtime.project.rtbaseframework.utils.JSONUtils;
@@ -55,20 +56,20 @@ public final class RxHttpOperators {
             return result;
         }
 
-        private String okHttpResponseToJsonString(@NonNull Response response) throws IeRuntimeException {
+        private String okHttpResponseToJsonString(@NonNull Response response) throws IeHttpException {
             LogWrapper.showLog(Log.INFO, getLogTag(), "okHttpResponseToJsonString - Tid: "
                     + Thread.currentThread().getId());
 
             if (!response.isSuccessful()) {
                 final String message = "Something wrong - code: " + response.code() +
                         ", message: " + response.message();
-                throw new IeRuntimeException(message, BaseConstants.ExceptionCode.HTTP_RESPONSE_ERROR, "", "");
+                throw new IeHttpException(message, ErrorCodes.HTTP.RESPONSE_ERROR, "", "");
             }
 
             final ResponseBody responseBody = response.body();
 
             if (null == responseBody) {
-                throw new IeRuntimeException("ResponseBody is null", BaseConstants.ExceptionCode.HTTP_RESPONSE_ERROR, "", "");
+                throw new IeHttpException("ResponseBody is null", ErrorCodes.HTTP.RESPONSE_ERROR, "", "");
 
             }
             try {
@@ -92,7 +93,7 @@ public final class RxHttpOperators {
             }
             catch (Exception cause) {
                 LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on okHttpResponseToJsonString");
-                throw new IeRuntimeException(cause, BaseConstants.ExceptionCode.HTTP_RESPONSE_PARSING_ERROR, "", "");
+                throw new IeHttpException(cause, ErrorCodes.HTTP.RESPONSE_PARSING_ERROR, "", "");
             }
             finally {
                 responseBody.close();
@@ -137,7 +138,7 @@ public final class RxHttpOperators {
                     }
                 }
 
-                throw new IeRuntimeException(message, BaseConstants.ExceptionCode.WRONG_STATUS_CODE, statusCode, jsonResponse);
+                throw new IeHttpException(message, ErrorCodes.HTTP.WRONG_STATUS_CODE, statusCode, jsonResponse);
             }
         }
     }
@@ -153,7 +154,7 @@ public final class RxHttpOperators {
             }
             catch (Exception cause) {
                 LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on ResponseBodyToString");
-                throw new IeRuntimeException(cause, BaseConstants.ExceptionCode.HTTP_RESPONSE_PARSING_ERROR, "", "");
+                throw new IeHttpException(cause, ErrorCodes.HTTP.RESPONSE_PARSING_ERROR, "", "");
             }
             finally {
                 responseBody.close();
@@ -206,7 +207,7 @@ public final class RxHttpOperators {
             catch (Exception cause) {
                 LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on JsonObjectToJsonString - Tid: " +
                         + Thread.currentThread().getId());
-                throw new IeRuntimeException(cause, BaseConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
+                throw new IeRuntimeException(cause, ErrorCodes.Base.JSON_PARSING_FAILURE);
             }
         }
     }
@@ -221,7 +222,7 @@ public final class RxHttpOperators {
             catch (Exception cause) {
                 LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on JsonArrayToJsonString - Tid: " +
                         + Thread.currentThread().getId());
-                throw new IeRuntimeException(cause, BaseConstants.ExceptionCode.JSON_PARSING_FAILURE, "", "");
+                throw new IeRuntimeException(cause, ErrorCodes.Base.JSON_PARSING_FAILURE);
             }
         }
     }

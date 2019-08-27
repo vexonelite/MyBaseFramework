@@ -93,7 +93,7 @@ public class ApiRequestBuilder implements ApiParameterSetDelegate {
     }
 
     @Override
-    public boolean doesEnableAesEncoding () {
+    public boolean doesEnableAesEncoding() {
         return bAesEncodingEnable;
     }
 
@@ -116,13 +116,13 @@ public class ApiRequestBuilder implements ApiParameterSetDelegate {
 
     @NonNull
     @Override
-    public String getApiUrl () {
+    public String getApiUrl() {
         return bApiUrl;
     }
 
     @NonNull
     @Override
-    public String getAccessToken () {
+    public String getAccessToken() {
         return bAccessToken;
     }
 

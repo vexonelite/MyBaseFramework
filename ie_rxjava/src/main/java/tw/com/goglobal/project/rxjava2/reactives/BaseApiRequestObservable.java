@@ -21,7 +21,7 @@ public abstract class BaseApiRequestObservable implements ApiParameterDelegate, 
     private ApiDataDelegate mApiDataDelegate;
 
     @Override
-    public boolean doesEnableAesEncoding () {
+    public boolean doesEnableAesEncoding() {
         return mAesEncodingEnable;
     }
 

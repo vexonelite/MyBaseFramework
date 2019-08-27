@@ -23,8 +23,8 @@ public final class MoshiUtil {
         try {
             final JsonAdapter<T> adapter = moshi.adapter(type);
             return adapter.fromJson(json);
-        } catch (Exception e) {
-            LogWrapper.showLog(android.util.Log.ERROR, "MoshiUtil", "Exception on adapter.fromJson()", e);
+        } catch (Exception cause) {
+            LogWrapper.showLog(android.util.Log.ERROR, "MoshiUtil", "Exception on adapter.fromJson()", cause);
             return null;
         }
     }

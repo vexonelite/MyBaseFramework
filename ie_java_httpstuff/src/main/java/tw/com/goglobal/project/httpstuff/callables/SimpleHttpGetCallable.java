@@ -8,8 +8,8 @@ import java.util.concurrent.Callable;
 import okhttp3.Call;
 import okhttp3.Response;
 import tw.com.goglobal.project.httpstuff.OkHttpUtil;
-import tw.realtime.project.rtbaseframework.apis.BaseConstants;
-import tw.realtime.project.rtbaseframework.apis.IeRuntimeException;
+import tw.realtime.project.rtbaseframework.apis.ErrorCodes;
+import tw.realtime.project.rtbaseframework.apis.IeHttpException;
 
 
 public final class SimpleHttpGetCallable implements Callable<Response> {
@@ -29,10 +29,10 @@ public final class SimpleHttpGetCallable implements Callable<Response> {
         }
         catch (Exception cause) {
             if (cause instanceof IOException) {
-                throw new IeRuntimeException(cause, BaseConstants.ExceptionCode.HTTP_REQUEST_ERROR, "", "");
+                throw new IeHttpException(cause, ErrorCodes.HTTP.REQUEST_ERROR, "", "");
             }
             else {
-                throw new IeRuntimeException(cause, BaseConstants.ExceptionCode.FAIL_TO_EXECUTE_API_REQUEST, "", "");
+                throw new IeHttpException(cause, ErrorCodes.HTTP.FAIL_TO_EXECUTE_API_REQUEST, "", "");
             }
         }
     }
