@@ -7,7 +7,8 @@ import java.io.IOException;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 import tw.realtime.project.rtbaseframework.LogWrapper;
-import tw.realtime.project.rtbaseframework.apis.BaseConstants;
+import tw.realtime.project.rtbaseframework.apis.ErrorCodes;
+import tw.realtime.project.rtbaseframework.apis.IeHttpException;
 import tw.realtime.project.rtbaseframework.apis.IeRuntimeException;
 import tw.realtime.project.rtbaseframework.delegates.apis.RtAsyncApiCallback;
 
@@ -35,20 +36,20 @@ public abstract class BaseRxAsyncRepository<T> extends BaseRxRepository {
         if (null != callback) {
             callback.onEnd();
 
-            if (cause instanceof IeRuntimeException) {
-                final IeRuntimeException asyncApiException = (IeRuntimeException) cause;
-                if (BaseConstants.ExceptionCode.SERVER_INVALID_ACCESS_TOKEN.equals(asyncApiException.getStatusCode())) {
+            if (cause instanceof IeHttpException) {
+                final IeHttpException httpException = (IeHttpException) cause;
+                if (ErrorCodes.HTTP.SERVER_INVALID_ACCESS_TOKEN.equals(httpException.getStatusCode())) {
                     callback.onTokenError();
                 }
                 else {
-                    callback.onError(asyncApiException);
+                    callback.onError(httpException);
                 }
             }
             else if (cause instanceof IOException) {
-                callback.onError(new IeRuntimeException(cause, BaseConstants.ExceptionCode.HTTP_REQUEST_ERROR, "", ""));
+                callback.onError(new IeHttpException(cause, ErrorCodes.HTTP.REQUEST_ERROR, "", ""));
             }
             else {
-                callback.onError(new IeRuntimeException(cause, BaseConstants.ExceptionCode.INTERNAL_CONVERSION_ERROR, "", ""));
+                callback.onError(new IeRuntimeException(cause, ErrorCodes.Base.INTERNAL_CONVERSION_ERROR));
             }
         }
     }
@@ -62,21 +63,21 @@ public abstract class BaseRxAsyncRepository<T> extends BaseRxRepository {
 
     protected final void defaultAsyncSuccessCallback(@NonNull T result) {
         LogWrapper.showLog(Log.INFO, getLogTag(), "defaultAsyncSuccessCallback#accept - Tid: (" + Thread.currentThread().getId() + ")");
-        rxDisposeIfNeeded();
+        rxDisposeIfPossible();
         notifyCallbackOnSuccess(result);
     }
 
     protected final void defaultAsyncErrorCallback(@NonNull Throwable cause) throws Exception {
         LogWrapper.showLog(Log.INFO, getLogTag(), "defaultAsyncErrorCallback#accept - Tid: (" + Thread.currentThread().getId() + ")");
 
-        rxDisposeIfNeeded();
+        rxDisposeIfPossible();
 
         if (cause instanceof IeRuntimeException) {
             final IeRuntimeException asyncApiException = (IeRuntimeException) cause;
             notifyCallbackOnError(asyncApiException);
         }
         else {
-            notifyCallbackOnError(new IeRuntimeException(cause, BaseConstants.ExceptionCode.INTERNAL_CONVERSION_ERROR, "", ""));
+            notifyCallbackOnError(new IeRuntimeException(cause, ErrorCodes.Base.INTERNAL_CONVERSION_ERROR));
         }
     }
 }

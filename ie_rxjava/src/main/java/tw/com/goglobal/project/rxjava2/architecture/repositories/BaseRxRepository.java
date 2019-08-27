@@ -22,23 +22,23 @@ public abstract class BaseRxRepository implements AppRepository, RxDisposeDelega
         return this.getClass().getSimpleName();
     }
 
-    protected final void setDisposable (@Nullable Disposable disposable) {
+    protected final void setDisposable(@Nullable Disposable disposable) {
         this.disposable = disposable;
     }
 
     @Override
-    public void rxDisposeIfNeeded() {
-        localRxDisposeIfNeeded();
+    public void rxDisposeIfPossible() {
+        localRxDisposeIfPossible();
     }
 
-    private void localRxDisposeIfNeeded() {
+    private void localRxDisposeIfPossible() {
         if (null != disposable) {
             if (!disposable.isDisposed()) {
                 disposable.dispose();
-                LogWrapper.showLog(Log.WARN, getLogTag(), "localRxDisposableIfNeeded - dispose");
+                LogWrapper.showLog(Log.WARN, getLogTag(), "localRxDisposeIfPossible - dispose");
             }
             disposable = null;
-            LogWrapper.showLog(Log.WARN, getLogTag(), "localRxDisposableIfNeeded - reset");
+            LogWrapper.showLog(Log.WARN, getLogTag(), "localRxDisposeIfPossible - reset");
         }
     }
 
@@ -47,7 +47,7 @@ public abstract class BaseRxRepository implements AppRepository, RxDisposeDelega
      */
     protected final void defaultSuccessActionCallback() {
         LogWrapper.showLog(Log.INFO, getLogTag(), "defaultSuccessActionCallback#run - Tid: (" + Thread.currentThread().getId() + ")");
-        rxDisposeIfNeeded();
+        rxDisposeIfPossible();
     }
 
     /**
@@ -55,7 +55,7 @@ public abstract class BaseRxRepository implements AppRepository, RxDisposeDelega
      */
     protected final void defaultErrorCallback(@NonNull Throwable throwable) throws Exception {
         LogWrapper.showLog(Log.ERROR, getLogTag(), "defaultErrorCallback#accept - Tid: (" + Thread.currentThread().getId() + ")", throwable);
-        rxDisposeIfNeeded();
+        rxDisposeIfPossible();
     }
 
 }
