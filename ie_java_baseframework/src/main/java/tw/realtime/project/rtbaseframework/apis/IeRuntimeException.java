@@ -4,46 +4,23 @@ import androidx.annotation.NonNull;
 
 
 public class IeRuntimeException extends RuntimeException {
-
+    //自訂錯誤碼
     private final String exceptionCode;
-    private final String statusCode;
-    private final String jsonResponse;
 
-    public IeRuntimeException(
-            @NonNull String message,
-            @NonNull String exceptionCode,
-            @NonNull String statusCode,
-            @NonNull String jsonResponse
-    ) {
+    public IeRuntimeException(@NonNull String message, @NonNull String exceptionCode) {
         super(message);
         this.exceptionCode = exceptionCode;
-        this.statusCode = statusCode;
-        this.jsonResponse = jsonResponse;
     }
 
-    public IeRuntimeException(
-            @NonNull String message,
-            @NonNull Throwable cause,
-            @NonNull String exceptionCode,
-            @NonNull String statusCode,
-            @NonNull String jsonResponse
-    ) {
-        super(message, cause);
-        this.exceptionCode = exceptionCode;
-        this.statusCode = statusCode;
-        this.jsonResponse = jsonResponse;
-    }
-
-    public IeRuntimeException(
-            @NonNull Throwable cause,
-            @NonNull String exceptionCode,
-            @NonNull String statusCode,
-            @NonNull String jsonResponse
-    ) {
+    public IeRuntimeException(@NonNull Throwable cause, @NonNull String exceptionCode) {
         super(cause);
         this.exceptionCode = exceptionCode;
-        this.statusCode = statusCode;
-        this.jsonResponse = jsonResponse;
+    }
+
+    public IeRuntimeException(
+            @NonNull String message, @NonNull Throwable cause, @NonNull String exceptionCode) {
+        super(message, cause);
+        this.exceptionCode = exceptionCode;
     }
 
     /**
@@ -52,21 +29,5 @@ public class IeRuntimeException extends RuntimeException {
     @NonNull
     public final String getExceptionCode () {
         return exceptionCode;
-    }
-
-    /**
-     *
-     */
-    @NonNull
-    public final String getStatusCode () {
-        return statusCode;
-    }
-
-    /**
-     *
-     */
-    @NonNull
-    public final String getJsonResponse () {
-        return jsonResponse;
     }
 }
