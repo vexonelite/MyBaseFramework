@@ -28,7 +28,7 @@ public final class OkHttpUtil {
 
     private volatile static OkHttpClient instance;
 
-    public static class ClientFactory implements ParameterFactory<OkHttpClient, OkHttpClient.Builder> {
+    public static class ClientFactory implements ParameterFactory<OkHttpClient.Builder, OkHttpClient> {
         @NonNull
         @Override
         public OkHttpClient create(@NonNull OkHttpClient.Builder parameter) {

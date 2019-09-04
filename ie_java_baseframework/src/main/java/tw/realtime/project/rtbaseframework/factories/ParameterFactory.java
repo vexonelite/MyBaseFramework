@@ -4,5 +4,5 @@ import androidx.annotation.NonNull;
 
 public interface ParameterFactory<T, R> {
     @NonNull
-    T create(@NonNull R parameter);
+    R create(@NonNull T parameter);
 }

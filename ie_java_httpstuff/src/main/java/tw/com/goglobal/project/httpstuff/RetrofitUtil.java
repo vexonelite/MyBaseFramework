@@ -12,7 +12,7 @@ public final class RetrofitUtil {
 
     private volatile static Retrofit instance;
 
-    public static class RetrofitFactory implements ParameterFactory<Retrofit, Retrofit.Builder> {
+    public static class RetrofitFactory implements ParameterFactory<Retrofit.Builder, Retrofit> {
         @NonNull
         @Override
         public Retrofit create(@NonNull Retrofit.Builder parameter) {
