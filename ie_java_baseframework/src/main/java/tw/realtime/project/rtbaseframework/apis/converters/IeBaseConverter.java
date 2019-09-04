@@ -17,14 +17,14 @@ public abstract class IeBaseConverter<T, R> implements IMapFunction<T, R> {
 
     @NonNull
     @Override
-    public final R convertIntoData(@NonNull T input) {
+    public final R convertIntoData(@NonNull T input) throws IeRuntimeException {
         try {
             return doConversion(input);
         }
         catch (Exception cause) {
             LogWrapper.showLog(Log.ERROR, getLogTag(), "Error on doConversion()");
             if (cause instanceof IeRuntimeException) {
-                throw cause;
+                throw ((IeRuntimeException) cause);
             }
             else {
                 throw new IeRuntimeException(cause, ErrorCodes.Base.INTERNAL_CONVERSION_ERROR);
@@ -33,5 +33,5 @@ public abstract class IeBaseConverter<T, R> implements IMapFunction<T, R> {
     }
 
     @NonNull
-    protected abstract R doConversion(@NonNull T input);
+    protected abstract R doConversion(@NonNull T input) throws Exception ;
 }
