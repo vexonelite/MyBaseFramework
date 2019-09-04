@@ -42,12 +42,14 @@ public class FileUtils {
      *  @return A file object pointing to the newly created file.
      */
     @Nullable
-    public static String getOutputFileName(@NonNull String givenFileName,
-                                           @NonNull String givenFileExtension,
-                                           @Nullable String givenFolderName,
-                                           @Nullable String givenEnvironmentFolder) {
+    public static String getOutputFileName(
+            @NonNull Context context,
+            @NonNull String givenFileName,
+            @NonNull String givenFileExtension,
+            @Nullable String givenFolderName,
+            @Nullable String givenEnvironmentFolder) {
 
-        final File mediaStorageDir = getOutputFolder(givenFolderName, givenEnvironmentFolder);
+        final File mediaStorageDir = getOutputFolder(context, givenFolderName, givenEnvironmentFolder);
         if (null == mediaStorageDir) {
             return null;
         }
@@ -70,8 +72,10 @@ public class FileUtils {
     }
 
     @Nullable
-    public static File getOutputFolder(@Nullable String givenFolderName,
-                                       @Nullable String givenEnvironmentFolder) {
+    public static File getOutputFolder(
+            @NonNull Context context,
+            @Nullable String givenFolderName,
+            @Nullable String givenEnvironmentFolder) {
 
         // To be safe, you should check if the SDCard is mounted
         // by using Environment.getExternalStorageState() before doing this.
@@ -83,17 +87,24 @@ public class FileUtils {
                 ((null != givenFolderName) && (givenFolderName.length() > 0))
                         ? givenFolderName : "APP_CACHE";
 
-//        final String fileExtension = (null != givenFileExtension) ? givenFileExtension : "";
         final String environmentFolder =
                 ((null != givenEnvironmentFolder) && (givenEnvironmentFolder.length() > 0))
                         ? givenEnvironmentFolder : Environment.DIRECTORY_DOWNLOADS;
 
         // file path: storage/sdcard#/Pictures/folderName/
-        final File mediaStorageDir = new File(
-                Environment.getExternalStoragePublicDirectory(environmentFolder),
-                folderName);
-        return mediaStorageDir;
-
+        /*
+         * getExternalStoragePublicDirectory()
+         * This method was deprecated in API level 29.
+         * To improve user privacy, direct access to shared/external storage devices is deprecated.
+         * When an app targets ``Build.VERSION_CODES.Q``,
+         * the path returned from this method is no longer directly accessible to apps.
+         * Apps can continue to access content stored on shared/external storage by migrating to alternatives such as
+         * ``Context#getExternalFilesDir(String)``, ``MediaStore``, or ``Intent#ACTION_OPEN_DOCUMENT``.
+         */
+        // final File mediaStorageDir = ...
+        return (Build.VERSION.SDK_INT >= 29)
+                ? new File(context.getExternalFilesDir(environmentFolder), folderName)
+                : new File(Environment.getExternalStoragePublicDirectory(environmentFolder), folderName);
     }
 
     public static String getRealImageFilePath (Context context, final Uri imageUri) {
