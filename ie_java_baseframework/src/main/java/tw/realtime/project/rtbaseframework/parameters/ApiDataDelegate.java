@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import org.json.JSONObject;
 
-import tw.realtime.project.rtbaseframework.apis.IeRuntimeException;
+import tw.realtime.project.rtbaseframework.apis.errors.IeRuntimeException;
 
 /**
  * Used to get a JSONObject instance or a result that is converted from HashMap.

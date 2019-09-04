@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import tw.realtime.project.rtbaseframework.apis.IeRuntimeException;
+import tw.realtime.project.rtbaseframework.apis.errors.IeRuntimeException;
 
 /**
  * Provide common interface to set and retrieve the key-value parameters via a JSONObject

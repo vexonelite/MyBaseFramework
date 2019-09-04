@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import tw.realtime.project.rtbaseframework.apis.IeRuntimeException;
+import tw.realtime.project.rtbaseframework.apis.errors.IeRuntimeException;
 
 /**
  * Created by vexonelite on 2017/10/3.

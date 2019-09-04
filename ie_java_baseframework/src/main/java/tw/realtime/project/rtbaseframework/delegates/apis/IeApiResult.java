@@ -2,7 +2,7 @@ package tw.realtime.project.rtbaseframework.delegates.apis;
 
 import androidx.annotation.NonNull;
 
-import tw.realtime.project.rtbaseframework.apis.IeRuntimeException;
+import tw.realtime.project.rtbaseframework.apis.errors.IeRuntimeException;
 
 
 public interface IeApiResult<T> {

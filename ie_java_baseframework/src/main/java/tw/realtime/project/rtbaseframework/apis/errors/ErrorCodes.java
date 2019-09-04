@@ -1,4 +1,4 @@
-package tw.realtime.project.rtbaseframework.apis;
+package tw.realtime.project.rtbaseframework.apis.errors;
 
 public final class ErrorCodes {
 

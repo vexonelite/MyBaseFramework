@@ -9,8 +9,8 @@ import java.io.IOException;
 import okhttp3.Response;
 import tw.com.goglobal.project.httpstuff.OkHttpUtil;
 import tw.realtime.project.rtbaseframework.LogWrapper;
-import tw.realtime.project.rtbaseframework.apis.ErrorCodes;
-import tw.realtime.project.rtbaseframework.apis.IeHttpException;
+import tw.realtime.project.rtbaseframework.apis.errors.ErrorCodes;
+import tw.realtime.project.rtbaseframework.apis.errors.IeHttpException;
 import tw.realtime.project.rtbaseframework.parameters.ApiParameterSetDelegate;
 
 

@@ -10,9 +10,9 @@ import io.reactivex.functions.Function;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import tw.realtime.project.rtbaseframework.LogWrapper;
-import tw.realtime.project.rtbaseframework.apis.ErrorCodes;
-import tw.realtime.project.rtbaseframework.apis.IeHttpException;
-import tw.realtime.project.rtbaseframework.apis.IeRuntimeException;
+import tw.realtime.project.rtbaseframework.apis.errors.ErrorCodes;
+import tw.realtime.project.rtbaseframework.apis.errors.IeHttpException;
+import tw.realtime.project.rtbaseframework.apis.errors.IeRuntimeException;
 import tw.realtime.project.rtbaseframework.utils.CryptUtils;
 import tw.realtime.project.rtbaseframework.utils.JSONUtils;
 

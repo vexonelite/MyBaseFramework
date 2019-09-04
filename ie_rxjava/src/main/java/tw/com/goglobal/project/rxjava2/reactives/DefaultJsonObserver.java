@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.observers.DisposableObserver;
 import tw.realtime.project.rtbaseframework.LogWrapper;
-import tw.realtime.project.rtbaseframework.apis.IeHttpException;
+import tw.realtime.project.rtbaseframework.apis.errors.IeHttpException;
 
 
 public final class DefaultJsonObserver extends DisposableObserver<JSONObject> {

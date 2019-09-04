@@ -8,8 +8,8 @@ import java.util.concurrent.Callable;
 import okhttp3.Call;
 import okhttp3.Response;
 import tw.com.goglobal.project.httpstuff.OkHttpUtil;
-import tw.realtime.project.rtbaseframework.apis.ErrorCodes;
-import tw.realtime.project.rtbaseframework.apis.IeHttpException;
+import tw.realtime.project.rtbaseframework.apis.errors.ErrorCodes;
+import tw.realtime.project.rtbaseframework.apis.errors.IeHttpException;
 
 
 public final class SimpleHttpGetCallable implements Callable<Response> {
