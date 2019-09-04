@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -536,5 +537,55 @@ public class CodeUtils {
         }
     }
 
+    /// Log:
 
+    @NonNull
+    public static String byteArrayToHexString(@NonNull byte[] byteArray) {
+        String result = "";
+        for (byte byteData : byteArray) {
+            final String hexStr = byteToHexString(byteData);
+            result += hexStr + "-";
+        }
+        return result;
+    }
+
+    @NonNull
+    public static String byteToHexString(@NonNull byte byteData) {
+        return String.format("%02X", byteData);
+    }
+
+
+    @NonNull
+    public static <T> String elementsToString(@NonNull List<T> itemList, @Nullable String newLine) {
+        final String theNewLine = (null != newLine) ? newLine : "\n";
+        String message = "";
+        for (int i = 0; i < itemList.size(); i++) {
+            message += itemList.get(i).toString();
+            if (i < (itemList.size() - 1)) {
+                message += ", " + theNewLine;
+            }
+        }
+        return "[" + message + "]";
+    }
+
+
+    @NonNull
+    public static String intItemsToString(@NonNull List<Integer> itemList, @Nullable String newLine) {
+        final String theNewLine = (null != newLine) ? newLine : "";
+        String message = "";
+        for (int i = 0; i < itemList.size(); i++) {
+            message += integerToDigitFormat(itemList.get(i), 4);
+            if (i < (itemList.size() - 1)) {
+                message += ", " + theNewLine;
+            }
+        }
+        return "[" + message + "]";
+    }
+
+    @NonNull
+    public static String integerToDigitFormat(int value, int digit) {
+        return String.format("%0" + digit + "d", value);
+    }
+
+    // End of Log
 }
