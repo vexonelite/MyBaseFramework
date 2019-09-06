@@ -5,14 +5,14 @@ import androidx.annotation.NonNull;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
-import tw.realtime.project.rtbaseframework.factories.ParameterFactory;
+import tw.realtime.project.rtbaseframework.factories.ParameterFactoryDelegate;
 
 
 public final class RetrofitUtil {
 
     private volatile static Retrofit instance;
 
-    public static class RetrofitFactory implements ParameterFactory<Retrofit.Builder, Retrofit> {
+    public static final class RetrofitFactory implements ParameterFactoryDelegate<Retrofit.Builder, Retrofit> {
         @NonNull
         @Override
         public Retrofit create(@NonNull Retrofit.Builder parameter) {

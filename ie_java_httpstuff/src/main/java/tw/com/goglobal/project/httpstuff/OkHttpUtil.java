@@ -16,7 +16,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import tw.realtime.project.rtbaseframework.LogWrapper;
-import tw.realtime.project.rtbaseframework.factories.ParameterFactory;
+import tw.realtime.project.rtbaseframework.factories.ParameterFactoryDelegate;
 
 
 /**
@@ -28,7 +28,7 @@ public final class OkHttpUtil {
 
     private volatile static OkHttpClient instance;
 
-    public static class ClientFactory implements ParameterFactory<OkHttpClient.Builder, OkHttpClient> {
+    public static final class ClientFactory implements ParameterFactoryDelegate<OkHttpClient.Builder, OkHttpClient> {
         @NonNull
         @Override
         public OkHttpClient create(@NonNull OkHttpClient.Builder parameter) {
