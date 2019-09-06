@@ -19,8 +19,15 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -37,6 +44,7 @@ import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RawRes;
 import androidx.core.content.ContextCompat;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 
@@ -534,6 +542,39 @@ public class CodeUtils {
         }
         catch (Exception e) {
             return 0;
+        }
+    }
+
+    ///
+
+    @NonNull
+    public static String readJsonStringFromResRawFile(@NonNull Context context, @RawRes int resId) {
+        InputStream inputStream = null;
+        try {
+            final int bufferSize = 1024 * 8;
+            final char[] buffer = new char[bufferSize];
+            final Writer writer = new StringWriter();
+            inputStream = context.getResources().openRawResource(resId);
+            final Reader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            int length;
+            while ((length = reader.read(buffer)) != -1) {
+                writer.write(buffer, 0, length);
+            }
+            return writer.toString();
+        }
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, "CodeUtil","Error on readJsonStringFromResRawFile", cause.fillInStackTrace());
+            return "";
+        }
+        finally {
+            try {
+                if (null != inputStream) {
+                    inputStream.close();
+                }
+            }
+            catch (Exception cause) {
+                LogWrapper.showLog(Log.ERROR, "CodeUtil","Error on inputStream.close()");
+            }
         }
     }
 
