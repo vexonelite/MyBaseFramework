@@ -2,6 +2,8 @@ package tw.realtime.project.rtbaseframework.widgets;
 
 import android.content.Context;
 import android.graphics.Rect;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
@@ -61,7 +63,11 @@ public class SimpleDecoration extends RecyclerView.ItemDecoration {
 
 
     @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+    public void getItemOffsets(
+            @NonNull Rect outRect,
+            @NonNull View view,
+            @NonNull RecyclerView parent,
+            @NonNull RecyclerView.State state) {
 
         if (parent.getChildLayoutPosition(view) == 0) {
             outRect.set(horizontalMargin, 0, horizontalMargin, 0);

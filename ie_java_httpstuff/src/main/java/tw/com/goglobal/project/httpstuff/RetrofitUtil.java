@@ -28,7 +28,7 @@ public final class RetrofitUtil {
     }
 
     @NonNull
-    public Retrofit.Builder defaultRetrofitBuilder(
+    public static Retrofit.Builder defaultRetrofitBuilder(
             @NonNull String baseApiUrl, boolean enableHttpLoggingInterceptor) {
 
         final OkHttpClient.Builder okHttpBuilder =
@@ -41,7 +41,7 @@ public final class RetrofitUtil {
 
     /** create a Retrofit 2 service representing a asynchronized api task.   */
     @NonNull
-    public <S> S createService(@NonNull Retrofit.Builder builder, Class<S> serviceClass) {
+    public static <S> S createService(@NonNull Retrofit.Builder builder, Class<S> serviceClass) {
         return new RetrofitFactory()
                 .create(builder)
                 .create(serviceClass);

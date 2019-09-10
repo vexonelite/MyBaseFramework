@@ -7,11 +7,11 @@ def versions = [:]
 versions.kotlinCoroutines = "1.1.1"
 versions.kotlinCoreKtx = "1.0.2"
 
-versions.androidX = "1.0.2"
+versions.androidX = "1.1.0"
 // needed for glide
 versions.annotationX = "1.0.0"
 versions.materialX = "1.0.0"
-versions.lifecycleX = "2.0.0"
+versions.lifecycleX = "2.1.0"
 versions.roomX = "2.1.0"
 versions.constraintLayoutX = "1.1.3"
 //constraintLayoutX = "2.0.0-alpha2"

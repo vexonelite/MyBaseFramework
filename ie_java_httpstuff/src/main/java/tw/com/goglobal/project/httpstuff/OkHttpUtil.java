@@ -44,7 +44,7 @@ public final class OkHttpUtil {
     }
 
     @NonNull
-    public OkHttpClient.Builder defaultOkHttpClientBuilder(boolean enableHttpLoggingInterceptor) {
+    public static OkHttpClient.Builder defaultOkHttpClientBuilder(boolean enableHttpLoggingInterceptor) {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(OkHttpSetting.CONNECTION_TIME, TimeUnit.MILLISECONDS)
                 .readTimeout(OkHttpSetting.READ_TIMEOUT, TimeUnit.MILLISECONDS)
@@ -67,7 +67,7 @@ public final class OkHttpUtil {
      * @return
      */
     @NonNull
-    public okhttp3.Call generateRequestCall(
+    public static okhttp3.Call generateRequestCall(
             @NonNull RequestBody requestBody,
             @NonNull String apiUrl,
             boolean enableHttpLoggingInterceptor
@@ -85,7 +85,7 @@ public final class OkHttpUtil {
     }
 
     @NonNull
-    public FormBody.Builder getFormBodyBuilder(@NonNull String key, @NonNull String outString) {
+    public static FormBody.Builder getFormBodyBuilder(@NonNull String key, @NonNull String outString) {
         final FormBody.Builder formBodyBuilder = new okhttp3.FormBody.Builder();
         if ( (!key.isEmpty()) && (!outString.isEmpty()) ) {
             formBodyBuilder.add(key, outString);
@@ -95,7 +95,8 @@ public final class OkHttpUtil {
     }
 
     @NonNull
-    public MultipartBody.Builder getMultipartBodyBuilder(@NonNull String key, @NonNull String outString) {
+    public static MultipartBody.Builder getMultipartBodyBuilder(
+            @NonNull String key, @NonNull String outString) {
         final MultipartBody.Builder multiPartBuilder = new MultipartBody.Builder();
         multiPartBuilder.setType(MultipartBody.FORM);
         //if ( (null != key) && (!key.isEmpty()) && (null != outString) && (!outString.isEmpty()) ) {
@@ -107,7 +108,7 @@ public final class OkHttpUtil {
     }
 
     @NonNull
-    public okhttp3.Call generateHttpGetRequestCall(
+    public static okhttp3.Call generateHttpGetRequestCall(
             @NonNull String apiUrl,
             boolean enableHttpLoggingInterceptor,
             boolean doesAddContentTypeForJson
@@ -125,18 +126,18 @@ public final class OkHttpUtil {
     }
 
     @Nullable
-    public MediaType getJsonMediaType() { return MediaType.parse("application/json; charset=utf-8"); }
+    public static MediaType getJsonMediaType() { return MediaType.parse("application/json; charset=utf-8"); }
 
     @NonNull
-    public MediaType getMultiFormPartMediaType() { return MultipartBody.FORM; }
+    public static MediaType getMultiFormPartMediaType() { return MultipartBody.FORM; }
 
     @NonNull
-    public RequestBody getRequestBody(@NonNull MediaType mediaType, @NonNull String value) {
+    public static RequestBody getRequestBody(@NonNull MediaType mediaType, @NonNull String value) {
         return RequestBody.create(mediaType, value);
     }
 
     @NonNull
-    public MultipartBody.Part getMultipartBodyFromFile(
+    public static MultipartBody.Part getMultipartBodyFromFile(
             @NonNull File file, @NonNull String parameterName) {
         final RequestBody fileRequestBody = RequestBody.create(null, file);
         // MultipartBody.Part is used to send also the actual file name
