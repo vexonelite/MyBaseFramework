@@ -63,6 +63,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation project(':ie_java_baseframework')
+    implementation project(':ie_java_httpstuff')
+    implementation project(':ie_rxjava')
 
     testImplementation "junit:junit:${deps.versions.junit}"
     androidTestImplementation "androidx.test:runner:${deps.versions.runner}"

@@ -41,9 +41,9 @@ dependencies {
 
     implementation "androidx.appcompat:appcompat:${deps.versions.androidX}"
 
-    implementation "com.squareup.okhttp3:okhttp:${deps.versions.okHttp}"
+    implementation "com.squareup.okhttp3:okhttp:${deps.versions.okHttp3}"
 
-    implementation "com.squareup.retrofit2:retrofit:${deps.versions.retrofit}"
+    implementation "com.squareup.retrofit2:retrofit:${deps.versions.retrofit2}"
 
     // RxJava 2.X
     implementation "io.reactivex.rxjava2:rxjava:${deps.versions.rxJava2}"

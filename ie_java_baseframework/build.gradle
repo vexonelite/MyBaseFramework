@@ -80,8 +80,8 @@ dependencies {
 
     implementation "androidx.constraintlayout:constraintlayout:${deps.versions.constraintLayoutX}"
 
-    implementation "com.squareup.okhttp3:okhttp:${deps.versions.okHttp}"
-    implementation "com.squareup.okhttp3:logging-interceptor:${deps.versions.okHttp}"
+    implementation "com.squareup.okhttp3:okhttp:${deps.versions.okHttp3}"
+    implementation "com.squareup.okhttp3:logging-interceptor:${deps.versions.okHttp3}"
 //    implementation "com.squareup.okhttp3:okhttp-urlconnection:${deps.versions.okHttp}"
 
     // RxJava 2.X
@@ -89,16 +89,16 @@ dependencies {
     // RxAndroid 2.X
     implementation "io.reactivex.rxjava2:rxandroid:${deps.versions.rxAndroid2}"
 
-    implementation "com.squareup.retrofit2:retrofit:${deps.versions.retrofit}"
-//    implementation "com.squareup.retrofit2:converter-scalars:${deps.versions.retrofit}"
+    implementation "com.squareup.retrofit2:retrofit:${deps.versions.retrofit2}"
+//    implementation "com.squareup.retrofit2:converter-scalars:${deps.versions.retrofit2}"
     // for using GSON json converter
-//    implementation "com.squareup.retrofit2:converter-gson:${deps.versions.retrofit}"
+//    implementation "com.squareup.retrofit2:converter-gson:${deps.versions.retrofit2}"
     // for using Moshi json converter
-//    implementation "com.squareup.retrofit2:converter-moshi:${deps.versions.retrofit}"
+//    implementation "com.squareup.retrofit2:converter-moshi:${deps.versions.retrofit2}"
     // for using RxJava 1.x
-//    implementation "com.squareup.retrofit2:adapter-rxjava:${deps.versions.retrofit}"
+//    implementation "com.squareup.retrofit2:adapter-rxjava:${deps.versions.retrofit2}"
     // for using RxJava 2.x
-//    implementation "com.squareup.retrofit2:adapter-rxjava2:${deps.versions.retrofit}"
+//    implementation "com.squareup.retrofit2:adapter-rxjava2:${deps.versions.retrofit2}"
 
     // 產生 QrCode 影像
     implementation "com.google.zxing:core:${deps.versions.zxing}"
