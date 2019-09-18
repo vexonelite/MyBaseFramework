@@ -33,7 +33,7 @@ public abstract class AbstractRxTask<T> implements RxDisposeDelegate {
     }
 
     @Override
-    public final void rxDisposeIfNeeded() {
+    public final void rxDisposeIfPossible() {
         if (null != disposable) {
             if (!disposable.isDisposed()) {
                 disposable.dispose();
@@ -58,14 +58,14 @@ public abstract class AbstractRxTask<T> implements RxDisposeDelegate {
         public void onError(@NonNull Throwable cause) {
             LogWrapper.showLog(Log.ERROR, getLogTag(), "ApiDisposableObserver - onError - Tid: " + Thread.currentThread().getId(), cause);
 
-            rxDisposeIfNeeded();
+            rxDisposeIfPossible();
             notifyCallbackOnError(cause);
         }
 
         @Override
         public void onComplete() {
             LogWrapper.showLog(Log.INFO, getLogTag(), "ApiDisposableObserver - onComplete - Tid: " + Thread.currentThread().getId());
-            rxDisposeIfNeeded();
+            rxDisposeIfPossible();
             notifyCallbackOnSuccess(cachedData);
         }
     }
@@ -75,14 +75,14 @@ public abstract class AbstractRxTask<T> implements RxDisposeDelegate {
         @Override
         public void onSuccess(@NonNull T result) {
             LogWrapper.showLog(Log.INFO, getLogTag(), "ApiDisposableSingleObserver - onSuccess - Tid: " + Thread.currentThread().getId());
-            rxDisposeIfNeeded();
+            rxDisposeIfPossible();
             notifyCallbackOnSuccess(result);
         }
 
         @Override
         public void onError(@NonNull Throwable cause) {
             LogWrapper.showLog(Log.ERROR, getLogTag(), "ApiDisposableSingleObserver - onError - Tid: " + Thread.currentThread().getId(), cause);
-            rxDisposeIfNeeded();
+            rxDisposeIfPossible();
             notifyCallbackOnError(cause);
         }
     }
@@ -113,21 +113,21 @@ public abstract class AbstractRxTask<T> implements RxDisposeDelegate {
         @Override
         public void onSuccess(T result) {
             LogWrapper.showLog(Log.INFO, getLogTag(), "ApiMaybeObserver - onSuccess - Tid: " + Thread.currentThread().getId());
-            rxDisposeIfNeeded();
+            rxDisposeIfPossible();
             notifyCallbackOnSuccess(result);
         }
 
         @Override
         public void onError(Throwable cause) {
             LogWrapper.showLog(Log.ERROR, getLogTag(), "ApiMaybeObserver - onError - Tid: " + Thread.currentThread().getId(), cause);
-            rxDisposeIfNeeded();
+            rxDisposeIfPossible();
             notifyCallbackOnError(cause);
         }
 
         @Override
         public void onComplete() {
             LogWrapper.showLog(Log.INFO, getLogTag(), "ApiMaybeObserver - onComplete - Tid: " + Thread.currentThread().getId());
-            rxDisposeIfNeeded();
+            rxDisposeIfPossible();
             if (null != callback) {
                 callback.onError(new IeRuntimeException(
                         "filter returns negative result", ErrorCodes.Base.RX_MAYBE_ON_COMPLETE));

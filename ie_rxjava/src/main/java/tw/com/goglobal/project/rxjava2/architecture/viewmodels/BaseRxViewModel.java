@@ -24,11 +24,11 @@ public abstract class BaseRxViewModel extends AndroidViewModel implements RxDisp
         super(application);
     }
 
-    protected final void setDisposable (@Nullable Disposable disposable) {
+    protected final void setDisposable(@Nullable Disposable disposable) {
         this.disposable = disposable;
     }
 
-    private void localRxDisposeIfNeeded () {
+    private void localRxDisposePossible() {
         if (null != disposable) {
             if (!disposable.isDisposed()) {
                 disposable.dispose();
@@ -40,12 +40,12 @@ public abstract class BaseRxViewModel extends AndroidViewModel implements RxDisp
     }
 
     @Override
-    public void rxDisposeIfNeeded () {
-        localRxDisposeIfNeeded();
+    public void rxDisposeIfPossible() {
+        localRxDisposePossible();
     }
 
 
-    protected final String getLogTag () {
+    protected final String getLogTag() {
         return this.getClass().getSimpleName();
     }
 
