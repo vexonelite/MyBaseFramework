@@ -102,4 +102,7 @@ dependencies {
 
     // 產生 QrCode 影像
     implementation "com.google.zxing:core:${deps.versions.zxing}"
+
+    // Gson
+    implementation "com.google.code.gson:gson:${deps.versions.gson}"
 }

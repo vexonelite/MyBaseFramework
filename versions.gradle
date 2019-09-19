@@ -42,6 +42,7 @@ versions.retrofit2 = "2.6.1"
 
 versions.glide = "4.9.0"
 
+versions.gson = "2.8.5"
 versions.moshi = "1.8.0"
 
 versions.facebook4 = "4.37.0"
@@ -50,7 +51,7 @@ versions.facebook5 = "5.5.0"
 //versions.twitter = "3.1.1"
 versions.twitter = "3.3.0"
 
-versions.crashlytics = "2.9.1"
+versions.crashlytics = "2.10.1"
 versions.fabricTool = "1.28.0"
 
 versions.flurry = "8.2.0"
@@ -75,12 +76,12 @@ versions.versionCode = 1
 versions.versionName = "0.0.1"
 
 versions.minSdk = 19
-versions.compileSdk = 28
-versions.targetSdk = 28
-versions.buildTools = "28.0.3"
-//versions.compileSdk = 29
-//versions.targetSdk = 29
-//versions.buildTools = "29.0.2"
+//versions.compileSdk = 28
+//versions.targetSdk = 28
+//versions.buildTools = "28.0.3"
+versions.compileSdk = 29
+versions.targetSdk = 29
+versions.buildTools = "29.0.2"
 
 deps.versions = versions
 

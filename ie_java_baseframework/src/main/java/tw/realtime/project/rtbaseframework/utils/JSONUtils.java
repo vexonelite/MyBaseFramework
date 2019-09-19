@@ -4,6 +4,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -17,6 +19,17 @@ import tw.realtime.project.rtbaseframework.apis.errors.IeRuntimeException;
  * revision on 2018/11/19.
  */
 public final class JSONUtils {
+
+    public static boolean isJSONValid(@NonNull String json) {
+        try {
+            final Gson gson = new Gson();
+            gson.fromJson(json, Object.class);
+            return true;
+        }
+        catch(com.google.gson.JsonSyntaxException cause) {
+            return false;
+        }
+    }
 
     /**
      * 將 JSON 字串轉換為 JSONObject
