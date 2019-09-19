@@ -40,6 +40,8 @@ versions.okHttp4 = "4.2.0"
 
 versions.retrofit2 = "2.6.1"
 
+versions.apacheCommonsNet = "3.6"
+
 versions.glide = "4.9.0"
 
 versions.gson = "2.8.5"

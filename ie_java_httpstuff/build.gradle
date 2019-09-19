@@ -42,6 +42,9 @@ dependencies {
     //implementation "com.squareup.retrofit2:converter-gson:${deps.versions.retrofit2}"
     //implementation "com.squareup.retrofit2:adapter-rxjava2:${deps.versions.retrofit2}"
 
+    //FTP
+    implementation "commons-net:commons-net:${deps.versions.apacheCommonsNet}"
+
     implementation "com.squareup.moshi:moshi:${deps.versions.moshi}"
 
     testImplementation "junit:junit:${deps.versions.junit}"
