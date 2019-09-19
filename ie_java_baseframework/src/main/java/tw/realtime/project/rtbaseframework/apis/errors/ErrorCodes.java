@@ -67,6 +67,19 @@ public final class ErrorCodes {
         String MALFORMED_URL = "99591";
     }
 
+    public interface FTP {
+        String CONNECTION_FAILURE = "99399";
+        String CONNECTION_TIMEOUT = "99398";
+        String LOGIN_FAILURE = "99397";
+        String LOGOUT_FAILURE = "99396";
+        String CHANGE_DIRECTORY_FAILURE = "99395";
+        String FAIL_TO_GET_FILE_LIST = "99394";
+        String DOWNLOAD_FAILURE = "99393";
+        String UPLOAD_FAILURE = "99392";
+
+        String GENERAL_OPERATION_FAILURE = "99379";
+    }
+
 
     public interface Socket {
         String CONNECTION_FAILURE = "99499";
@@ -81,6 +94,8 @@ public final class ErrorCodes {
         String SELECTOR_IS_NULL = "99491";
         String NO_SELECTED_RESULT = "99490";
         String NO_WORKABLE_RESULT = "99489";
+
+        String GENERAL_OPERATION_FAILURE = "99479";
     }
 
 }
