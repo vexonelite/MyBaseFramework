@@ -27,6 +27,18 @@ public final class RxHttpOperators {
         return RxHttpOperators.class.getSimpleName();
     }
 
+    public static final class SimpleResponseVerifier implements Function<Response, Boolean> {
+        @Override
+        public Boolean apply(Response response) throws Exception {
+            if (!response.isSuccessful()) {
+                final String message = "Something wrong - code: " + response.code() + ", message: " + response.message();
+                throw new IeHttpException(message, ErrorCodes.HTTP.RESPONSE_ERROR, "", "");
+            }
+            response.close();
+            return true;
+        }
+    }
+
     public static class OkHttpResponseToJsonString implements Function<Response, String> {
 
         private boolean doesEnableAesEncoding = false;
