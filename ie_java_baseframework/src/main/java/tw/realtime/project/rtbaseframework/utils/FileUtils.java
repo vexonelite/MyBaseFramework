@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -31,9 +32,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import okhttp3.ResponseBody;
 import tw.realtime.project.rtbaseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.apis.errors.ErrorCodes;
+import tw.realtime.project.rtbaseframework.apis.errors.IeRuntimeException;
 
 
-public class FileUtils {
+public final class FileUtils {
 
     /**
      *  Creates a media file in the {@code Environment.DIRECTORY_PICTURES} directory.
@@ -257,14 +260,57 @@ public class FileUtils {
 
     // https://www.mkyong.com/java/how-to-convert-file-into-an-array-of-bytes/
     @NonNull
-    public static byte[] fileToByteArray(@NonNull File file) throws Exception {
-        final FileInputStream fileInputStream = new FileInputStream(file);
-        //init array with file length
-        final byte[] bytesArray = new byte[(int) file.length()];
-        //read file into bytes[]
-        fileInputStream.read(bytesArray);
-        fileInputStream.close();
-        return bytesArray;
+    public static byte[] fileToByteArray(@NonNull File file) throws IeRuntimeException {
+        try {
+            final FileInputStream fileInputStream = new FileInputStream(file);
+            //init array with file length
+            final byte[] bytesArray = new byte[(int) file.length()];
+            //read file into bytes[]
+            fileInputStream.read(bytesArray);
+            fileInputStream.close();
+            return bytesArray;
+        }
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, "IeUtils", "Exception on fileToByteArray");
+            throw new IeRuntimeException(cause, ErrorCodes.Base.INTERNAL_CONVERSION_ERROR);
+        }
+    }
+
+    @NonNull
+    public static File saveByteArrayToFile(
+            @NonNull String path, @NonNull String fileName, @NonNull byte[] byteArray) throws IeRuntimeException {
+        OutputStream outputStream = null;
+        try {
+            final File file = new File(path + "/" + fileName);
+            LogWrapper.showLog(Log.INFO, "IeUtils", "saveByteArrayToFile - file: " + file.getPath());
+            outputStream = new FileOutputStream(file);
+            outputStream.write(byteArray);
+            return file;
+        }
+        catch (Exception cause) {
+            throw new IeRuntimeException(cause, ErrorCodes.Base.FAIL_TO_WRITE_TO_FILE);
+        }
+        finally {
+            if (null != outputStream) {
+                try {
+                    outputStream.close();
+                }
+                catch (Exception cause) {
+                    LogWrapper.showLog(Log.ERROR, "IeUtils", "Error on outputStream.close()!");
+                }
+            }
+        }
+    }
+
+    @NonNull
+    public static byte[] getByteArrayFromString(@NonNull String given) throws IeRuntimeException {
+        try {
+            return Base64.decode(given, Base64.NO_WRAP);
+        }
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, "IeUtils", "Exception on getByteArrayFromString");
+            throw new IeRuntimeException(cause, ErrorCodes.Base.INTERNAL_CONVERSION_ERROR);
+        }
     }
 
     public static void writeResponseBodyToDisk(@NonNull ResponseBody responseBody,

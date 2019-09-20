@@ -7,6 +7,9 @@ public final class ErrorCodes {
 
         String ILLEGAL_ARGUMENT_ERROR = "99998";
 
+        String FAIL_TO_WRITE_TO_FILE = "99997";
+        String FAIL_TO_READ_FROM_FILE = "99996";
+
         String JSON_WRAPPING_FAILURE = "99989";
         String JSON_PARSING_FAILURE = "99988";
         String NO_SPECIFIED_KEY_IN_JSON = "99987";

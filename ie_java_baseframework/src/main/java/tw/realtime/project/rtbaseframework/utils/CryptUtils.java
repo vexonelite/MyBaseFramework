@@ -47,7 +47,7 @@ public class CryptUtils {
      * @throws Exception    例外物件
      */
     @NonNull
-    public String encrypt (String plainText, String aesKey, String aesIv) throws Exception {
+    public String encrypt(String plainText, String aesKey, String aesIv) throws Exception {
         init (aesKey, aesIv);
         mCipher.init(Cipher.ENCRYPT_MODE, mSecretKeySpec, mAlgorithmParameterSpec);
         byte[] encryptedByteArray = mCipher.doFinal(plainText.getBytes("UTF-8"));
@@ -64,7 +64,7 @@ public class CryptUtils {
      * @throws Exception        例外物件
      */
     @NonNull
-    public String decrypt (String encryptedText, String aesKey, String aesIv) throws Exception {
+    public String decrypt(String encryptedText, String aesKey, String aesIv) throws Exception {
         init (aesKey, aesIv);
         mCipher.init(Cipher.DECRYPT_MODE, mSecretKeySpec, mAlgorithmParameterSpec);
         byte[] encryptedByteArray = encryptedText.getBytes("UTF-8");
