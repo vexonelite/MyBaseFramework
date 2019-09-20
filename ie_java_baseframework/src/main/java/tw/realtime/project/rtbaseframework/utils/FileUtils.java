@@ -24,7 +24,10 @@ import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -299,6 +302,20 @@ public final class FileUtils {
                     LogWrapper.showLog(Log.ERROR, "IeUtils", "Error on outputStream.close()!");
                 }
             }
+        }
+    }
+
+    public static void deleteFileList(@NonNull List<File> fileList) {
+        for (final File file : fileList) {
+            LogWrapper.showLog(Log.INFO, "IeUtils", "Delete file: " + file.getPath() + " - result: " + file.delete());
+        }
+    }
+
+    public static void deleteFileMap(@NonNull Map<String, File> fileMap) {
+        final Set<String> keySet = fileMap.keySet();
+        for (final String key : keySet) {
+            final File file = fileMap.get(key);
+            LogWrapper.showLog(Log.INFO, "IeUtils", "Delete file: " + file.getPath() + " - result: " + file.delete());
         }
     }
 

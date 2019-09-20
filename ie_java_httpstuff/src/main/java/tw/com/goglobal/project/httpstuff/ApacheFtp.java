@@ -10,13 +10,16 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.apis.errors.ErrorCodes;
@@ -67,7 +70,10 @@ public final class ApacheFtp {
         public final String password;
         public final String remotePath;
         public final String localPath;
-        public final List<String> fileNameList;
+        /** used for download */
+        public final List<String> fileNameList = new ArrayList<>();
+        /** used for upload */
+        public final Map<String, File> fileMap = new HashMap<>();
 
         public Configuration(
                 @NonNull String hostName,
@@ -77,8 +83,7 @@ public final class ApacheFtp {
                 @NonNull String username,
                 @NonNull String password,
                 @NonNull String remotePath,
-                @NonNull String localPath,
-                @NonNull List<String> fileNameList
+                @NonNull String localPath
         ) {
             this.hostName = hostName;
             this.portNumber = portNumber;
@@ -88,7 +93,24 @@ public final class ApacheFtp {
             this.password = password;
             this.remotePath = remotePath;
             this.localPath = localPath;
-            this.fileNameList = fileNameList;
+        }
+
+        @NonNull
+        public Configuration setFileNameList(@NonNull List<String> fileNameList) {
+            if (!fileNameList.isEmpty()) {
+                this.fileNameList.clear();
+                this.fileNameList.addAll(fileNameList);
+            }
+            return this;
+        }
+
+        @NonNull
+        public Configuration setFileMap(@NonNull Map<String, File> fileMap) {
+            if (!fileMap.isEmpty()) {
+                this.fileMap.clear();
+                this.fileMap.putAll(fileMap);
+            }
+            return this;
         }
 
         @NonNull
@@ -110,7 +132,7 @@ public final class ApacheFtp {
         private final String tag = Helper.class.getSimpleName();
 
         private final FTPClient ftpClient;
-        private final Configuration config;
+        public final Configuration config;
 
         public Helper(@NonNull FTPClient ftpClient, @NonNull Configuration config) {
             this.ftpClient = ftpClient;
@@ -136,7 +158,8 @@ public final class ApacheFtp {
                 LogWrapper.showLog(Log.INFO, tag, "connect to remote successfully!");
             }
             catch (Exception cause) {
-                throw new IeRuntimeException("FTP connection failure!", ErrorCodes.FTP.CONNECTION_FAILURE);
+                LogWrapper.showLog(Log.ERROR, tag, "Error on connectToRemote!");
+                throw new IeRuntimeException(cause, ErrorCodes.FTP.CONNECTION_FAILURE);
             }
         }
 
@@ -172,7 +195,8 @@ public final class ApacheFtp {
                 LogWrapper.showLog(Log.INFO, tag, "login successfully!");
             }
             catch (Exception cause) {
-                throw new IeRuntimeException("FTP connection failure!", ErrorCodes.FTP.LOGIN_FAILURE);
+                LogWrapper.showLog(Log.ERROR, tag, "Error on login!");
+                throw new IeRuntimeException(cause, ErrorCodes.FTP.LOGIN_FAILURE);
             }
         }
 
@@ -188,7 +212,8 @@ public final class ApacheFtp {
                 LogWrapper.showLog(Log.INFO, tag, "logout successfully!");
             }
             catch (Exception cause) {
-                throw new IeRuntimeException("FTP connection failure!", ErrorCodes.FTP.LOGOUT_FAILURE);
+                LogWrapper.showLog(Log.ERROR, tag, "Error on logout!");
+                throw new IeRuntimeException(cause, ErrorCodes.FTP.LOGOUT_FAILURE);
             }
         }
 
@@ -196,10 +221,14 @@ public final class ApacheFtp {
             final String workingDirectory = config.getWorkingDirectory();
             try {
                 // 轉移到FTP伺服器目錄至指定的目錄下
-                ftpClient.changeWorkingDirectory(workingDirectory);
+                final boolean result = ftpClient.changeWorkingDirectory(workingDirectory);
+                if (!result) {
+                    throw new IeRuntimeException("Fail to change working directory!", ErrorCodes.FTP.CHANGE_DIRECTORY_FAILURE);
+                }
             }
             catch (Exception cause) {
-                throw new IeRuntimeException("FTP connection failure!", ErrorCodes.FTP.CHANGE_DIRECTORY_FAILURE);
+                LogWrapper.showLog(Log.ERROR, tag, "Error on changeWorkingDirectory!");
+                throw new IeRuntimeException(cause, ErrorCodes.FTP.CHANGE_DIRECTORY_FAILURE);
             }
         }
 
@@ -210,7 +239,8 @@ public final class ApacheFtp {
                 return ftpClient.listFiles();
             }
             catch (Exception cause) {
-                throw new IeRuntimeException("FTP connection failure!", ErrorCodes.FTP.FAIL_TO_GET_FILE_LIST);
+                LogWrapper.showLog(Log.ERROR, tag, "Error on getFileList!");
+                throw new IeRuntimeException(cause, ErrorCodes.FTP.FAIL_TO_GET_FILE_LIST);
             }
         }
 
@@ -256,7 +286,8 @@ public final class ApacheFtp {
                 return localFile;
             }
             catch (Exception cause) {
-                throw new IeRuntimeException("FTP connection failure!", ErrorCodes.FTP.DOWNLOAD_FAILURE);
+                LogWrapper.showLog(Log.ERROR, tag, "Error on downloadSingleFile!");
+                throw new IeRuntimeException(cause, ErrorCodes.FTP.DOWNLOAD_FAILURE);
             }
             finally {
                 if (null != outputStream) {
@@ -266,7 +297,46 @@ public final class ApacheFtp {
                     catch (Exception cause) {
                         LogWrapper.showLog(Log.ERROR, tag, "Error on outputStream.close()!");
                     }
+                }
+            }
+        }
 
+        ///
+
+        @NonNull
+        public Map<String, Boolean> bulkUploadToMap() throws IeRuntimeException {
+            final Map<String, Boolean> uploadResultFileMap = new HashMap<>();
+            final Set<String> keySet = config.fileMap.keySet();
+            for (final String fileName : keySet) {
+                final File file = config.fileMap.get(fileName);
+                final boolean result = uploadSingleFile(fileName, file);
+                uploadResultFileMap.put(fileName, result);
+                LogWrapper.showLog(Log.INFO, tag, "upload result: " + result + " for fileName: " + fileName);
+            }
+            LogWrapper.showLog(Log.INFO, tag, "fileMap.size: " + config.fileMap.size() + ", uploadResultFileMap.size: " + uploadResultFileMap.size());
+            return uploadResultFileMap;
+        }
+
+        private boolean uploadSingleFile(@NonNull String fileName, @NonNull File file) throws IeRuntimeException {
+            InputStream inputStream = null;
+            try {
+                LogWrapper.showLog(Log.INFO, tag, "uploadSingleFile - file: " + file.getPath());
+                inputStream = new FileInputStream(file);
+                final String remoteFileName = new String(fileName.getBytes(config.controlEncoding), StandardCharsets.ISO_8859_1);
+                return ftpClient.storeFile(remoteFileName, inputStream);
+            }
+            catch (Exception cause) {
+                LogWrapper.showLog(Log.ERROR, tag, "Error on uploadSingleFile!");
+                throw new IeRuntimeException(cause, ErrorCodes.FTP.UPLOAD_FAILURE);
+            }
+            finally {
+                if (null != inputStream) {
+                    try {
+                        inputStream.close();
+                    }
+                    catch (Exception cause) {
+                        LogWrapper.showLog(Log.ERROR, tag, "Error on inputStream.close()!");
+                    }
                 }
             }
         }
