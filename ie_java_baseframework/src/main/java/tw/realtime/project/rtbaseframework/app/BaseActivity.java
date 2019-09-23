@@ -3,6 +3,7 @@ package tw.realtime.project.rtbaseframework.app;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -29,6 +31,7 @@ import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.dialogs.ConfirmDialog;
 import tw.realtime.project.rtbaseframework.dialogs.ProgressDialog;
 import tw.realtime.project.rtbaseframework.delegates.fragment.FragmentManipulationDelegate;
+import tw.realtime.project.rtbaseframework.R;
 
 
 /**
@@ -58,7 +61,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         //LogWrapper.showLog(Log.INFO, getLogTag(), "onCreate!");
         mLifeCycleState = LifeCycleState.ON_CREATE;
         super.onCreate(savedInstanceState);
@@ -111,7 +114,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         //LogWrapper.showLog(Log.INFO, getLogTag(), "onSaveInstanceState!");
         mLifeCycleState = LifeCycleState.ON_SAVE_INSTANCE;
         super.onSaveInstanceState(outState);
@@ -141,12 +144,20 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         }
     }
 
-    public boolean isAllowedToCommitFragmentTransaction () {
+    public final boolean isAllowedToCommitFragmentTransaction() {
         //LogWrapper.showLog(Log.INFO, getLogTag(), "isAllowedToCommitFragmentTransaction: " + mLifeCycleState);
         return ((mLifeCycleState == LifeCycleState.ON_CREATE) ||
                 (mLifeCycleState == LifeCycleState.ON_RESUME_FRAGMENT) ||
                 (mLifeCycleState == LifeCycleState.ON_POST_RESUME) );
     }
+
+    protected final boolean testIfTaskRootIsNotLauncherAndMain() {
+        return (!isTaskRoot()
+                && getIntent().hasCategory(Intent.CATEGORY_LAUNCHER)
+                && getIntent().getAction() != null
+                && getIntent().getAction().equals(Intent.ACTION_MAIN));
+    }
+
 
     /*
      * Fragment 的取代或蓋頁
@@ -155,9 +166,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
      * @param containerResId 對應的容器 Id
      */
     @Override
-    public final void replaceOrShroudFragment (@NonNull Fragment targetFragment,
-                                               boolean doesReplace,
-                                               @IdRes final int containerResId) {
+    public final void replaceOrShroudFragment(
+            @NonNull Fragment targetFragment, boolean doesReplace, @IdRes final int containerResId) {
 
         if (doesReplace) {
             popAllFragmentsIfNeeded();
@@ -177,14 +187,61 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         try {
             fragTransaction.commit();
         }
-        catch (Exception e) {
-            LogWrapper.showLog(Log.ERROR, BaseActivity.class.getSimpleName(),
-                    "Exception on FragmentTransaction.commit()", e);
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on FragmentTransaction.commit()", cause);
+        }
+    }
+
+    public final void replaceFragment(@NonNull Fragment targetFragment, @IdRes final int containerResId) {
+
+        popAllFragmentsIfNeeded();
+
+        try {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_NONE)
+                    .replace(containerResId, targetFragment)
+                    .commit();
+        }
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on FragmentTransaction.commit()", cause);
+        }
+    }
+
+    public final void conductNavigation(@NonNull Fragment targetFragment, @IdRes final int containerResId) {
+        try {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_NONE)
+                    .add(containerResId, targetFragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on FragmentTransaction.commit()", cause);
+        }
+    }
+
+    public final void conductNavigationWithAnimation(@NonNull Fragment targetFragment, @IdRes final int containerResId) {
+        try {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(
+                            R.animator.base_animator_fragment_slide_left_in2,
+                            R.animator.base_animator_fragment_slide_right_out2,
+                            R.animator.base_animator_fragment_slide_left_in2,
+                            R.animator.base_animator_fragment_slide_right_out2)
+                    .add(containerResId, targetFragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on FragmentTransaction.commit()", cause);
         }
     }
 
     @Override
-    public final void popAllFragmentsIfNeeded () {
+    public final void popAllFragmentsIfNeeded() {
         try {
             final FragmentManager fragmentManager = getSupportFragmentManager();
             final int fragmentCount = fragmentManager.getBackStackEntryCount();
@@ -194,9 +251,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
                 }
             }
         }
-        catch (Exception e) {
-            LogWrapper.showLog(Log.ERROR, BaseActivity.class.getSimpleName(),
-                    "Exception on FragmentManager.popBackStackImmediate()", e);
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on FragmentManager.popBackStackImmediate()", cause);
         }
     }
 
@@ -204,7 +260,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
      * Pop 目前畫面中的 Fragment
      */
     @Override
-    public final void popFragmentIfNeeded () {
+    public final void popFragmentIfNeeded() {
         final FragmentManager fragManager = getSupportFragmentManager();
         if (fragManager.getBackStackEntryCount() <= 0) {
             return;
@@ -213,19 +269,19 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
             //fragManager.popBackStack();
             fragManager.popBackStackImmediate();
         }
-        catch (Exception e) {
-            LogWrapper.showLog(Log.ERROR, BaseActivity.class.getSimpleName(),
-                    "Exception on FragmentManager.popBackStackImmediate()", e);
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on FragmentManager.popBackStackImmediate()", cause);
         }
     }
 
-    public final void showAlertDialog (boolean isSingleOption,
-                                       String title,
-                                       String message,
-                                       String positiveText,
-                                       String negativeText,
-                                       DialogInterface.OnClickListener positiveCallback,
-                                       DialogInterface.OnClickListener negativeCallback) {
+    public final void showAlertDialog(
+            boolean isSingleOption,
+            @Nullable String title,
+            @Nullable String message,
+            @Nullable String positiveText,
+            @Nullable String negativeText,
+            @Nullable DialogInterface.OnClickListener positiveCallback,
+            @Nullable DialogInterface.OnClickListener negativeCallback) {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -260,8 +316,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
                 dialog.show(getSupportFragmentManager(), dialog.getClass().getSimpleName());
             }
         }
-        catch (Exception e) {
-            LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on showAlertDialog", e);
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on showAlertDialog", cause);
         }
     }
 
@@ -269,11 +325,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
      * 顯示對話框 Fragment
      * @param dialogFragment 要顯示的 DialogFragment 實體
      */
-    public final void showDialogFragment (DialogFragment dialogFragment) {
-        if (null == dialogFragment) {
-            return;
-        }
-
+    public final void showDialogFragment(@NonNull DialogFragment dialogFragment) {
         // DialogFragment.show() will take care of adding the fragment in a transaction.
         // We also want to remove any currently showing dialog,
         // so make our own transaction and take care of that here.
@@ -288,15 +340,15 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         try {
             dialogFragment.show(ft, dialogFragment.getClass().getSimpleName());
         }
-        catch (Exception e) {
-            LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on showDialogFragment", e);
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on showDialogFragment", cause);
         }
     }
 
     /**
      * 顯示正在處理某事件之對話框
      */
-    public void showProgressDialog (String title) {
+    public void showProgressDialog(@NonNull String title) {
         mProgressDialog = new ProgressDialog(this, title);
         mProgressDialog.show();
     }
@@ -304,7 +356,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
     /**
      * 隱藏正在處理某事件之對話框
      */
-    public void dismissProgressDialog () {
+    public void dismissProgressDialog() {
         if (null != mProgressDialog) {
             mProgressDialog.cancel();
             mProgressDialog = null;
@@ -317,7 +369,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
     public final void hideSoftKeyboard() {
         if (null != getCurrentFocus()) {
             final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            if (null != inputMethodManager) {
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
             getCurrentFocus().clearFocus();
         }
     }
@@ -326,9 +380,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
      * 顯示軟鍵盤
      */
     public final void showSoftKeyboard(@NonNull View view) {
-        final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         view.requestFocus();
-        inputMethodManager.showSoftInput(view, 0);
+        final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (null != inputMethodManager) {
+            inputMethodManager.showSoftInput(view, 0);
+        }
     }
 
 
@@ -346,7 +402,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         }
     }
 
-    protected void hideStatusBar () {
+    protected void hideStatusBar() {
         // If the Android version is lower than Jellybean, use this call to hide the status bar.
         if (Build.VERSION.SDK_INT < 16) {
             getWindow().setFlags(
@@ -367,33 +423,33 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
     /**
      * Set the default Logo icon and Navigation icon.
      */
-    protected final void setupToolbarAsActionBar (@NonNull final Toolbar toolbar,
-                                                  final boolean enableDefault,
-                                                  final int logoResourceId,
-                                                  final int navigationIconResourceId) {
+    protected final void setupToolbarAsActionBar(
+            @NonNull final Toolbar toolbar,
+            final boolean enableDefault,
+            final int logoResourceId,
+            final int navigationIconResourceId) {
         this.toolbar = toolbar;
         if (enableDefault) {
             try {
                 toolbar.setLogo(logoResourceId);
                 toolbar.setNavigationIcon(navigationIconResourceId);
             }
-            catch (Exception e) {
-                LogWrapper.showLog(Log.ERROR, BaseActivity.class.getSimpleName(),
-                        "Exception on setupToolbarAsActionBar", e);
+            catch (Exception cause) {
+                LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on setupToolbarAsActionBar", cause);
             }
         }
 
         setSupportActionBar(toolbar);
     }
 
-    public final void setToolbarTextColor (@ColorInt int textColor) {
+    public final void setToolbarTextColor(@ColorInt int textColor) {
         try {
             if (null != toolbar) {
                 toolbar.setTitleTextColor(textColor);
             }
         }
-        catch (Exception e) {
-            LogWrapper.showLog(Log.ERROR, BaseActivity.class.getSimpleName(), "Exception on setToolbarTextColor", e);
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on setToolbarTextColor", cause);
         }
     }
 
@@ -403,8 +459,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
                 toolbar.setTitleTextColor(ContextCompat.getColor(this, textColorResId) );
             }
         }
-        catch (Exception e) {
-            LogWrapper.showLog(Log.ERROR, BaseActivity.class.getSimpleName(), "Exception on setToolbarTextColor", e);
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on setToolbarTextColor", cause);
         }
     }
 
@@ -414,8 +470,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
                 toolbar.setBackgroundColor(backgroundColor);
             }
         }
-        catch (Exception e) {
-            LogWrapper.showLog(Log.ERROR, BaseActivity.class.getSimpleName(), "Exception on setToolbarTextColor", e);
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on setToolbarTextColor", cause);
         }
     }
 
@@ -425,8 +481,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
                 toolbar.setBackgroundResource(backgroundDrawable);
             }
         }
-        catch (Exception e) {
-            LogWrapper.showLog(Log.ERROR, BaseActivity.class.getSimpleName(), "Exception on setToolbarTextColor", e);
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on setToolbarTextColor", cause);
         }
     }
 
@@ -436,8 +492,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
                 toolbar.setNavigationIcon(navigationIconResourceId);
             }
         }
-        catch (Exception e) {
-            LogWrapper.showLog(Log.ERROR, BaseActivity.class.getSimpleName(), "Exception on setNavigationIcon", e);
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on setNavigationIcon", cause);
         }
     }
 
@@ -447,7 +503,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
      * @param homeButtonEnabledFlag
      * @param homeAsUpEnabledFlag
      */
-    protected final void setUpActionBar (@NonNull String title, boolean homeButtonEnabledFlag, boolean homeAsUpEnabledFlag) {
+    protected final void setUpActionBar(@NonNull String title, boolean homeButtonEnabledFlag, boolean homeAsUpEnabledFlag) {
         //LogWrapper.showLog(Log.INFO, getLogTag(), "setUpActionBar");
         final ActionBar actionBar = getSupportActionBar();
         if (null != actionBar) {
@@ -457,7 +513,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         }
     }
 
-    public final void haveAudioManagerAlterStreamVolume (boolean hasRaised) {
+    public final void haveAudioManagerAlterStreamVolume(boolean hasRaised) {
         final AudioManager myAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         final int maxLevelVol = myAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         final int currentLevelVol = myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -475,7 +531,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
     }
 
 
-    protected String getLogTag () {
+    protected final String getLogTag() {
         return this.getClass().getSimpleName();
     }
 

@@ -7,6 +7,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.R;
 
@@ -14,7 +16,7 @@ import tw.realtime.project.rtbaseframework.R;
 /**
  * 自定義顯示載入中的對話框
  */
-public class ProgressDialog extends android.app.ProgressDialog {
+public final class ProgressDialog extends android.app.ProgressDialog {
 
 	private String mTitle;
 	private TextView mDescription;
@@ -24,7 +26,7 @@ public class ProgressDialog extends android.app.ProgressDialog {
 	 * @param context
 	 * @param title 要顯示給使用者看的字串
 	 */
-	public ProgressDialog(Context context, String title) {
+	public ProgressDialog(Context context, @NonNull String title) {
 		super(context);
 		this.mTitle = title;
 		this.setIndeterminate(true);
@@ -36,18 +38,13 @@ public class ProgressDialog extends android.app.ProgressDialog {
 	}
 
 
-	public void setTitle (String title) {
+	public void setTitle (@NonNull String title) {
 		this.mTitle = title;
 		if (null != mDescription) {
-			if (null != title) {
-				mDescription.setText(title);
-			}
-			else {
-				LogWrapper.showLog(Log.INFO, "ProgressDialog", "setTitle - title is null!");
-			}
+			mDescription.setText(title);
 		}
 		else {
-			LogWrapper.showLog(Log.INFO, "ProgressDialog", "setTitle - mDescription is null!");
+			LogWrapper.showLog(Log.WARN, "ProgressDialog", "setTitle - mDescription is null!");
 		}
 	}
 
@@ -77,7 +74,10 @@ public class ProgressDialog extends android.app.ProgressDialog {
 	 * https://gist.github.com/ishitcno1/9408188
 	 */
 	private void setWindowStyle () {
-		Window window = getWindow();
+		final Window window = getWindow();
+		if (null == window) {
+			return;
+		}
 		window.setBackgroundDrawableResource(android.R.color.transparent);
 		WindowManager.LayoutParams params = window.getAttributes();
 		// Use dimAmount to control the amount of dim

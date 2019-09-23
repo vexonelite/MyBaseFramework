@@ -14,9 +14,8 @@ public interface FragmentManipulationDelegate {
      * @param doesReplace   是否要取代或蓋頁
      * @param containerResId 對應的容器 Id
      */
-    void replaceOrShroudFragment (@NonNull Fragment targetFragment,
-                                  boolean doesReplace,
-                                  @IdRes final int containerResId);
+    void replaceOrShroudFragment(
+            @NonNull Fragment targetFragment, boolean doesReplace, @IdRes final int containerResId);
 
     void popAllFragmentsIfNeeded();
 
