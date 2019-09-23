@@ -68,14 +68,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
     }
 
     @Override
-    public void onStart() {
+    protected void onStart() {
         //LogWrapper.showLog(Log.INFO, getLogTag(), "onStart!");
         mLifeCycleState = LifeCycleState.ON_START;
         super.onStart();
     }
 
     @Override
-    public void onResume() {
+    protected void onResume() {
         //LogWrapper.showLog(Log.INFO, getLogTag(), "onResume!");
         mLifeCycleState = LifeCycleState.ON_RESUME;
         super.onResume();
@@ -86,42 +86,42 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
      * (after onResume() has been called).
      */
     @Override
-    public void onPostResume() {
+    protected void onPostResume() {
         //LogWrapper.showLog(Log.INFO, getLogTag(), "onPostResume!");
         mLifeCycleState = LifeCycleState.ON_POST_RESUME;
         super.onPostResume();
     }
 
     @Override
-    public void onResumeFragments() {
+    protected void onResumeFragments() {
         //LogWrapper.showLog(Log.INFO, getLogTag(), "onResumeFragments!");
         mLifeCycleState = LifeCycleState.ON_RESUME_FRAGMENT;
         super.onResumeFragments();
     }
 
     @Override
-    public void onRestart() {
+    protected void onRestart() {
         //LogWrapper.showLog(Log.INFO, getLogTag(), "onRestart!");
         mLifeCycleState = LifeCycleState.ON_RESTART;
         super.onRestart();
     }
 
     @Override
-    public void onPause() {
+    protected void onPause() {
         //LogWrapper.showLog(Log.INFO, getLogTag(), "onPause!");
         mLifeCycleState = LifeCycleState.ON_PAUSE;
         super.onPause();
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         //LogWrapper.showLog(Log.INFO, getLogTag(), "onSaveInstanceState!");
         mLifeCycleState = LifeCycleState.ON_SAVE_INSTANCE;
         super.onSaveInstanceState(outState);
     }
 
     @Override
-    public void onStop() {
+    protected void onStop() {
         //LogWrapper.showLog(Log.INFO, getLogTag(), "onStop!");
         mLifeCycleState = LifeCycleState.ON_STOP;
         super.onStop();
