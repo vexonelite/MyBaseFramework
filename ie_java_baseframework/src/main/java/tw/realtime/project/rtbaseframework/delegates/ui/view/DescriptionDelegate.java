@@ -8,5 +8,5 @@ import androidx.annotation.NonNull;
 
 public interface DescriptionDelegate {
     @NonNull
-    String getDescription();
+    String theDescription();
 }

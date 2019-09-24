@@ -80,7 +80,8 @@ public class CryptUtils {
      * @return Return a randomly generated String with length is exactly 32.
      */
     @NonNull
-    public static String generateRandomStringWithLength (@NonNull SecureRandom random, int length) throws Exception {
+    public static String generateRandomStringWithLength(
+            @NonNull SecureRandom random, int length) throws Exception {
 //        return random.ints(48,122)
 //                .filter(i-> (i<57 || i>65) && (i <90 || i>97))
 //                .mapToObj(i -> (char) i)
@@ -124,7 +125,7 @@ public class CryptUtils {
      * @return Return a randomly generated String.
      */
     @NonNull
-    public static String generateRandomString (@NonNull SecureRandom random) { //throws Exception {
+    public static String generateRandomString(@NonNull SecureRandom random) { //throws Exception {
         return new BigInteger(130, random).toString(32);
     }
 
@@ -133,7 +134,7 @@ public class CryptUtils {
      * @throws Exception
      */
     @NonNull
-    public static String generateRandomStringViaUuid () {
+    public static String generateRandomStringViaUuid() {
         return UUID.randomUUID().toString() + "_" + System.currentTimeMillis();
     }
 
@@ -144,7 +145,7 @@ public class CryptUtils {
      * @return A fixed-length hashed byte array.
      */
     @NonNull
-    public static byte[] messageDigestSHA256 (@NonNull byte[] data) throws Exception {
+    public static byte[] messageDigestSHA256(@NonNull byte[] data) throws Exception {
         try {
             final MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(data);
@@ -174,7 +175,7 @@ public class CryptUtils {
     }
 
 
-    public static int getRandomNumber (@NonNull SecureRandom random, int min, int max) throws IllegalArgumentException {
+    public static int getRandomNumber(@NonNull SecureRandom random, int min, int max) throws IllegalArgumentException {
         if (min < 0 || max < 0) {
             throw new IllegalArgumentException("min or max < 0");
         }
@@ -193,8 +194,8 @@ public class CryptUtils {
     }
 
     @Nullable
-    public static <T> T getRandomObject (@NonNull SecureRandom secureRandom,
-                                         @NonNull List<T> objectList) {
+    public static <T> T getRandomObject(
+            @NonNull SecureRandom secureRandom, @NonNull List<T> objectList) {
         if (objectList.isEmpty()) {
             return null;
         }

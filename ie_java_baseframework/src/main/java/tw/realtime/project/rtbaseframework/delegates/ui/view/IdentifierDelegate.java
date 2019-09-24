@@ -11,5 +11,5 @@ public interface IdentifierDelegate {
      * @return Object ID
      */
     @NonNull
-    String getIdentifier();
+    String theIdentifier();
 }

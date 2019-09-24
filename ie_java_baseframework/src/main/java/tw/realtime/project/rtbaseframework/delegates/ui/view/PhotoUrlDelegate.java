@@ -11,5 +11,5 @@ public interface PhotoUrlDelegate {
      * @return 圖片網址
      */
     @NonNull
-    String getPhotoUrl();
+    String thePhotoUrl();
 }

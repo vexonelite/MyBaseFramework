@@ -4,6 +4,6 @@ package tw.realtime.project.rtbaseframework.delegates.ui.view;
  * Created by vexonelite on 2018/03/14.
  */
 public interface ResourceSelectionDelegate {
-    int getSelectedResourceId();
-    int getNormalResourceId();
+    int theSelectedResourceId();
+    int theNormalResourceId();
 }

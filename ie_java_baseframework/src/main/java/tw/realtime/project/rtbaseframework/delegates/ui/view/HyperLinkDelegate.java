@@ -11,5 +11,5 @@ public interface HyperLinkDelegate {
      * @return 超連結
      */
     @NonNull
-    String getHyperLink();
+    String theHyperLink();
 }
