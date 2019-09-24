@@ -1,6 +1,5 @@
 package tw.realtime.project.rtbaseframework.app;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
@@ -28,7 +27,7 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
 
     private ProgressDialog mProgressDialog;
 
-    private onViewDestroyListener mCallback;
+    public onViewDestroyListener onViewDestroyCallback;
 
 
     public interface onViewDestroyListener {
@@ -43,31 +42,26 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
      * 設定目前 Fragment 是否被接下來的 Fragment 給蓋頁
      * @param flag
      */
-    protected void setHasBeenShroudedByChildFlag (boolean flag) {
+    protected final void setHasBeenShroudedByChildFlag (boolean flag) {
         hasBeenShroudedByChild = flag;
     }
 
     /**
      * 取得目前 Fragment 是否被其它的 Fragment 蓋頁
      */
-    protected boolean getHasBeenShroudedByChildFlag () {
+    protected final boolean getHasBeenShroudedByChildFlag () {
         return hasBeenShroudedByChild;
     }
-
-    public void setonViewDestroyListener (onViewDestroyListener callback) {
-        mCallback = callback;
-    }
-
 
     @Override
     public void onDestroyView() {
         try {
-            if (null != mCallback) {
-                mCallback.onDestroyViewGetCalled();
+            if (null != onViewDestroyCallback) {
+                onViewDestroyCallback.onDestroyViewGetCalled();
             }
-        } catch (Exception e) {
+        } catch (Exception cause) {
             // 防止閃退；當 mCallback 中做了某些會閃退的事情
-            LogWrapper.showLog(Log.ERROR, getLogTag(), "onDestroyView", e);
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "onDestroyView", cause);
         }
         super.onDestroyView();
     }
@@ -77,22 +71,20 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
         super.onDestroy();
         dismissProgressDialog();
     }
-    
 
-    public String getLogTag() {
+    public final String getLogTag() {
         return this.getClass().getSimpleName();
     }
 
-
     @Deprecated
-    protected void setProgressDialog(Context context, String title) {
+    protected final void setProgressDialog(Context context, String title) {
         ProgressDialog.show(context, null, title, true, false);
     }
 
     /**
      * 顯示正在處理某事件之對話框
      */
-    protected void showProgressDialog (String title) {
+    protected final void showProgressDialog(String title) {
         if (isAdded() && (null != getActivity()) ) {
             if (null == mProgressDialog) {
                 mProgressDialog = new ProgressDialog(getActivity(), title);
@@ -109,20 +101,21 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
     /**
      * 隱藏正在處理某事件之對話框
      */
-    protected void dismissProgressDialog () {
+    protected final void dismissProgressDialog() {
         if (null != mProgressDialog) {
             mProgressDialog.cancel();
             //mProgressDialog = null;
         }
     }
 
-    protected void showAlertDialog (boolean isSingleOption,
-                                    String title,
-                                    String message,
-                                    String positiveText,
-                                    String negativeText,
-                                    DialogInterface.OnClickListener positiveCallback,
-                                    DialogInterface.OnClickListener negativeCallback) {
+    protected final void showAlertDialog(
+            boolean isSingleOption,
+            @Nullable String title,
+            @Nullable String message,
+            @Nullable String positiveText,
+            @Nullable String negativeText,
+            @Nullable DialogInterface.OnClickListener positiveCallback,
+            @Nullable DialogInterface.OnClickListener negativeCallback) {
         if (!isAdded()) {
             return;
         }
@@ -141,11 +134,11 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
     }
 
 
-    private boolean forbidSetupActionBar () {
+    private boolean forbidSetupActionBar() {
         return (!isAdded()) || hasBeenShroudedByChild;
     }
 
-    protected final void setUpActionBarHomeAsUpIndicator (@DrawableRes final int iconResId) {
+    protected final void setUpActionBarHomeAsUpIndicator(@DrawableRes final int iconResId) {
         if (forbidSetupActionBar()) {
             return;
         }
@@ -158,7 +151,7 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
             actionBar.setHomeAsUpIndicator(iconResId);
         }
     }
-    protected final void setUpActionBarTitle (String title) {
+    protected final void setUpActionBarTitle(String title) {
         if ( (null == title) || (forbidSetupActionBar()) ) {
             return;
         }
@@ -174,7 +167,7 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
         }
     }
 
-    protected final void setUpActionBarTitleAndDisplayHomeAsUp (String title, boolean homeAsUpEnabledFlag) {
+    protected final void setUpActionBarTitleAndDisplayHomeAsUp(String title, boolean homeAsUpEnabledFlag) {
         if ( (null == title) || (forbidSetupActionBar()) ) {
             return;
         }
@@ -197,7 +190,7 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
      * @param homeButtonEnabledFlag
      * @param homeAsUpEnabledFlag
      */
-    protected final void setUpActionBar (@NonNull String title, boolean homeButtonEnabledFlag, boolean homeAsUpEnabledFlag) {
+    protected final void setUpActionBar(@NonNull String title, boolean homeButtonEnabledFlag, boolean homeAsUpEnabledFlag) {
         if (forbidSetupActionBar()) {
             return;
         }
@@ -215,7 +208,7 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
         }
     }
 
-    protected final void hideActionBar () {
+    protected final void hideActionBar() {
         if (forbidSetupActionBar()) {
             return;
         }
@@ -229,7 +222,7 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
         }
     }
 
-    protected final void showActionBar () {
+    protected final void showActionBar() {
         if (forbidSetupActionBar()) {
             return;
         }
@@ -247,7 +240,7 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
     /**
      * 將軟鍵盤隱藏
      */
-    protected final void hideSoftKeyboard () {
+    protected final void hideSoftKeyboard() {
         if (!isAdded()) {
             return;
         }
@@ -294,10 +287,10 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
      * before involve the method!
      * @param dialogFragment
      */
-    protected final void showDialogFragment (@NonNull DialogFragment dialogFragment) {
-        if (!isAllowedToCommitFragmentTransaction()) {
-            return;
-        }
+    protected final void showDialogFragment(@NonNull DialogFragment dialogFragment) {
+//        if (!isAllowedToCommitFragmentTransaction()) {
+//            return;
+//        }
         // DialogFragment.show() will take care of adding the fragment in a transaction.
         // We also want to remove any currently showing dialog,
         // so make our own transaction and take care of that here.
@@ -307,15 +300,22 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
             fragmentTransaction.remove(previousFragment);
         }
         fragmentTransaction.addToBackStack(null);
-        dialogFragment.show(fragmentTransaction, dialogFragment.getClass().getSimpleName());
+
+        try {
+            dialogFragment.show(fragmentTransaction, dialogFragment.getClass().getSimpleName());
+        }
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "Exception on showDialogFragment", cause);
+        }
     }
+
 
     /**
      * 預設實作好，給確定或取消選項之 Callback，點下會令目前 Fragment 被 Pop
      */
     public final class BackPressedCallback implements DialogInterface.OnClickListener {
         @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
+        public void onClick(DialogInterface dialogInterface, int which) {
             dialogInterface.dismiss();
             // inner class use method reference/ lambda might encounter IllegalAccessError
             // for some old android devices
@@ -329,7 +329,7 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
      */
     public final class BackPressedCallback2 implements BaseDialogFragment.OnDecisionMadeListener {
         @Override
-        public void onNotification(DialogFragment dialogFrag, BaseDialogFragment.DialogAction dialogAction) {
+        public void onNotification(@NonNull DialogFragment dialogFrag, @NonNull BaseDialogFragment.DialogAction dialogAction) {
             dialogFrag.dismiss();
             // inner class use method reference/ lambda might encounter IllegalAccessError
             // for some old android devices
@@ -343,36 +343,34 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
      */
     public final class DefaultDismissCallback implements BaseDialogFragment.OnDecisionMadeListener {
         @Override
-        public void onNotification(DialogFragment dialogFrag, BaseDialogFragment.DialogAction dialogAction) {
+        public void onNotification(@NonNull DialogFragment dialogFrag, @NonNull BaseDialogFragment.DialogAction dialogAction) {
             dialogFrag.dismiss();
         }
     }
 
-
     /**
      * 呼叫 Attached Activity 的 onBackPressed 方法
      */
-    protected final void backToPreviousOne () {
+    protected final void involveHostActivityOnBackPressed() {
         if (isAllowedToCommitFragmentTransaction()) {
-            final Activity activity = getActivity();
-            activity.onBackPressed();
+            requireActivity().onBackPressed();
+        }
+    }
+
+    /**
+     * 呼叫 Attached AppCompatActivity 的 popFragmentIfNeeded 方法
+     */
+    protected final void involvePopFragmentIfNeeded() {
+        if (isAllowedToCommitFragmentTransaction()) {
+            final BaseActivity hostActivity = (BaseActivity) requireActivity();
+            hostActivity.popFragmentIfNeeded();
         }
     }
 
     public final class BackToPreviousOneTask implements Runnable {
         @Override
         public void run() {
-            backToPreviousOne();
-        }
-    }
-
-    /**
-     * 呼叫 Attached BaseActivity 的 popFragmentIfNeeded 方法
-     */
-    protected final void involvePopFragmentIfNeeded () {
-        if (isAllowedToCommitFragmentTransaction()) {
-            final BaseActivity activity = (BaseActivity) getActivity();
-            activity.popFragmentIfNeeded();
+            involveHostActivityOnBackPressed();
         }
     }
 
@@ -383,27 +381,30 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
         }
     }
 
-
-    protected final void conductNavigation (@NonNull BaseFragment fragment, @IdRes int fragmentContainerId) {
-        conductNavigation(fragment, new DefaultOnViewDestroyCallback(), fragmentContainerId);
+    protected final void conductNavigation(@NonNull BaseFragment fragment, @IdRes int fragmentContainerId) {
+        conductNavigation(fragment, fragmentContainerId, true, new DefaultOnViewDestroyCallback());
     }
 
-
-    protected final void conductNavigation (@NonNull BaseFragment fragment,
-                                            @Nullable onViewDestroyListener callback,
-                                            @IdRes int fragmentContainerId) {
-
+    protected final void conductNavigation(@NonNull BaseFragment fragment,
+                                           @IdRes int fragmentContainerId,
+                                           boolean withAnimation,
+                                           @Nullable onViewDestroyListener callback) {
         if (!isAllowedToCommitFragmentTransaction() || (getHasBeenShroudedByChildFlag()) ) {
             return;
         }
 
-        fragment.setonViewDestroyListener(callback);
+        fragment.onViewDestroyCallback = callback;
         setMenuVisibility(false);
         setHasBeenShroudedByChildFlag(true);
 
-        final BaseActivity activity = (BaseActivity) getActivity();
+        final BaseActivity activity = (BaseActivity) requireActivity();
         onConductNavigationExecuted(activity);
-        activity.replaceOrShroudFragment(fragment, false, fragmentContainerId);
+        if (withAnimation) {
+            activity.conductNavigationWithAnimation(fragment, fragmentContainerId);
+        }
+        else {
+            activity.conductNavigation(fragment, fragmentContainerId);
+        }
     }
 
     public final class DefaultOnViewDestroyCallback implements BaseFragment.onViewDestroyListener {
@@ -418,11 +419,11 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
         }
     }
 
-    protected void onConductNavigationExecuted(@Nullable BaseActivity activity) {
+    protected void onConductNavigationExecuted(@NonNull BaseActivity activity) {
 
     }
 
-    protected void onDestroyViewExecuted(@Nullable BaseActivity activity) {
+    protected void onDestroyViewExecuted(@NonNull BaseActivity activity) {
 
     }
 

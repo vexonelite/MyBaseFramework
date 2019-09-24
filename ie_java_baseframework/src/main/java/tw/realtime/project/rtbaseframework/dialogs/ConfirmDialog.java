@@ -22,7 +22,7 @@ public final class ConfirmDialog extends DialogFragment {
         this.setCancelable(false);
     }
 
-    public void setAlertDialogBuilder(AlertDialog.Builder builder) {
+    public void setAlertDialogBuilder(@NonNull AlertDialog.Builder builder) {
         mBuilder = builder;
     }
 
@@ -81,19 +81,24 @@ public final class ConfirmDialog extends DialogFragment {
      * Refs:
      * https://gist.github.com/ishitcno1/9408188
      */
-    private void setWindowStyle () {
-        final Window window = getDialog().getWindow();
-        if (null != window) {
-        final WindowManager.LayoutParams params = window.getAttributes();
-            // Use dimAmount to control the amount of dim
-            params.dimAmount = 0.6f;
-            window.setAttributes(params);
-            /*
-             * if you want to enable Immersive Mode
-             * Ref: {@link tw.realtime.project.rtbaseframework.app.BaseActivity#enableImmersiveMode}
-             */
-            //window.getDecorView().setSystemUiVisibility(getSystemUiVisibility());
+    private void setWindowStyle() {
+        final Dialog theDialog = getDialog();
+        if (null == theDialog) {
+            return;
         }
+        final Window window = getDialog().getWindow();
+        if (null == window) {
+            return;
+        }
+        final WindowManager.LayoutParams params = window.getAttributes();
+        // Use dimAmount to control the amount of dim
+        params.dimAmount = 0.6f;
+        window.setAttributes(params);
+        /*
+         * if you want to enable Immersive Mode
+         * Ref: {@link tw.realtime.project.rtbaseframework.app.BaseActivity#enableImmersiveMode}
+         */
+        //window.getDecorView().setSystemUiVisibility(getSystemUiVisibility());
     }
 
     private int getSystemUiVisibility() {
