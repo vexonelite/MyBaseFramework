@@ -77,6 +77,7 @@ dependencies {
 
     // needed for glide, https://github.com/bumptech/glide/issues/3185
 //    annotationProcessor "androidx.annotation:annotation:${deps.version.annotationX}"
+    implementation "androidx.transition:transition:${deps.versions.transitionX}"
 
     implementation "androidx.constraintlayout:constraintlayout:${deps.versions.constraintLayoutX}"
 

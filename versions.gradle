@@ -10,6 +10,7 @@ versions.kotlinCoreKtx = "1.1.0"
 versions.androidX = "1.1.0"
 // needed for glide
 versions.annotationX = "1.1.0"
+versions.transitionX = "1.1.0"
 versions.materialX = "1.0.0"
 versions.lifecycleX = "2.1.0"
 versions.roomX = "2.1.0"

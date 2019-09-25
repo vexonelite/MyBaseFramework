@@ -102,7 +102,7 @@ public abstract class BasePagerTabLayoutViewHolder<T extends TabItemDelegate> {
         }
 
         for (T delegate : tabItemSet) {
-            tabLayout.addTab(tabLayout.newTab().setText(delegate.getDescription()));
+            tabLayout.addTab(tabLayout.newTab().setText(delegate.theDescription()));
         }
     }
 
