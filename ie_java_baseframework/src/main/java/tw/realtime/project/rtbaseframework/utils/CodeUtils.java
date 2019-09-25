@@ -13,6 +13,13 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
 
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RawRes;
+import androidx.core.content.ContextCompat;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -30,22 +37,11 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.EnumMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
-import androidx.annotation.ColorRes;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RawRes;
-import androidx.core.content.ContextCompat;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 
 
@@ -53,107 +49,10 @@ import tw.realtime.project.rtbaseframework.LogWrapper;
  * Created by vexonelite on 2017/6/5.
  */
 
-public class CodeUtils {
-
-    /**
-     * 將日期字串轉換成 Date 物件
-     * @param dateString 日期字串
-     * @param dateFormat 指定的日期格式 (若是空字串或 Null，會使用預設值)
-     * @return Date 物件
-     */
-    @Nullable
-    public static Date convertStringToDate (@NonNull String dateString, @NonNull String dateFormat) {
-        try {
-            final String internalDateFormat = (dateFormat.isEmpty()) ? "yyyy-MM-dd hh:mm:ss" : dateFormat;
-            final Locale locale = Locale.getDefault();
-            //LogWrapper.showLog(Log.INFO, "CodeUtil", "convertStringToDate: " + locale);
-            final SimpleDateFormat fmt = new SimpleDateFormat(internalDateFormat, locale);
-            return fmt.parse(dateString);
-
-        }
-        catch (Exception e) {
-            LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on convertStringToDate", e);
-            return null;
-        }
-    }
-
-    /**
-     * 將Date 物件轉換成日期字串
-     * @param date Date 物件
-     * @param dateFormat 指定的日期格式 (若是空字串或 Null，會使用預設值)
-     * @return 日期字串
-     */
-    @Nullable
-    public static String convertDateToString (@NonNull Date date, @NonNull String dateFormat) {
-        try {
-            final String internalDateFormat = (dateFormat.isEmpty()) ? "yyyy-MM-dd hh:mm:ss" : dateFormat;
-            final Locale locale = Locale.getDefault();
-            //LogWrapper.showLog(Log.INFO, "CodeUtil", "convertDateToString: " + locale);
-            final SimpleDateFormat fmt = new SimpleDateFormat(internalDateFormat, locale);
-            return fmt.format(date);
-        }
-        catch (Exception e) {
-            LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on convertDateToString", e);
-            return null;
-        }
-    }
-
-    /**
-     * 更新剩餘時間字串 hh:mm:ss
-     * @param timeStamp
-     */
-    @NonNull
-    public static String getTimeString (long timeStamp) {
-        final Locale locale = Locale.getDefault();
-        final int day = (int) TimeUnit.SECONDS.toDays(timeStamp);
-        final int hours = (int)(TimeUnit.SECONDS.toHours(timeStamp) - (day * 24));
-        final int minutes = (int)(TimeUnit.SECONDS.toMinutes(timeStamp) - (TimeUnit.SECONDS.toHours(timeStamp) * 60));
-        final int seconds = (int)(TimeUnit.SECONDS.toSeconds(timeStamp) - (TimeUnit.SECONDS.toMinutes(timeStamp) * 60));
-        //LogWrapper.showLog(Log.WARN, "CodeUtil", "getTimeString - hours: " + hours + ", minutes: " + minutes + ", seconds: " + seconds);
-        return  String.format(locale, "%02d", hours) + ":" +
-                String.format(locale, "%02d", minutes) + ":" +
-                String.format(locale, "%02d", seconds);
-    }
-
-    /**
-     * return a default Calendar where the properties hour, minute, and second are set to '0'
-     * @param date The specific date
-     * @return a default calendar
-     */
-    @NonNull
-    public static Calendar getTripleZeroCalendar(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        if (null != date) {
-            calendar.setTime(date);
-        }
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        return calendar;
-    }
-
-    /**
-     * The timeStamp typically is a time stamp in the near future.
-     * If the time difference between timeStamp and currentTime
-     * is less than acceptableDuration, the timeStamp is treated as expired.
-     *  @param timeStamp            the time stamp in the near future!
-     * @param acceptableDuration    the expected duration between timeStamp and current time
-     * @return
-     */
-    public static boolean isTimeStampExpired(long timeStamp, long acceptableDuration) {
-        final long currentTime = System.currentTimeMillis() / 1000L;
-        final long timeDifference = timeStamp - currentTime;
-        LogWrapper.showLog(Log.INFO, "CodeUtils", "isTimeStampExpired" +
-                "\ntimeStamp:          " + timeStamp +
-                "\ncurrentTime:        " + currentTime +
-                "\nacceptableDuration: " + acceptableDuration +
-                "\ntimeDifference:     " + timeDifference);
-        return (timeDifference < acceptableDuration);
-    }
-
+public final class CodeUtils {
 
     @NonNull
-    public static String getDecimalFormatString (@NonNull String inputPrice) {
+    public static String getDecimalFormatString(@NonNull String inputPrice) {
         final DecimalFormat fmt = new DecimalFormat();
         final DecimalFormatSymbols fmts = new DecimalFormatSymbols();
         fmts.setGroupingSeparator(',');
@@ -167,37 +66,6 @@ public class CodeUtils {
         catch (Exception e) {
             LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on getDecimalFormatString", e);
             return inputPrice;
-        }
-    }
-
-    @NonNull
-    public static Long getTimestampFromString(@NonNull String given) {
-        return Long.parseLong(given) * 1000L;
-    }
-
-    @NonNull
-    public static Date timestampToDate(@NonNull Long timestamp) {
-        return new Date(timestamp);
-    }
-
-    @NonNull
-    public static String timestampToDateFormattedString(@NonNull Date date,
-                                                        @NonNull String formatPattern) {
-        return formatPattern.isEmpty()
-                ? new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(date)
-                : new SimpleDateFormat(formatPattern, Locale.getDefault()).format(date);
-    }
-
-    @NonNull
-    public static String parseTimestampString(@Nullable String timestampString) {
-        try {
-            final Long timestamp = getTimestampFromString(timestampString);
-            final Date date = timestampToDate(timestamp);
-            return timestampToDateFormattedString(date, "yyyy/MM/dd HH:mm:ss");
-        }
-        catch (Exception e) {
-            Log.e("CodeUtil", "Exception on parseTimestampString", e);
-            return "";
         }
     }
 
