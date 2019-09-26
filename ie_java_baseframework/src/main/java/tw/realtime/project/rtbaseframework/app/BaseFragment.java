@@ -17,8 +17,10 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import tw.realtime.project.rtbaseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.dialogs.BaseDialogFragment;
 import tw.realtime.project.rtbaseframework.dialogs.ProgressDialog;
 import tw.realtime.project.rtbaseframework.delegates.ActionBarDelegate;
+import tw.realtime.project.rtbaseframework.enumerations.DialogAction;
 
 
 public abstract class BaseFragment extends Fragment implements ActionBarDelegate {
@@ -329,7 +331,7 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
      */
     public final class BackPressedCallback2 implements BaseDialogFragment.OnDecisionMadeListener {
         @Override
-        public void onNotification(@NonNull DialogFragment dialogFrag, @NonNull BaseDialogFragment.DialogAction dialogAction) {
+        public void onNotification(@NonNull DialogFragment dialogFrag, @NonNull DialogAction dialogAction) {
             dialogFrag.dismiss();
             // inner class use method reference/ lambda might encounter IllegalAccessError
             // for some old android devices
@@ -343,7 +345,7 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
      */
     public final class DefaultDismissCallback implements BaseDialogFragment.OnDecisionMadeListener {
         @Override
-        public void onNotification(@NonNull DialogFragment dialogFrag, @NonNull BaseDialogFragment.DialogAction dialogAction) {
+        public void onNotification(@NonNull DialogFragment dialogFrag, @NonNull DialogAction dialogAction) {
             dialogFrag.dismiss();
         }
     }

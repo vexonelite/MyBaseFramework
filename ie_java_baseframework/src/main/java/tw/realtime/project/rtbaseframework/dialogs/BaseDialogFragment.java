@@ -1,4 +1,4 @@
-package tw.realtime.project.rtbaseframework.app;
+package tw.realtime.project.rtbaseframework.dialogs;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -9,18 +9,13 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import tw.realtime.project.rtbaseframework.enumerations.DialogAction;
+
 
 /**
  * 基礎對話框 Fragment
  */
 public abstract class BaseDialogFragment extends DialogFragment {
-
-    public enum DialogAction {
-        /** 確定 */
-        CONFIRM,
-        /** 取消 */
-        CANCEL
-    }
 
     public interface OnDecisionMadeListener {
         /**
@@ -56,7 +51,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
 	 * Refs:
 	 * https://gist.github.com/ishitcno1/9408188
 	 */
-	protected void setWindowStyle() {
+	protected final void setWindowStyle() {
 		final Dialog theDialog = getDialog();
 		if (null == theDialog) {
 			return;

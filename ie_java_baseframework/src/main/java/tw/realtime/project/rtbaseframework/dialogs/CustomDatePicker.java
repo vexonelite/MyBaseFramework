@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.Calendar;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
-import tw.realtime.project.rtbaseframework.app.BaseDialogFragment;
+import tw.realtime.project.rtbaseframework.enumerations.DialogAction;
 
 
 /**

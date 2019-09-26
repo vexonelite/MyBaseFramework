@@ -18,8 +18,8 @@ import java.util.List;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.adapters.recyclerview.BaseRecyclerViewAdapter;
-import tw.realtime.project.rtbaseframework.app.BaseDialogFragment;
 import tw.realtime.project.rtbaseframework.delegates.OptionDelegate;
+import tw.realtime.project.rtbaseframework.enumerations.DialogAction;
 import tw.realtime.project.rtbaseframework.utils.CodeUtils;
 import tw.realtime.project.rtbaseframework.widgets.CommonItemClicker;
 
