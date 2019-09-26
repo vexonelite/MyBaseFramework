@@ -22,7 +22,7 @@ import tw.realtime.project.rtbaseframework.apis.errors.ErrorCodes;
 import tw.realtime.project.rtbaseframework.apis.errors.IeRuntimeException;
 import tw.realtime.project.rtbaseframework.delegates.apis.RtAsyncApiCallback;
 import tw.realtime.project.rtbaseframework.models.DateItem;
-import tw.realtime.project.rtbaseframework.utils.CodeUtils;
+import tw.realtime.project.rtbaseframework.utils.TimeUtils;
 
 
 /**
@@ -353,7 +353,7 @@ public class DateItemGenerator {
                     .setDate(calendar.get(Calendar.DATE))
                     .setDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK))
                     .setMode(DateItem.Mode.ITEM)
-                    .setItemId(CodeUtils.convertDateToString(calendar.getTime(), "yyyy-MM-dd"))
+                    .setItemId(TimeUtils.convertDateToString(calendar.getTime(), "yyyy-MM-dd"))
                     .build();
             dateItemIdList.add(dateItem.getItemId());
             addDateItem(dateItem);

@@ -23,4 +23,27 @@
 
     <string name="base_network_is_unavailable">請檢查網路連線</string>
 
+    <string name="base_test_string_1">Update existing item</string>
+    <string name="base_test_string_2">
+		The previously saved programs will be restored.\n\nAre you sure to restore full data?
+	</string>
+    <string name="base_test_string_3">
+		The bitter truth is that OOP fails at the only task it was intended to address.
+It looks good on paper —
+we have clean hierarchies of animals, dogs, humans, etc.
+However, it falls flat once the complexity of the application starts increasing.
+Instead of reducing complexity, it encourages promiscuous sharing of mutable state and
+introduces additional complexity with its numerous design patterns.
+OOP makes common development practices, like refactoring and testing, needlessly hard.
+Some might disagree with me, but the truth is that
+modern Java/C# OOP has never been properly designed.
+It never came out of a proper research institution (in contrast with Haskell/FP).
+Lambda calculus offers a complete theoretical foundation for Functional Programming.
+OOP has nothing to match that.
+Using OOP is seemingly innocent in the short-term,
+especially on greenfield projects.
+But what are the long-term consequences of using OOP?
+OOP is a time bomb, set to explode sometime in the future when the codebase gets big enough.
+	</string>
+
 </resources>

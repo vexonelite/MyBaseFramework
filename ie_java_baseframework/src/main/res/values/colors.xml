@@ -9,17 +9,17 @@
 
     <color name="base_description_text">#747474</color>
 
-    <color name="base_gray_94">#f0f0f0</color>
-    <color name="base_gray_85">#555555</color>
-    <color name="base_gray_136">#888888</color>
-    <color name="base_gray_80">#cccccc</color>
-    <color name="base_gray_187">#bbbbbb</color>
-    <color name="base_gray_221">#dddddd</color>
-    <color name="base_gray_60">#999999</color>
-    <color name="base_gray_40">#666666</color>
-    <color name="base_gray_27">#454545</color>
-    <color name="base_gray_22">#383838</color>
-    <color name="base_gray_20">#333333</color>
+    <color name="base_grey_94">#f0f0f0</color>
+    <color name="base_grey_85">#555555</color>
+    <color name="base_grey_136">#888888</color>
+    <color name="base_grey_80">#cccccc</color>
+    <color name="base_grey_187">#bbbbbb</color>
+    <color name="base_grey_221">#dddddd</color>
+    <color name="base_grey_60">#999999</color>
+    <color name="base_grey_40">#666666</color>
+    <color name="base_grey_27">#454545</color>
+    <color name="base_grey_22">#383838</color>
+    <color name="base_grey_20">#333333</color>
 
     <color name="base_alpha_point_95_white">#f2ffffff</color>
     <color name="base_alpha_point_90_white">#e6ffffff</color>
@@ -32,6 +32,8 @@
     <color name="base_alpha_point_40_black">#66000000</color>
     <color name="base_alpha_point_50_black">#80000000</color>
     <color name="base_alpha_point_60_black">#99000000</color>
+
+    <color name="base_alpha_point_28_black">#28000000</color>
 
     <!--
         Hex Opacity Values

@@ -2,6 +2,8 @@ package tw.realtime.project.rtbaseframework.app;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
+
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -11,7 +13,7 @@ import android.view.WindowManager;
 /**
  * 基礎對話框 Fragment
  */
-public class BaseDialogFragment extends DialogFragment {
+public abstract class BaseDialogFragment extends DialogFragment {
 
     public enum DialogAction {
         /** 確定 */
@@ -54,10 +56,16 @@ public class BaseDialogFragment extends DialogFragment {
 	 * Refs:
 	 * https://gist.github.com/ishitcno1/9408188
 	 */
-	protected void setWindowStyle () {
-		Window window = getDialog().getWindow();
-		WindowManager.LayoutParams params = window.getAttributes();
-
+	protected void setWindowStyle() {
+		final Dialog theDialog = getDialog();
+		if (null == theDialog) {
+			return;
+		}
+		final Window window = getDialog().getWindow();
+		if (null == window) {
+			return;
+		}
+		final WindowManager.LayoutParams params = window.getAttributes();
 		// Use dimAmount to control the amount of dim
 		params.dimAmount = 0.6f;
 		window.setAttributes(params);

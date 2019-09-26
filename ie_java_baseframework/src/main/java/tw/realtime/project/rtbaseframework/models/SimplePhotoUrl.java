@@ -18,7 +18,7 @@ public final class SimplePhotoUrl implements PhotoUrlDelegate {
 
     @NonNull
     @Override
-    public String getPhotoUrl() {
+    public String thePhotoUrl() {
         return photoUrl;
     }
 }

@@ -319,7 +319,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 tabTitleView = (TextView) tabView;
             }
 
-            tabTitleView.setText(dataItem.getDescription());
+            tabTitleView.setText(dataItem.theDescription());
             tabView.setOnClickListener(tabItemClicker);
 
             mTabStrip.addView(tabView);

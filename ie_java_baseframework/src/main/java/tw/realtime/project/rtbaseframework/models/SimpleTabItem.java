@@ -22,13 +22,13 @@ public final class SimpleTabItem implements TabItemDelegate {
 
     @NonNull
     @Override
-    public String getIdentifier() {
+    public String theIdentifier() {
         return identifier;
     }
 
     @NonNull
     @Override
-    public String getDescription() {
+    public String theDescription() {
         return description;
     }
 }
