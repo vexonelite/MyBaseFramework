@@ -155,9 +155,9 @@ public final class TimeUtils {
     }
 
     @NonNull
-    public static String parseTimestampString(@Nullable String timestampString) {
+    public static String parseTimestampString(@NonNull String timestampString) {
         try {
-            final Long timestamp = getTimestampFromString(Objects.requireNonNull(timestampString));
+            final Long timestamp = getTimestampFromString(timestampString);
             final Date date = timestampToDate(timestamp);
             return timestampToDateFormattedString(date, "yyyy/MM/dd HH:mm:ss");
         }
@@ -168,9 +168,9 @@ public final class TimeUtils {
     }
 
     @NonNull
-    public static String parseTimestampStringSimple(@Nullable String timestampString) {
+    public static String parseTimestampStringSimple(@NonNull String timestampString) {
         try {
-            final Long timestamp = getTimestampFromString(Objects.requireNonNull(timestampString));
+            final Long timestamp = getTimestampFromString(timestampString);
             final Date date = timestampToDate(timestamp);
             return timestampToDateFormattedString(date, "yyyy/MM/dd");
         }
@@ -181,9 +181,9 @@ public final class TimeUtils {
     }
 
     @Nullable
-    public static Date timestampStringToDate(@Nullable String timestampString) {
+    public static Date timestampStringToDate(@NonNull String timestampString) {
         try {
-            final Long timestamp = getTimestampFromString(Objects.requireNonNull(timestampString));
+            final Long timestamp = getTimestampFromString(timestampString);
             return timestampToDate(timestamp);
         }
         catch (Exception cause) {
