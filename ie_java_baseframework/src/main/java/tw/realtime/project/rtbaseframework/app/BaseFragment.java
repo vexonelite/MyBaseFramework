@@ -1,5 +1,6 @@
 package tw.realtime.project.rtbaseframework.app;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
@@ -246,11 +247,11 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
         if (!isAdded()) {
             return;
         }
-        final BaseActivity activity = (BaseActivity) getActivity();
-        if (null == activity) {
-            return;
+        final Activity activity = getActivity();
+        if (activity instanceof BaseActivity) {
+            final BaseActivity baseActivity = (BaseActivity) getActivity();
+            baseActivity.hideSoftKeyboard();
         }
-        activity.hideSoftKeyboard();
     }
 
     /**
@@ -260,11 +261,11 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
         if (!isAdded()) {
             return;
         }
-        final BaseActivity activity = (BaseActivity) getActivity();
-        if (null == activity) {
-            return;
+        final Activity activity = getActivity();
+        if (activity instanceof BaseActivity) {
+            final BaseActivity baseActivity = (BaseActivity) getActivity();
+            baseActivity.showSoftKeyboard(view);
         }
-        activity.showSoftKeyboard(view);
     }
 
     protected final boolean isAllowedToCommitFragmentTransaction () {

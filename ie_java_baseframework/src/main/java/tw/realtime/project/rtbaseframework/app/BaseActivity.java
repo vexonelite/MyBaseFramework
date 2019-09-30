@@ -367,23 +367,45 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
      * 將軟鍵盤隱藏
      */
     public final void hideSoftKeyboard() {
-        if (null != getCurrentFocus()) {
-            final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            if (null != inputMethodManager) {
-                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-            }
-            getCurrentFocus().clearFocus();
+        if (null == getCurrentFocus()) {
+            return;
         }
+        final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (null == inputMethodManager) {
+            LogWrapper.showLog(Log.WARN, getLogTag(), "hideSoftKeyboard - InputMethodManager is null!!");
+            return;
+
+        }
+        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        getCurrentFocus().clearFocus();
+        //LogWrapper.showLog(Log.WARN, getLogTag(), "hideSoftKeyboard - done!!");
     }
 
     /**
      * 顯示軟鍵盤
      */
     public final void showSoftKeyboard(@NonNull View view) {
-        view.requestFocus();
-        final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        if (null != inputMethodManager) {
-            inputMethodManager.showSoftInput(view, 0);
+        final View currentFocusedView = getCurrentFocus();
+        if (null != currentFocusedView) {
+            currentFocusedView.clearFocus();
+        }
+
+        /*
+         * Ref:
+         * https://github.com/codepath/android_guides/wiki/Working-with-the-Soft-Keyboard
+         */
+        if (view.requestFocus()) {
+            final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            if (null != inputMethodManager) {
+                inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+                //LogWrapper.showLog(Log.WARN, getLogTag(), "showSoftKeyboard - done!!");
+            }
+            else {
+                LogWrapper.showLog(Log.WARN, getLogTag(), "showSoftKeyboard - InputMethodManager is null!!");
+            }
+        }
+        else {
+            LogWrapper.showLog(Log.WARN, getLogTag(), "showSoftKeyboard - Fail to view.requestFocus()!!");
         }
     }
 
