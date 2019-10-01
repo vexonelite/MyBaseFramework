@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
@@ -440,6 +441,37 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
             // status bar is hidden, so hide that too if necessary.
             hideActionBar();
         }
+    }
+
+    public final void alterStatusBarColor(@ColorRes int colorResId) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return;
+        }
+        final Window window = getWindow();
+        if (null == window) {
+            return;
+        }
+        final int color = ContextCompat.getColor(getApplicationContext(), colorResId);
+        window.setStatusBarColor(color);
+    }
+
+    public final void alterStatusBarTextColor(boolean isLight) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return;
+        }
+        final Window window = getWindow();
+        if (null == window) {
+            return;
+        }
+
+        int flags = window.getDecorView().getSystemUiVisibility();
+        if (isLight){
+            flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+        }
+        else{
+            flags = 0; // white text color
+        }
+        window.getDecorView().setSystemUiVisibility(flags);
     }
 
     /**

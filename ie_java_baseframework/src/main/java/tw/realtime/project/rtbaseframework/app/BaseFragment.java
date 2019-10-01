@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
@@ -267,6 +268,30 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
             baseActivity.showSoftKeyboard(view);
         }
     }
+
+
+    protected final void alterStatusBarColor(@ColorRes int colorResId) {
+        if (!isAdded()) {
+            return;
+        }
+        if (null == getActivity()) {
+            return;
+        }
+        final BaseActivity activity = (BaseActivity) getActivity();
+        activity.alterStatusBarColor(colorResId);
+    }
+
+    protected final void alterStatusBarTextColor(boolean isLight) {
+        if (!isAdded()) {
+            return;
+        }
+        if (null == getActivity()) {
+            return;
+        }
+        final BaseActivity activity = (BaseActivity) getActivity();
+        activity.alterStatusBarTextColor(isLight);
+    }
+
 
     protected final boolean isAllowedToCommitFragmentTransaction () {
         if (!isAdded()) {
