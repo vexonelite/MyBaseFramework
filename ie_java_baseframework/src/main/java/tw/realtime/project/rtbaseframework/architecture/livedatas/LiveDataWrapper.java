@@ -12,20 +12,19 @@ public final class LiveDataWrapper<T> {
     private final MutableLiveData<T> mutableLiveData = new MutableLiveData<>();
 
     @MainThread
-    public LiveData<T> retrieveLiveData() {
-        return mutableLiveData;
-    }
+    public LiveData<T> retrieveLiveData() { return mutableLiveData; }
 
     @MainThread
-    public void setItemToLiveData(@Nullable T item) {
-        mutableLiveData.setValue(item);
-    }
+    @Nullable
+    public T retrieveItemFromLiveData() { return mutableLiveData.getValue(); }
 
     @MainThread
-    public void postItemToLiveData(@Nullable T item) {
-        mutableLiveData.postValue(item);
+    public void setItemToLiveData(@Nullable T item) { mutableLiveData.setValue(item); }
+
+    @MainThread
+    public void postItemToLiveData(@Nullable T item) { mutableLiveData.postValue(item); }
 //        synchronized (lock) {
 //            mutableLiveData.postValue(item);
 //        }
-    }
+//    }
 }
