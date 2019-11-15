@@ -2,6 +2,9 @@ package tw.com.goglobal.project.rxjava2;
 
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
+import io.reactivex.CompletableObserver;
 import io.reactivex.MaybeObserver;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -12,25 +15,21 @@ import tw.realtime.project.rtbaseframework.apis.errors.ErrorCodes;
 import tw.realtime.project.rtbaseframework.apis.errors.ExceptionHelper;
 import tw.realtime.project.rtbaseframework.apis.errors.IeRuntimeException;
 import tw.realtime.project.rtbaseframework.delegates.apis.IeApiResult;
+import tw.realtime.project.rtbaseframework.delegates.apis.IeTaskDelegate;
 
 
-public abstract class AbstractRxTask<T> implements RxDisposeDelegate {
+public abstract class AbstractRxTask<T> implements IeTaskDelegate, RxDisposeDelegate {
 
     private Disposable disposable;
 
     public IeApiResult<T> callback;
 
-    protected boolean isForHttp() {
-        return false;
-    }
+    protected boolean isForHttp() { return false; }
 
-    protected final String getLogTag() {
-        return this.getClass().getSimpleName();
-    }
+    protected final String getLogTag() { return this.getClass().getSimpleName(); }
 
-    protected final void setDisposable(@NonNull Disposable disposable) {
-        this.disposable = disposable;
-    }
+    protected final void setDisposable(@NonNull Disposable disposable) { this.disposable = disposable; }
+
 
     @Override
     public final void rxDisposeIfPossible() {
@@ -57,7 +56,6 @@ public abstract class AbstractRxTask<T> implements RxDisposeDelegate {
         @Override
         public void onError(@NonNull Throwable cause) {
             LogWrapper.showLog(Log.ERROR, getLogTag(), "ApiDisposableObserver - onError - Tid: " + Thread.currentThread().getId(), cause);
-
             rxDisposeIfPossible();
             notifyCallbackOnError(cause);
         }
@@ -87,18 +85,30 @@ public abstract class AbstractRxTask<T> implements RxDisposeDelegate {
         }
     }
 
-    protected final void notifyCallbackOnSuccess(@NonNull T result) {
-        if (null != callback) {
-            callback.onSuccess(result);
-        }
-    }
+    public final class ApiCompletableObserver implements CompletableObserver {
 
-    protected final void notifyCallbackOnError(@NonNull Throwable cause) {
-        if (null != callback) {
-            final IeRuntimeException exception = isForHttp()
-                    ? ExceptionHelper.toIeHttpException(cause)
-                    : ExceptionHelper.toIeRuntimeException(cause);
-            callback.onError(exception);
+        final T result;
+
+        public ApiCompletableObserver(@NonNull T result) { this.result = result; }
+
+        @Override
+        public void onSubscribe(Disposable disposable) {
+            LogWrapper.showLog(Log.INFO, getLogTag(), "ApiCompletableObserver - onSubscribe - Tid: " + Thread.currentThread().getId());
+            setDisposable(disposable);
+        }
+
+        @Override
+        public void onComplete() {
+            LogWrapper.showLog(Log.INFO, getLogTag(), "ApiCompletableObserver - onComplete - Tid: " + Thread.currentThread().getId());
+            rxDisposeIfPossible();
+            notifyCallbackOnSuccess(result);
+        }
+
+        @Override
+        public void onError(Throwable cause) {
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "ApiCompletableObserver - onError - Tid: " + Thread.currentThread().getId(), cause);
+            rxDisposeIfPossible();
+            notifyCallbackOnError(cause);
         }
     }
 
@@ -135,5 +145,26 @@ public abstract class AbstractRxTask<T> implements RxDisposeDelegate {
         }
     }
 
-    public abstract void runTask();
+    protected final void notifyCallbackOnSuccess(@NonNull T result) {
+        if (null != callback) {
+            callback.onSuccess(result);
+        }
+    }
+
+    protected final void notifyCallbackOnError(@NonNull Throwable cause) {
+        if (null != callback) {
+            final IeRuntimeException exception = isForHttp()
+                    ? ExceptionHelper.toIeHttpException(cause)
+                    : ExceptionHelper.toIeRuntimeException(cause);
+            callback.onError(exception);
+        }
+    }
+
+    ///
+
+    public static <T extends AbstractRxTask<?>> void releaseTaskIfPossible(@Nullable T task) {
+        if (null != task) {
+            task.rxDisposeIfPossible();
+        }
+    }
 }
