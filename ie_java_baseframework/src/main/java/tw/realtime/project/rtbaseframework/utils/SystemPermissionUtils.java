@@ -2,6 +2,9 @@ package tw.realtime.project.rtbaseframework.utils;
 
 import android.Manifest;
 import android.app.Activity;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -30,105 +33,49 @@ public class SystemPermissionUtils {
 
 
     /** ask if the permission INTERNET has been granted. */
-    public static boolean hasInternetPermissionBeenGranted (final Context context) {
-        if (null == context) {
-            return false;
-        }
-
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.INTERNET)
-                == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        } else {
-            return false;
-        }
+    public static boolean hasInternetPermissionBeenGranted(@NonNull Context context) {
+        return ContextCompat.checkSelfPermission(context, Manifest.permission.INTERNET)
+                == PackageManager.PERMISSION_GRANTED;
     }
 
     /** ask if the permission CAMERA has been granted. */
-    public static boolean hasCameraPermissionBeenGranted (final Context context) {
-        if (null == context) {
-            return false;
-        }
-
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        } else {
-            return false;
-        }
+    public static boolean hasCameraPermissionBeenGranted(@NonNull Context context) {
+        return ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED;
     }
 
     /** ask if the permission RECORD_AUDIO has been granted. */
-    public static boolean hasMicrophonePermissionBeenGranted (final Context context) {
-        if (null == context) {
-            return false;
-        }
-
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO)
-                == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        } else {
-            return false;
-        }
+    public static boolean hasMicrophonePermissionBeenGranted(@NonNull Context context) {
+        return ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO)
+                == PackageManager.PERMISSION_GRANTED;
     }
 
     /** ask if the permission READ_EXTERNAL_STORAGE has been granted. */
-    public static boolean hasReadExternalStoragePermissionBeenGranted (final Context context) {
-        if (null == context) {
-            return false;
-        }
-
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        } else {
-            return false;
-        }
+    public static boolean hasReadExternalStoragePermissionBeenGranted(@NonNull Context context) {
+        return ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED;
     }
 
     /** ask if the permission WRITE_EXTERNAL_STORAGE has been granted. */
-    public static boolean hasWriteExternalStoragePermissionBeenGranted (final Context context) {
-        if (null == context) {
-            return false;
-        }
-
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        } else {
-            return false;
-        }
+    public static boolean hasWriteExternalStoragePermissionBeenGranted(@NonNull Context context) {
+        return ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED;
     }
 
     /** ask if the permission ACCESS_COARSE_LOCATION has been granted. */
-    public static boolean hasCoarseLocationPermissionBeenGranted (final Context context) {
-        if (null == context) {
-            return false;
-        }
-
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        } else {
-            return false;
-        }
+    public static boolean hasCoarseLocationPermissionBeenGranted(@NonNull Context context) {
+        return ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED;
     }
 
     /** ask if the permission ACCESS_FINE_LOCATION has been granted. */
-    public static boolean hasFineLocationPermissionBeenGranted (final Context context) {
-        if (null == context) {
-            return false;
-        }
-
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        } else {
-            return false;
-        }
+    public static boolean hasFineLocationPermissionBeenGranted(@NonNull Context context) {
+        return ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED;
     }
 
     /** ask if the permissions CAMERA, RECORD_AUDIO, and WRITE_EXTERNAL_STORAGE have been granted. */
-    public static boolean hasEnoughVideoRecPermission (final Context context) {
+    public static boolean hasEnoughVideoRecPermission(@NonNull Context context) {
         boolean camera = hasCameraPermissionBeenGranted(context);
         boolean mic = hasMicrophonePermissionBeenGranted(context);
         boolean read = hasReadExternalStoragePermissionBeenGranted(context);
@@ -137,7 +84,7 @@ public class SystemPermissionUtils {
     }
 
     /** ask if the permissions CAMERA and WRITE_EXTERNAL_STORAGE have been granted. */
-    public static boolean hasEnoughTakeShotPermission (final Context context) {
+    public static boolean hasEnoughTakeShotPermission(@NonNull Context context) {
         boolean camera = hasCameraPermissionBeenGranted(context);
         boolean read = hasReadExternalStoragePermissionBeenGranted(context);
         boolean write = hasWriteExternalStoragePermissionBeenGranted(context);
@@ -145,217 +92,175 @@ public class SystemPermissionUtils {
     }
 
     /** ask if the permissions ACCESS_FINE_LOCATION and ACCESS_COARSE_LOCATION have been granted. */
-    public static boolean hasEnoughLocationPermission (final Context context) {
+    public static boolean hasEnoughLocationPermission(@NonNull Context context) {
         boolean fine = hasFineLocationPermissionBeenGranted(context);
         boolean coarse = hasCoarseLocationPermissionBeenGranted(context);
         return (fine && coarse);
     }
 
     /** appeal user for the permission INTERNET. */
-    public static void requestInternetPermission (final Activity activity) {
-        if (null != activity) {
-            ActivityCompat.requestPermissions(
-                    activity,
-                    new String[]{Manifest.permission.INTERNET},
-                    REQUEST_CODE_INTERNET_PERMISSION);
-        }
+    public static void requestInternetPermission(@NonNull Activity activity) {
+        ActivityCompat.requestPermissions(
+                activity,
+                new String[]{Manifest.permission.INTERNET},
+                REQUEST_CODE_INTERNET_PERMISSION);
     }
 
     /** appeal user for the permission CAMERA. */
-    public static void requestCameraPermission (final Activity activity) {
-        if (null != activity) {
-            ActivityCompat.requestPermissions(
-                    activity,
-                    new String[]{Manifest.permission.CAMERA},
-                    REQUEST_CODE_CAMERA_PERMISSION);
-        }
+    public static void requestCameraPermission(@NonNull Activity activity) {
+        ActivityCompat.requestPermissions(
+                activity,
+                new String[] { Manifest.permission.CAMERA },
+                REQUEST_CODE_CAMERA_PERMISSION);
     }
 
     /** appeal user for the permission CAMERA. */
-    public static void requestCameraPermission (final Fragment fragment) {
-        if (null != fragment) {
-            fragment.requestPermissions(
-                    new String[]{Manifest.permission.CAMERA},
-                    REQUEST_CODE_CAMERA_PERMISSION);
-        }
+    public static void requestCameraPermission(@NonNull Fragment fragment) {
+        fragment.requestPermissions(
+                new String[] { Manifest.permission.CAMERA },
+                REQUEST_CODE_CAMERA_PERMISSION);
     }
 
     /** appeal for the permission RECORD_AUDIO */
-    public static void requestMicrophonePermission (final Activity activity) {
-        if (null != activity) {
-            ActivityCompat.requestPermissions(
-                    activity,
-                    new String[]{Manifest.permission.RECORD_AUDIO},
-                    REQUEST_CODE_MICROPHONE_PERMISSION);
-        }
+    public static void requestMicrophonePermission(@NonNull Activity activity) {
+        ActivityCompat.requestPermissions(
+                activity,
+                new String[] { Manifest.permission.RECORD_AUDIO },
+                REQUEST_CODE_MICROPHONE_PERMISSION);
     }
 
     /** appeal for the permission RECORD_AUDIO */
-    public static void requestMicrophonePermission (final Fragment fragment) {
-        if (null != fragment) {
-            fragment.requestPermissions(
-                    new String[]{Manifest.permission.RECORD_AUDIO},
-                    REQUEST_CODE_MICROPHONE_PERMISSION);
-        }
+    public static void requestMicrophonePermission(@NonNull Fragment fragment) {
+        fragment.requestPermissions(
+                new String[] { Manifest.permission.RECORD_AUDIO },
+                REQUEST_CODE_MICROPHONE_PERMISSION);
     }
 
     /** appeal user for the permission READ_EXTERNAL_STORAGE. */
-    public static void requestReadExternalStoragePermission (final Activity activity) {
-        if (null != activity) {
-            ActivityCompat.requestPermissions(
-                    activity,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSION);
-        }
+    public static void requestReadExternalStoragePermission(@NonNull Activity activity) {
+        ActivityCompat.requestPermissions(
+                activity,
+                new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },
+                REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSION);
     }
 
     /** appeal user for the permission READ_EXTERNAL_STORAGE. */
-    public static void requestReadExternalStoragePermission (final Fragment fragment) {
-        if (null != fragment) {
-            fragment.requestPermissions(
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSION);
-        }
+    public static void requestReadExternalStoragePermission(@NonNull Fragment fragment) {
+        fragment.requestPermissions(
+                new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },
+                REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSION);
     }
 
     /** appeal user for the permission WRITE_EXTERNAL_STORAGE. */
-    public static void requestWriteExternalStoragePermission (final Activity activity) {
-        if (null != activity) {
-            ActivityCompat.requestPermissions(
-                    activity,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
-        }
+    public static void requestWriteExternalStoragePermission(@NonNull Activity activity) {
+        ActivityCompat.requestPermissions(
+                activity,
+                new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
     }
 
     /** appeal user for the permission WRITE_EXTERNAL_STORAGE. */
-    public static void requestWriteExternalStoragePermission (final Fragment fragment) {
-        if (null != fragment) {
-            fragment.requestPermissions(
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
-        }
+    public static void requestWriteExternalStoragePermission(@NonNull Fragment fragment) {
+        fragment.requestPermissions(
+                new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
     }
 
     /** appeal user for the permission ACCESS_FINE_LOCATION. */
-    public static void requestFineLocationPermission (final Activity activity) {
-        if (null != activity) {
-            ActivityCompat.requestPermissions(
-                    activity,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_CODE_FINE_LOCATION_PERMISSION);
-        }
+    public static void requestFineLocationPermission(@NonNull Activity activity) {
+        ActivityCompat.requestPermissions(
+                activity,
+                new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                REQUEST_CODE_FINE_LOCATION_PERMISSION);
     }
 
     /** appeal user for the permission ACCESS_FINE_LOCATION. */
-    public static void requestFineLocationPermission (final Fragment fragment) {
-        if (null != fragment) {
-            fragment.requestPermissions(
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_CODE_FINE_LOCATION_PERMISSION);
-        }
+    public static void requestFineLocationPermission(@NonNull Fragment fragment) {
+        fragment.requestPermissions(
+                new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                REQUEST_CODE_FINE_LOCATION_PERMISSION);
     }
 
     /** appeal user for the permission ACCESS_COARSE_LOCATION. */
-    public static void requestCoarseLocationPermission (final Activity activity) {
-        if (null != activity) {
-            ActivityCompat.requestPermissions(
-                    activity,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    REQUEST_CODE_COARSE_LOCATION_PERMISSION);
-        }
+    public static void requestCoarseLocationPermission(@NonNull Activity activity) {
+        ActivityCompat.requestPermissions(
+                activity,
+                new String[] { Manifest.permission.ACCESS_COARSE_LOCATION },
+                REQUEST_CODE_COARSE_LOCATION_PERMISSION);
     }
 
     /** appeal user for the permission ACCESS_COARSE_LOCATION. */
-    public static void requestCoarseLocationPermission (final Fragment fragment) {
-        if (null != fragment) {
-            fragment.requestPermissions(
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    REQUEST_CODE_COARSE_LOCATION_PERMISSION);
-        }
+    public static void requestCoarseLocationPermission(@NonNull Fragment fragment) {
+        fragment.requestPermissions(
+                new String[] { Manifest.permission.ACCESS_COARSE_LOCATION },
+                REQUEST_CODE_COARSE_LOCATION_PERMISSION);
     }
 
     /** appeal user for the permission ACCESS_FINE_LOCATION and ACCESS_COARSE_LOCATION. */
-    public static void requestLocationPermissions (final Activity activity) {
-        if (null != activity) {
-            ActivityCompat.requestPermissions(
-                    activity,
-                    new String[]{
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_CODE_LOCATION_PERMISSIONS);
-        }
+    public static void requestLocationPermissions(@NonNull Activity activity) {
+        ActivityCompat.requestPermissions(
+                activity,
+                new String[] {
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION },
+                REQUEST_CODE_LOCATION_PERMISSIONS);
     }
 
     /** appeal user for the permission ACCESS_FINE_LOCATION and ACCESS_COARSE_LOCATION. */
-    public static void requestLocationPermissions (final Fragment fragment) {
-        if (null != fragment) {
-            fragment.requestPermissions(
-                    new String[]{
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_CODE_LOCATION_PERMISSIONS);
-        }
+    public static void requestLocationPermissions(@NonNull Fragment fragment) {
+        fragment.requestPermissions(
+                new String[] {
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION },
+                REQUEST_CODE_LOCATION_PERMISSIONS);
     }
 
     /** appeal user for the permissions CAMERA and WRITE_EXTERNAL_STORAGE. */
-    public static void requestTakeShotPermissions (final Activity activity) {
-        if (null != activity) {
-            ActivityCompat.requestPermissions(
-                    activity,
-                    new String[]{
-                            Manifest.permission.CAMERA,
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    },
-                    REQUEST_CODE_TAKE_SHOT_PERMISSIONS);
-        }
+    public static void requestTakeShotPermissions(@NonNull Activity activity) {
+        ActivityCompat.requestPermissions(
+                activity,
+                new String[] {
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                REQUEST_CODE_TAKE_SHOT_PERMISSIONS);
     }
 
     /** appeal user for the permissions CAMERA and WRITE_EXTERNAL_STORAGE. */
-    public static void requestTakeShotPermissions (final Fragment fragment) {
-        if (null != fragment) {
-            fragment.requestPermissions(
-                    new String[]{
-                            Manifest.permission.CAMERA,
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    },
-                    REQUEST_CODE_TAKE_SHOT_PERMISSIONS);
-        }
+    public static void requestTakeShotPermissions(@NonNull Fragment fragment) {
+        fragment.requestPermissions(
+                new String[]{
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                REQUEST_CODE_TAKE_SHOT_PERMISSIONS);
     }
 
     /** appeal user for the permissions CAMERA, RECORD_AUDIO, and WRITE_EXTERNAL_STORAGE. */
-    public static void requestVideoRecPermissions (final Activity activity) {
-        if (null != activity) {
-            ActivityCompat.requestPermissions(
-                    activity,
-                    new String[]{
-                            Manifest.permission.CAMERA,
-                            Manifest.permission.RECORD_AUDIO,
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    },
-                    REQUEST_CODE_VIDEO_REC_PERMISSIONS);
-        }
+    public static void requestVideoRecPermissions(@NonNull Activity activity) {
+        ActivityCompat.requestPermissions(
+                activity,
+                new String[] {
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                REQUEST_CODE_VIDEO_REC_PERMISSIONS);
     }
 
     /** appeal user for the permissions CAMERA, RECORD_AUDIO, and WRITE_EXTERNAL_STORAGE. */
-    public static void requestVideoRecPermissions (final Fragment fragment) {
-        if (null != fragment) {
-            fragment.requestPermissions(
-                    new String[]{
-                            Manifest.permission.CAMERA,
-                            Manifest.permission.RECORD_AUDIO,
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    },
-                    REQUEST_CODE_VIDEO_REC_PERMISSIONS);
-        }
+    public static void requestVideoRecPermissions(@NonNull Fragment fragment) {
+        fragment.requestPermissions(
+                new String[] {
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                REQUEST_CODE_VIDEO_REC_PERMISSIONS);
     }
 
 
-    public static boolean verifyGrantResults (int[] grantResults, String logTag) {
+    public static boolean verifyGrantResults(@Nullable int[] grantResults, @Nullable String logTag) {
         if (null == logTag) {
             logTag = "SystemPermissionUtils";
         }
@@ -380,9 +285,8 @@ public class SystemPermissionUtils {
     }
 
     /** template of implementation for the callback of permission appeal. */
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[],
-                                           int[] grantResults) {
+    public void onRequestPermissionsResult(
+            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         switch (requestCode) {
             case REQUEST_CODE_INTERNET_PERMISSION:
@@ -403,5 +307,4 @@ public class SystemPermissionUtils {
                 break;
         }
     }
-
 }
