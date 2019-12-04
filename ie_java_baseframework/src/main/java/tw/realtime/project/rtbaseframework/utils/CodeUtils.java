@@ -80,7 +80,7 @@ public final class CodeUtils {
      * @return
      */
     @Deprecated
-    public static int getColorFromResourceId (@NonNull Context context, @ColorRes int colorResId) {
+    public static int getColorFromResourceId(@NonNull Context context, @ColorRes int colorResId) {
         return ContextCompat.getColor(context, colorResId);
     }
 
@@ -93,11 +93,8 @@ public final class CodeUtils {
      * Ref: https://stackoverflow.com/questions/29041027/android-getresources-getdrawable-deprecated-api-22
      */
     @Deprecated
-    public static Drawable getDrawableFromResourceId (@NonNull Context context, @DrawableRes int drawableResID) {
+    public static Drawable getDrawableFromResourceId(@NonNull Context context, @DrawableRes int drawableResID) {
         return ContextCompat.getDrawable(context, drawableResID);
-//        if (Build.VERSION.SDK_INT >= 21) {
-//            return Resources.getDrawable(resID, Theme);
-//        }
     }
 
     /**
@@ -106,21 +103,21 @@ public final class CodeUtils {
      * <p> 取得螢幕的寬與高
      */
     @Nullable
-    public static Point getRealScreenSize (@NonNull Context context) {
+    public static Point getRealScreenSize(@NonNull Context context) {
         try {
             final Point size = new Point();
             final WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             manager.getDefaultDisplay().getRealSize(size);
             return size;
-        } catch (Exception e) {
-            LogWrapper.showLog(Log.ERROR, "error", "Exception on getRealScreenSize!", e);
+        } catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, "error", "Exception on getRealScreenSize!", cause);
             return null;
         }
     }
 
     // get the size of device's screen.
     @Nullable
-    public static Point getScreenSize (@NonNull Context context) {
+    public static Point getScreenSize(@NonNull Context context) {
         try {
             final DisplayMetrics metrics = new DisplayMetrics();
             final WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -129,8 +126,8 @@ public final class CodeUtils {
             size.x = metrics.widthPixels;
             size.y = metrics.heightPixels;
             return size;
-        } catch (Exception e) {
-            LogWrapper.showLog(Log.ERROR, "error", "Exception on getScreenSize!", e);
+        } catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, "error", "Exception on getScreenSize!", cause);
             return null;
         }
     }
@@ -142,31 +139,26 @@ public final class CodeUtils {
      * @param qrCodeContent 卻轉換的 Qr碼字串
      * @return Qr 碼影像; 若過程中出現例外，會回傳 Null
      */
-    public static Bitmap generateQrCode (Context context, String qrCodeContent) {
-        if ((null == qrCodeContent) || (qrCodeContent.isEmpty())) {
-            LogWrapper.showLog(Log.WARN, "CodeUtil", "generateQrCode: qrCodeContent is invalid!");
-            return null;
-        }
-
+    public static Bitmap generateQrCode(@NonNull Context context, @NonNull String qrCodeContent) {
         final Point screenSize = getRealScreenSize(context);
         // QR code 寬度
         final int qrImageSize = ((screenSize.x - 100) > 200) ? (screenSize.x - 100) : 200;
         // QR code Content codec
-        Map<EncodeHintType, Object> hints = new EnumMap<>(EncodeHintType.class);
+        final Map<EncodeHintType, Object> hints = new EnumMap<>(EncodeHintType.class);
         // 文字內容為 UTF-8
         hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
         // 設定 QR code 容錯率為 H
         // 容錯率姑且可以將它想像成解析度，分為 4 級：L(7%)，M(15%)，Q(25%)，H(30%)
         hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
-        MultiFormatWriter writer = new MultiFormatWriter();
+        final MultiFormatWriter writer = new MultiFormatWriter();
         try {
             // 建立 QR code 的資料矩陣
-            BitMatrix bitMatrix = writer.encode(
+            final BitMatrix bitMatrix = writer.encode(
                     qrCodeContent, BarcodeFormat.QR_CODE, qrImageSize, qrImageSize, hints);
             // ZXing 還可以生成其他形式條碼，如：BarcodeFormat.CODE_39、BarcodeFormat.CODE_93、BarcodeFormat.CODE_128、BarcodeFormat.EAN_8、BarcodeFormat.EAN_13...
 
             //建立點陣圖
-            Bitmap bitmap = Bitmap.createBitmap(qrImageSize, qrImageSize, Bitmap.Config.ARGB_8888);
+            final Bitmap bitmap = Bitmap.createBitmap(qrImageSize, qrImageSize, Bitmap.Config.ARGB_8888);
             // 將 QR code 資料矩陣繪製到點陣圖上
             for (int y = 0; y < qrImageSize; y++) {
                 for (int x = 0; x < qrImageSize; x++) {
@@ -174,8 +166,9 @@ public final class CodeUtils {
                 }
             }
             return bitmap;
-        } catch (Exception e) {
-            LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on generateQrCode", e);
+        }
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on generateQrCode", cause);
             return null;
         }
     }
@@ -202,12 +195,9 @@ public final class CodeUtils {
         return len;
     }
 
-    public static void sendEmailByIntent (Context context, String emailAddress) {
-        if ( (null == context) || (null == emailAddress) ) {
-            return;
-        }
+    public static void sendEmailByIntent(@NonNull Context context, @NonNull String emailAddress) {
         try {
-            Intent emailIntent = new Intent(Intent.ACTION_SENDTO,
+            final Intent emailIntent = new Intent(Intent.ACTION_SENDTO,
                     Uri.fromParts("mailto", emailAddress, null));
             context.startActivity(Intent.createChooser(emailIntent, null));
             //emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
@@ -221,38 +211,35 @@ public final class CodeUtils {
 //            intent.putExtra(Intent.EXTRA_TEXT, "I'm email body.");
 //            context.startActivity(Intent.createChooser(intent, "Send Email"));
         }
-        catch (Exception e) {
-            LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on sendEmailByIntent", e);
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on sendEmailByIntent", cause);
         }
     }
 
-    public static void makePhoneCallByIntent (Context context, String phoneNumber) {
-        if ( (null == context) || (null == phoneNumber) ) {
-            return;
-        }
+    public static void makePhoneCallByIntent(@NonNull Context context, @NonNull String phoneNumber) {
         try {
-            String phoneNum = "tel:" + phoneNumber;
-            Uri uri = Uri.parse(phoneNum);
-            Intent intent = new Intent(Intent.ACTION_DIAL, uri);
+            final String phoneNum = "tel:" + phoneNumber;
+            final Uri uri = Uri.parse(phoneNum);
+            final Intent intent = new Intent(Intent.ACTION_DIAL, uri);
             context.startActivity(intent);
         }
-        catch (Exception e) {
-            LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on makePhoneCallByIntent", e);
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on makePhoneCallByIntent", cause);
         }
     }
 
-    public static void openBrowser(Context context, String url) {
+    public static void openBrowser(@NonNull Context context, @NonNull String url) {
         LogWrapper.showLog(Log.INFO, "CodeUtils", "openBrowser - given url: " + url);
         if ( (!url.startsWith("http://")) && (!url.startsWith("https://")) ) {
             url = "http://" + url;
             LogWrapper.showLog(Log.INFO,"CodeUtil", "openBrowser - append 'http': " + url);
         }
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         context.startActivity(browserIntent);
     }
 
     @SuppressWarnings({"MissingPermission"})
-    public static boolean hasInterNet (Context context) {
+    public static boolean hasInterNet(@NonNull Context context) {
         ConnectivityManager connMgr =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -268,8 +255,8 @@ public final class CodeUtils {
                 Object objData = urlConnect.getContent();
                 hasInterNet = true;
             }
-            catch (Exception e) {
-                LogWrapper.showLog(Log.ERROR, "CodeUtils", "Exception on hasInterNet", e);
+            catch (Exception cause) {
+                LogWrapper.showLog(Log.ERROR, "CodeUtils", "Exception on hasInterNet", cause);
                 //return false;
             }
         }
@@ -278,7 +265,7 @@ public final class CodeUtils {
     }
 
     @SuppressWarnings({"MissingPermission"})
-    public static String getNetworkAccessType (Context context) {
+    public static String getNetworkAccessType(@NonNull Context context) {
         ConnectivityManager connMgr =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -300,7 +287,9 @@ public final class CodeUtils {
      * @param source
      * @return
      */
-    public static boolean containsEmoji(String source) {
+    public static boolean containsEmoji(@NonNull String source) {
+        if (source.isEmpty()) { return false; }
+
         int len = source.length();
         boolean isEmoji = false;
         for (int i = 0; i < len; i++) {
@@ -334,11 +323,11 @@ public final class CodeUtils {
                 }
             }
         }
-        return  isEmoji;
+        return isEmoji;
     }
 
-    public static int compareAppVersion (@NonNull String currentVersion,
-                                         @NonNull String apiVersion) throws IllegalArgumentException {
+    public static int compareAppVersion(@NonNull String currentVersion,
+                                        @NonNull String apiVersion) throws IllegalArgumentException {
         if (currentVersion.isEmpty()) {
             throw new IllegalArgumentException("currentVersion cannot be empty");
         }
@@ -401,16 +390,10 @@ public final class CodeUtils {
 
     public static int integerParseInt(@Nullable String input) {
         try {
-            if (null == input) {
-                return 0;
-            }
-            else {
-                return Integer.parseInt(input);
-            }
+            if (null == input) { return 0; }
+            else { return Integer.parseInt(input); }
         }
-        catch (Exception e) {
-            return 0;
-        }
+        catch (Exception cause) { return 0; }
     }
 
     ///
@@ -459,7 +442,7 @@ public final class CodeUtils {
     }
 
     @NonNull
-    public static String byteToHexString(@NonNull byte byteData) {
+    public static String byteToHexString(byte byteData) {
         return String.format("%02X", byteData);
     }
 
@@ -494,6 +477,26 @@ public final class CodeUtils {
     @NonNull
     public static String integerToDigitFormat(int value, int digit) {
         return String.format("%0" + digit + "d", value);
+    }
+
+    // Returns a char sequence with characters in reversed order.
+    // https://www.baeldung.com/java-reverse-string
+    @NonNull
+    public static String reverseStraightForward(@NonNull String input) {
+        if (input.isEmpty()) { return input; }
+        String output = "";
+        for (int i = input.length() - 1; i >= 0; i--) {
+            output = output + input.charAt(i);
+        }
+        return output;
+    }
+
+    // Returns a char sequence with characters in reversed order.
+    // https://www.baeldung.com/java-reverse-string
+    @NonNull
+    public static String reverseUsingStringBuilder(@NonNull String input) {
+        if (input.isEmpty()) { return input; }
+        return new StringBuilder(input).reverse().toString();
     }
 
     // End of Log

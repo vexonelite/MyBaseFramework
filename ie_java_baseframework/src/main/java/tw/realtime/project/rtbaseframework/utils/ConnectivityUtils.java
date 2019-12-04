@@ -64,7 +64,7 @@ public final class ConnectivityUtils {
     }
 
     ///
-    
+
     @SuppressLint("MissingPermission")
     public static boolean preAndroidMInternetCheck(
             @NonNull ConnectivityManager connectivityManager,
