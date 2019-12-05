@@ -3,10 +3,10 @@ package tw.realtime.project.rtbaseframework.apis.converters;
 import android.util.Log;
 import androidx.annotation.NonNull;
 
-
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.apis.errors.ErrorCodes;
 import tw.realtime.project.rtbaseframework.apis.errors.IeRuntimeException;
+
 
 public abstract class IeBaseConverter<T, R> implements IMapFunction<T, R> {
 
