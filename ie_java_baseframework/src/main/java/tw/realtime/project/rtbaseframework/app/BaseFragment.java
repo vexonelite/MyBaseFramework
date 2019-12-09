@@ -413,6 +413,11 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
         conductNavigation(fragment, fragmentContainerId, true, new DefaultOnViewDestroyCallback());
     }
 
+    protected final void conductNavigation(
+            @NonNull BaseFragment fragment, @IdRes int fragmentContainerId, boolean withAnimation) {
+        conductNavigation(fragment, fragmentContainerId, withAnimation, new DefaultOnViewDestroyCallback());
+    }
+
     protected final void conductNavigation(@NonNull BaseFragment fragment,
                                            @IdRes int fragmentContainerId,
                                            boolean withAnimation,

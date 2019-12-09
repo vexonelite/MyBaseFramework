@@ -225,13 +225,15 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
 
     public final void conductNavigationWithAnimation(@NonNull Fragment targetFragment, @IdRes final int containerResId) {
         try {
+            targetFragment.setEnterTransition(FragmentTransitions.defaultEnter1());
+            targetFragment.setExitTransition(FragmentTransitions.defaultExit1());
             getSupportFragmentManager()
                     .beginTransaction()
-                    .setCustomAnimations(
-                            R.animator.base_animator_fragment_slide_left_in2,
-                            R.animator.base_animator_fragment_slide_right_out2,
-                            R.animator.base_animator_fragment_slide_left_in2,
-                            R.animator.base_animator_fragment_slide_right_out2)
+//                    .setCustomAnimations(
+//                            R.animator.base_animator_fragment_slide_left_in2,
+//                            R.animator.base_animator_fragment_slide_right_out2,
+//                            R.animator.base_animator_fragment_slide_left_in2,
+//                            R.animator.base_animator_fragment_slide_right_out2)
                     .add(containerResId, targetFragment)
                     .addToBackStack(null)
                     .commit();

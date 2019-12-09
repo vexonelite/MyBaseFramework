@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import tw.realtime.project.rtbaseframework.utils.CryptUtils;
 
+
 public final class WiFiAccessPointImpl implements WiFiAccessPointDelegate {
 
     private final String identifier;
