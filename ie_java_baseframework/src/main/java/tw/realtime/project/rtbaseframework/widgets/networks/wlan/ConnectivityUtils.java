@@ -1,4 +1,4 @@
-package tw.realtime.project.rtbaseframework.utils;
+package tw.realtime.project.rtbaseframework.widgets.networks.wlan;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -159,6 +159,7 @@ public final class ConnectivityUtils {
      * <p>
      * The method can only be involved for the case (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
      */
+    @SuppressLint("MissingPermission")
     public static int connectToSpecifiedRouterViaWifiNetworkSuggestion(
             @NonNull Context context, @NonNull String networkSSID, @NonNull String networkPassword) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) { return -1; }
