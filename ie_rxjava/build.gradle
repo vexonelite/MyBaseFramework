@@ -40,6 +40,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:${deps.versions.espresso}"
 
     implementation "androidx.appcompat:appcompat:${deps.versions.androidX}"
+    implementation "androidx.recyclerview:recyclerview:${deps.versions.recyclerviewX}"
 
     implementation "com.squareup.okhttp3:okhttp:${deps.versions.okHttp3}"
 
