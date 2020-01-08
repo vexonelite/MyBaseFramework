@@ -524,9 +524,7 @@ public final class CodeUtils {
 
     public static void showSoftKeyboard(@NonNull Activity activity, @NonNull View view) {
         final View currentFocusedView = activity.getCurrentFocus();
-        if (null != currentFocusedView) {
-            currentFocusedView.clearFocus();
-        }
+        if (null != currentFocusedView) { currentFocusedView.clearFocus(); }
 
         /*
          * Ref:

@@ -17,12 +17,14 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.dialogs.BaseDialogFragment;
 import tw.realtime.project.rtbaseframework.dialogs.ProgressDialog;
 import tw.realtime.project.rtbaseframework.delegates.ActionBarDelegate;
 import tw.realtime.project.rtbaseframework.enumerations.DialogAction;
+import tw.realtime.project.rtbaseframework.utils.CodeUtils;
 
 
 public abstract class BaseFragment extends Fragment implements ActionBarDelegate {
@@ -76,9 +78,7 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
         dismissProgressDialog();
     }
 
-    public final String getLogTag() {
-        return this.getClass().getSimpleName();
-    }
+    public final String getLogTag() { return this.getClass().getSimpleName(); }
 
     @Deprecated
     protected final void setProgressDialog(Context context, String title) {
@@ -143,44 +143,29 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
     }
 
     protected final void setUpActionBarHomeAsUpIndicator(@DrawableRes final int iconResId) {
-        if (forbidSetupActionBar()) {
-            return;
-        }
+        if (forbidSetupActionBar()) { return; }
         final AppCompatActivity activity = (AppCompatActivity) getActivity();
-        if (null == activity) {
-            return;
-        }
+        if (null == activity) { return; }
         final ActionBar actionBar = activity.getSupportActionBar();
-        if (null != actionBar) {
-            actionBar.setHomeAsUpIndicator(iconResId);
-        }
+        if (null != actionBar) { actionBar.setHomeAsUpIndicator(iconResId); }
     }
+
     protected final void setUpActionBarTitle(String title) {
-        if ( (null == title) || (forbidSetupActionBar()) ) {
-            return;
-        }
+        if ( (null == title) || (forbidSetupActionBar()) ) { return; }
         //LogWrapper.showLog(Log.INFO, getLogTag(), "setUpActionBar");
 
         final AppCompatActivity activity = (AppCompatActivity) getActivity();
-        if (null == activity) {
-            return;
-        }
+        if (null == activity) { return; }
         final ActionBar actionBar = activity.getSupportActionBar();
-        if (null != actionBar) {
-            actionBar.setTitle(title);
-        }
+        if (null != actionBar) { actionBar.setTitle(title); }
     }
 
     protected final void setUpActionBarTitleAndDisplayHomeAsUp(String title, boolean homeAsUpEnabledFlag) {
-        if ( (null == title) || (forbidSetupActionBar()) ) {
-            return;
-        }
+        if ( (null == title) || (forbidSetupActionBar()) ) { return; }
         //LogWrapper.showLog(Log.INFO, getLogTag(), "setUpActionBar");
 
         final AppCompatActivity activity = (AppCompatActivity) getActivity();
-        if (null == activity) {
-            return;
-        }
+        if (null == activity) { return; }
         final ActionBar actionBar = activity.getSupportActionBar();
         if (null != actionBar) {
             actionBar.setTitle(title);
@@ -195,15 +180,11 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
      * @param homeAsUpEnabledFlag
      */
     protected final void setUpActionBar(@NonNull String title, boolean homeButtonEnabledFlag, boolean homeAsUpEnabledFlag) {
-        if (forbidSetupActionBar()) {
-            return;
-        }
+        if (forbidSetupActionBar()) { return; }
         //LogWrapper.showLog(Log.INFO, getLogTag(), "setUpActionBar");
 
         final AppCompatActivity activity = (AppCompatActivity) getActivity();
-        if (null == activity) {
-            return;
-        }
+        if (null == activity) { return; }
         final ActionBar actionBar = activity.getSupportActionBar();
         if (null != actionBar) {
             actionBar.setTitle(title);
@@ -213,93 +194,60 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
     }
 
     protected final void hideActionBar() {
-        if (forbidSetupActionBar()) {
-            return;
-        }
+        if (forbidSetupActionBar()) { return; }
         final AppCompatActivity activity = (AppCompatActivity) getActivity();
-        if (null == activity) {
-            return;
-        }
+        if (null == activity) { return; }
         final ActionBar actionBar = activity.getSupportActionBar();
-        if (null != actionBar) {
-            actionBar.hide();
-        }
+        if (null != actionBar) { actionBar.hide(); }
     }
 
     protected final void showActionBar() {
-        if (forbidSetupActionBar()) {
-            return;
-        }
+        if (forbidSetupActionBar()) { return; }
         final AppCompatActivity activity = (AppCompatActivity) getActivity();
-        if (null == activity) {
-            return;
-        }
+        if (null == activity) { return; }
         final ActionBar actionBar = activity.getSupportActionBar();
-        if (null != actionBar) {
-            actionBar.show();
-        }
+        if (null != actionBar) { actionBar.show(); }
     }
-
 
     /**
      * 將軟鍵盤隱藏
      */
     protected final void hideSoftKeyboard() {
-        if (!isAdded()) {
-            return;
-        }
-        final Activity activity = getActivity();
-        if (activity instanceof BaseActivity) {
-            final BaseActivity baseActivity = (BaseActivity) getActivity();
-            baseActivity.hideSoftKeyboard();
-        }
+        if (!isAdded()) { return; }
+        final FragmentActivity activity = getActivity();
+        if (null == activity) { return; }
+        CodeUtils.hideSoftKeyboard(activity);
     }
 
     /**
      * 顯示軟鍵盤
      */
     protected final void showSoftKeyboard(@NonNull View view) {
-        if (!isAdded()) {
-            return;
-        }
-        final Activity activity = getActivity();
-        if (activity instanceof BaseActivity) {
-            final BaseActivity baseActivity = (BaseActivity) getActivity();
-            baseActivity.showSoftKeyboard(view);
-        }
+        if (!isAdded()) { return; }
+        final FragmentActivity activity = getActivity();
+        if (null == activity) { return; }
+        CodeUtils.showSoftKeyboard(activity, view);
     }
 
 
     protected final void alterStatusBarColor(@ColorRes int colorResId) {
-        if (!isAdded()) {
-            return;
-        }
-        if (null == getActivity()) {
-            return;
-        }
+        if (!isAdded()) { return; }
+        if (null == getActivity()) { return; }
         final BaseActivity activity = (BaseActivity) getActivity();
         activity.alterStatusBarColor(colorResId);
     }
 
     protected final void alterStatusBarTextColor(boolean isLight) {
-        if (!isAdded()) {
-            return;
-        }
-        if (null == getActivity()) {
-            return;
-        }
+        if (!isAdded()) { return; }
+        if (null == getActivity()) { return; }
         final BaseActivity activity = (BaseActivity) getActivity();
         activity.alterStatusBarTextColor(isLight);
     }
 
 
     protected final boolean isAllowedToCommitFragmentTransaction () {
-        if (!isAdded()) {
-            return false;
-        }
-        if (null == getActivity()) {
-            return false;
-        }
+        if (!isAdded()) { return false; }
+        if (null == getActivity()) { return false; }
         final BaseActivity activity = (BaseActivity) getActivity();
         return activity.isAllowedToCommitFragmentTransaction();
     }
