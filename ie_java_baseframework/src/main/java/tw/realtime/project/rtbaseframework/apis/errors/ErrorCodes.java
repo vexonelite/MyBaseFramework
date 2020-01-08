@@ -31,7 +31,11 @@ public final class ErrorCodes {
 
         String INVALID_REQUEST_CODE = "99951";
 
-        //String JOB_CANCELLATION_REMINDER = "99951";
+        String NETWORK_IS_DISCONNECTED = "99950";
+
+        String THREAD_INTERRUPTED = "99949";
+
+        String CALCULATE_DIFF_RESULT_ERROR = "99948";
     }
 
     public interface Ping {
