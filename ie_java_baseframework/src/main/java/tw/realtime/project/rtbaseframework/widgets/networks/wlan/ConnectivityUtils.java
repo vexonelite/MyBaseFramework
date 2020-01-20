@@ -293,6 +293,21 @@ public final class ConnectivityUtils {
         return null;
     }
 
+    @SuppressLint("MissingPermission")
+    public static boolean disconnectToWiFi(@NonNull Context context) {
+        final WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (null == wifiManager) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "disconnectToWiFi - WifiManager is null!");
+            return false;
+        }
+        if (!wifiManager.isWifiEnabled()) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "disconnectToWiFi - Wifi is disabled!");
+            return false;
+        }
+        wifiManager.disconnect();
+        return true;
+    }
+
     ///
 
     @NonNull
