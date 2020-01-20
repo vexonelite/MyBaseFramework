@@ -195,4 +195,72 @@ public final class Decorations {
             }
         }
     }
+
+    ///
+
+    /**
+     * Use the class when you use the [PagerSnapHelper] or [PagerSnapHelperVerbose]
+     * <p>
+     * @see <a href="https://github.com/d4vidi/VP2RV">VP2RV</a>
+     */
+    public static final class Peek1 extends RecyclerView.ItemDecoration {
+
+        private final int verticalGap;
+        private final int interItemsGap;
+        private final int netOneSidedGap;
+
+        public Peek1(final int padding, final int peekingWidth) {
+            verticalGap = padding / 4;
+            interItemsGap = padding / 2 - 2 * peekingWidth;
+            netOneSidedGap = (padding / 2) / 2 - peekingWidth;
+        }
+
+        @Override
+        public void getItemOffsets(@NonNull Rect outRect, @NonNull View view,
+                                   @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+            final int index = parent.getChildAdapterPosition(view);
+            if (index == RecyclerView.NO_POSITION) { return; }
+            final RecyclerView.Adapter recyclerViewAdapter = parent.getAdapter();
+            if (null == recyclerViewAdapter) { return; }
+            if (recyclerViewAdapter.getItemCount() == 0) { return; }
+            final boolean isFirstItem = (index == 0);
+            final boolean isLastItem = (index == recyclerViewAdapter.getItemCount() - 1);
+            final int leftInset = isFirstItem ? interItemsGap : netOneSidedGap;
+            final int rightInset = isLastItem ? interItemsGap : netOneSidedGap;
+            outRect.set(leftInset, verticalGap, rightInset, verticalGap);
+        }
+    }
+
+    /**
+     * Use the class when you use the [CardPeekPagerSnapHelper] or [CardPeekPagerSnapHelperVerbose]
+     * <p>
+     * @see <a href="https://github.com/d4vidi/VP2RV">VP2RV</a>
+     */
+    public static final class Peek2 extends RecyclerView.ItemDecoration {
+
+        private final int verticalGap;
+        private final int horizontalGap;
+        private final int netOneSidedGap;
+
+        public Peek2(final int padding) {
+            this.verticalGap = padding / 4;
+            this.horizontalGap = padding / 2;
+            this.netOneSidedGap = padding / 4;
+        }
+
+        @Override
+        public void getItemOffsets(@NonNull Rect outRect, @NonNull View view,
+                                   @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+            final int index = parent.getChildAdapterPosition(view);
+            if (index == RecyclerView.NO_POSITION) { return; }
+            final RecyclerView.Adapter recyclerViewAdapter = parent.getAdapter();
+            if (null == recyclerViewAdapter) { return; }
+            if (recyclerViewAdapter.getItemCount() == 0) { return; }
+            final boolean isFirstItem = (index == 0);
+            final boolean isLastItem = (index == recyclerViewAdapter.getItemCount() - 1);
+            final int leftInset = isFirstItem ? horizontalGap : netOneSidedGap;
+            final int rightInset = isLastItem ? horizontalGap : netOneSidedGap;
+            outRect.set(leftInset, verticalGap, rightInset, verticalGap);
+        }
+    }
 }
