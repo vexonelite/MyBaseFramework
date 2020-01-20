@@ -304,6 +304,9 @@ public final class ConnectivityUtils {
             LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "disconnectToWiFi - Wifi is disabled!");
             return false;
         }
+        final WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "disconnectToWiFi - current networkId: " + wifiInfo.getNetworkId());
+        wifiManager.disableNetwork(wifiInfo.getNetworkId());
         wifiManager.disconnect();
         return true;
     }
