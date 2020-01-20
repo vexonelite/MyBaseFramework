@@ -1,15 +1,19 @@
-package tw.realtime.project.rtbaseframework.widgets.ui.banner;
+package tw.realtime.project.rtbaseframework.widgets.recyclerviews.banner;
 
 import android.content.Context;
 import android.graphics.PointF;
+import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 
-public class SmoothLinearLayoutManager extends LinearLayoutManager {
+/**
+ * {@link RecyclerView} relevant
+ */
+public final class SmoothLinearLayoutManager extends LinearLayoutManager {
 
     private static final float MILLISECONDS_PER_INCH = 100f;
 
