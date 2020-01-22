@@ -13,6 +13,7 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.NetworkRequest;
 import android.net.NetworkSpecifier;
+import android.net.wifi.ScanResult;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
@@ -42,6 +43,17 @@ public final class ConnectivityUtils {
             return -1;
         }
         if (wifiManager.isWifiEnabled()) { return 1; }
+        else { return 0; }
+    }
+
+    @SuppressLint("MissingPermission")
+    public static int isWifiEnabled2(@NonNull Context context) {
+        final WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (null == wifiManager) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "isWifiEnabled2 - WifiManager is null!");
+            return -1;
+        }
+        if (wifiManager.getWifiState() == android.net.wifi.WifiManager.WIFI_STATE_ENABLED) { return 1; }
         else { return 0; }
     }
 
@@ -114,7 +126,7 @@ public final class ConnectivityUtils {
     public static String getSsidViaWifiInfo(@NonNull Context context) {
         final WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (null == wifiManager) {
-            LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "getSsidViaWifiInfo - WifiManager is null!");
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "getSsidViaWifiInfo - WifiManager is null!");
             return "";
         }
         try {
@@ -135,9 +147,9 @@ public final class ConnectivityUtils {
     @SuppressLint("MissingPermission")
     public static String getSsidViaNetworkInfo(@NonNull Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { return ""; }
-        final ConnectivityManager connManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (null != connManager) {
-            final NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
+        final ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (null != connectivityManager) {
+            final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
             if (null != networkInfo) {
                 LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "getSsidViaNetworkInfo - isConnected: " + networkInfo.isConnected() + ", ExtraInfo: " + networkInfo.getExtraInfo());
                 if ( (networkInfo.isConnected()) && (null != networkInfo.getExtraInfo()) ) {
@@ -149,6 +161,140 @@ public final class ConnectivityUtils {
         else { LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "getSsidViaNetworkInfo - ConnectivityManager is null!"); }
 
         return "";
+    }
+
+    ///
+
+    @SuppressLint("MissingPermission")
+    public static int conductWiFiScan(
+            @NonNull Activity activity, @NonNull BroadcastReceiver wiFiScanResultReceiver) {
+        final WifiManager wifiManager = (WifiManager) activity.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (null == wifiManager) {
+            Log.e("ConnectivityUtils", "conductWiFiScan - WifiManager is null!");
+            return -1;
+        }
+
+        if (wifiManager.getWifiState() != WifiManager.WIFI_STATE_ENABLED) {
+            Log.e("ConnectivityUtils", "conductWiFiScan - WifiState != WIFI_STATE_ENABLED!");
+            return -1;
+        }
+
+        final IntentFilter filter = new IntentFilter();
+        filter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+        // register WiFi scan results receiver
+        activity.registerReceiver(wiFiScanResultReceiver, filter);
+
+        try {
+            // start WiFi Scan
+            // This method was deprecated in API level 28.
+            // The ability for apps to trigger scan requests will be removed in a future release.
+            // https://developer.android.com/reference/android/net/wifi/WifiManager#startScan()
+            final boolean result = wifiManager.startScan();
+            Log.i("ConnectivityUtils", "start WiFi Scan - result: " + result);
+            return 1;
+        }
+        catch (Exception cause) {
+            Log.e("ConnectivityUtils", "error on WifiManager.startScan()", cause);
+            return 0;
+        }
+    }
+
+    @NonNull
+    @SuppressLint("MissingPermission")
+    public static List<ScanResult> getWiFiScanResult(@NonNull Context context) {
+        final List<ScanResult> resultList = new ArrayList<>();
+        final WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (null == wifiManager) {
+            Log.e("ConnectivityUtils", "getWiFiScanResult - WifiManager is null!");
+            return resultList;
+        }
+        try {
+            final List<ScanResult> list = wifiManager.getScanResults();
+            if (null != list) {
+                Log.d("ConnectivityUtils", "getWiFiScanResult - WifiManager#getScanResults().size: " + list.size());
+                resultList.addAll(list);
+            }
+            else { Log.e("ConnectivityUtils", "getWiFiScanResult - WifiManager#getScanResults() is null!"); }
+        }
+        catch (Exception cause) { Log.e("ConnectivityUtils", "getWiFiScanResult - error on WifiManager#getScanResults()!"); }
+
+        return resultList;
+    }
+
+    ///
+
+    /**
+     * The method can only be involved for the case (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
+     */
+    @Nullable
+    @SuppressLint("MissingPermission")
+    public static WifiConfiguration connectToSpecifiedRouterIfPossible(
+            @NonNull Context context, @NonNull String networkSSID, @NonNull String networkPassword) {
+        final WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (null == wifiManager) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectToSpecifiedRouterIfPossible - WifiManager is null!");
+            return null;
+        }
+        if (!wifiManager.isWifiEnabled()) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectToSpecifiedRouterIfPossible - Wifi is disabled!");
+            return null;
+        }
+
+        final String wrappedNetworkSSID = String.format("\"%s\"", networkSSID);
+        final String wrappedNetworkPasswordSSID = String.format("\"%s\"", networkPassword);
+        LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "connectToSpecifiedRouterIfPossible - wrappedNetworkSSID: " + wrappedNetworkSSID + ", wrappedNetworkPasswordSSID: " + wrappedNetworkPasswordSSID);
+        final List<WifiConfiguration> configuredNetworks = wifiManager.getConfiguredNetworks();
+
+
+        for (final WifiConfiguration configuredNetwork : configuredNetworks) {
+            LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "connectToSpecifiedRouterIfPossible - configuredNetwork SSID: " + configuredNetwork.SSID);
+            if (configuredNetwork.SSID.equals(wrappedNetworkSSID) ) {
+                LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "connectToSpecifiedRouterIfPossible - found configuredNetwork for SSID: " + networkSSID);
+                configuredNetwork.preSharedKey = wrappedNetworkPasswordSSID;
+                final int networkId = wifiManager.updateNetwork(configuredNetwork);
+                LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "connectToSpecifiedRouterIfPossible - updateNetwork - networkId: " + networkId);
+                final boolean result = wifiManager.enableNetwork(configuredNetwork.networkId, true);
+                if (result) {
+                    LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "connect to configuredNetwork for SSID: " + networkSSID);
+                    return configuredNetwork;
+                }
+            }
+        }
+
+        final WifiConfiguration wifiConfiguration = new WifiConfiguration();
+        wifiConfiguration.SSID = wrappedNetworkSSID;
+        wifiConfiguration.preSharedKey = wrappedNetworkPasswordSSID;
+        final int networkId = wifiManager.addNetwork(wifiConfiguration);
+        if (networkId != -1) {
+            LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "connectToSpecifiedRouterIfPossible - addNetwork for SSID: " + networkSSID);
+            final boolean result = wifiManager.enableNetwork(networkId, true);
+            if (result) {
+                LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "connectToSpecifiedRouterIfPossible - connect to configuredNetwork for SSID: " + networkSSID);
+                return wifiConfiguration;
+            }
+        }
+        else { LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectToSpecifiedRouterIfPossible - fail to addNetwork for SSID: " + networkSSID + " -> networkId: " + networkId); }
+
+        return null;
+    }
+
+    @SuppressLint("MissingPermission")
+    public static boolean disconnectToWiFi(@NonNull Context context) {
+        final WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (null == wifiManager) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "disconnectToWiFi - WifiManager is null!");
+            return false;
+        }
+        if (!wifiManager.isWifiEnabled()) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "disconnectToWiFi - Wifi is disabled!");
+            return false;
+        }
+
+        final WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "disconnectToWiFi - current networkId: " + wifiInfo.getNetworkId());
+        wifiManager.disableNetwork(wifiInfo.getNetworkId());
+        wifiManager.disconnect();
+        return true;
     }
 
     ///
@@ -211,8 +357,8 @@ public final class ConnectivityUtils {
                 return 0;
             case WifiManager.STATUS_NETWORK_SUGGESTIONS_ERROR_ADD_DUPLICATE:
                 LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectToSpecifiedRouterViaWifiNetworkSuggestion - STATUS_NETWORK_SUGGESTIONS_ERROR_ADD_DUPLICATE!");
-//                final int result = wifiManager.removeNetworkSuggestions(suggestionsList);
-//                LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectToSpecifiedRouterViaWifiNetworkSuggestion - after remove: "  + result);
+                final int result = wifiManager.removeNetworkSuggestions(suggestionsList);
+                LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectToSpecifiedRouterViaWifiNetworkSuggestion - after remove: "  + result);
                 return 0;
             case WifiManager.STATUS_NETWORK_SUGGESTIONS_ERROR_ADD_EXCEEDS_MAX_PER_APP:
                 LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectToSpecifiedRouterViaWifiNetworkSuggestion - STATUS_NETWORK_SUGGESTIONS_ERROR_ADD_EXCEEDS_MAX_PER_APP!");
@@ -238,81 +384,6 @@ public final class ConnectivityUtils {
 
     ///
 
-    /**
-     * The method can only be involved for the case (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
-     */
-    @Nullable
-    @SuppressLint("MissingPermission")
-    public static WifiConfiguration connectToSpecifiedRouterIfPossible(
-            @NonNull Context context, @NonNull String networkSSID, @NonNull String networkPassword) {
-        final WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if (null == wifiManager) {
-            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectToSpecifiedRouterIfPossible - WifiManager is null!");
-            return null;
-        }
-        if (!wifiManager.isWifiEnabled()) {
-            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectToSpecifiedRouterIfPossible - Wifi is disabled!");
-            return null;
-        }
-
-        final String wrappedNetworkSSID = String.format("\"%s\"", networkSSID);
-        final String wrappedNetworkPasswordSSID = String.format("\"%s\"", networkPassword);
-        LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "connectToSpecifiedRouterIfPossible - wrappedNetworkSSID: " + wrappedNetworkSSID + ", wrappedNetworkPasswordSSID: " + wrappedNetworkPasswordSSID);
-        final List<WifiConfiguration> configuredNetworks = wifiManager.getConfiguredNetworks();
-
-
-        for (final WifiConfiguration configuredNetwork : configuredNetworks) {
-            LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "connectToSpecifiedRouterIfPossible - configuredNetwork SSID: " + configuredNetwork.SSID);
-            if (configuredNetwork.SSID.equals(wrappedNetworkSSID) ) {
-                LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "connectToSpecifiedRouterIfPossible - found configuredNetwork for SSID: " + networkSSID);
-                configuredNetwork.preSharedKey = wrappedNetworkPasswordSSID;
-                final int networkId = wifiManager.updateNetwork(configuredNetwork);
-                LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "connectToSpecifiedRouterIfPossible - updateNetwork - networkId: " + networkId);
-                final boolean result = wifiManager.enableNetwork(configuredNetwork.networkId, true);
-                if (result) {
-                    LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "connect to configuredNetwork for SSID: " + networkSSID);
-                    return configuredNetwork;
-                }
-            }
-        }
-
-        final WifiConfiguration wifiConfiguration = new WifiConfiguration();
-        wifiConfiguration.SSID = wrappedNetworkSSID;
-        wifiConfiguration.preSharedKey = wrappedNetworkPasswordSSID;
-        final int networkId = wifiManager.addNetwork(wifiConfiguration);
-        if (networkId != -1) {
-            LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "addNetwork for SSID: " + networkSSID);
-            final boolean result = wifiManager.enableNetwork(networkId, true);
-            if (result) {
-                LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "connect to configuredNetwork for SSID: " + networkSSID);
-                return wifiConfiguration;
-            }
-        }
-        else { LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "fail to addNetwork for SSID: " + networkSSID + " -> networkId: " + networkId); }
-
-        return null;
-    }
-
-    @SuppressLint("MissingPermission")
-    public static boolean disconnectToWiFi(@NonNull Context context) {
-        final WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if (null == wifiManager) {
-            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "disconnectToWiFi - WifiManager is null!");
-            return false;
-        }
-        if (!wifiManager.isWifiEnabled()) {
-            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "disconnectToWiFi - Wifi is disabled!");
-            return false;
-        }
-        final WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-        LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "disconnectToWiFi - current networkId: " + wifiInfo.getNetworkId());
-        wifiManager.disableNetwork(wifiInfo.getNetworkId());
-        wifiManager.disconnect();
-        return true;
-    }
-
-    ///
-
     @NonNull
     @TargetApi(Build.VERSION_CODES.Q)
     public static WifiNetworkSpecifier getWifiNetworkSpecifier(
@@ -326,13 +397,22 @@ public final class ConnectivityUtils {
 
     @NonNull
     @TargetApi(Build.VERSION_CODES.Q)
-    public static NetworkRequest getNetworkRequest(
-            @NonNull NetworkSpecifier specifier, final int requiredTransportType) {
-        final NetworkRequest.Builder builder = new NetworkRequest.Builder()
+    public static NetworkRequest getNetworkRequest(final int requiredTransportType) {
+        return new NetworkRequest.Builder()
                 .addTransportType(requiredTransportType)
                 .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_RESTRICTED)
-                .setNetworkSpecifier(specifier);
-        return builder.build();
+                .build();
+    }
+
+    @NonNull
+    @TargetApi(Build.VERSION_CODES.Q)
+    public static NetworkRequest getNetworkRequest(
+            @NonNull NetworkSpecifier specifier, final int requiredTransportType) {
+        return new NetworkRequest.Builder()
+                .addTransportType(requiredTransportType)
+                .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_RESTRICTED)
+                .setNetworkSpecifier(specifier)
+                .build();
     }
 
     @NonNull
@@ -349,7 +429,10 @@ public final class ConnectivityUtils {
                 .addTransportType(requiredTransportType)
                 .setNetworkSpecifier(specifier);
         if (doesNeedToExclude) { builder.removeTransportType(excludedTransportType); }
-        if (internetIsNotRequired) { builder.removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET); }
+        if (internetIsNotRequired) {
+            //builder.removeCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED);
+        }
+        //builder.addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_RESTRICTED);
         return builder.build();
     }
 
@@ -373,12 +456,33 @@ public final class ConnectivityUtils {
         }
     }
 
+    @SuppressLint("MissingPermission")
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static int connectivityManagerRegisterNetworkCallback(
+            @NonNull Context context,
+            @NonNull NetworkRequest request,
+            @NonNull ConnectivityManager.NetworkCallback callback) {
+        final ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (null == connectivityManager) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectivityManagerRegisterNetworkCallback - ConnectivityManager is null!");
+            return -1;
+        }
+        try {
+            connectivityManager.registerNetworkCallback(request, callback);
+            return 1;
+        }
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectivityManagerRegisterNetworkCallback - Error on ConnectivityManager#unregisterNetworkCallback is null!", cause);
+            return 0;
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static int connectivityManagerUnregisterNetworkCallback(
             @NonNull Context context, @NonNull ConnectivityManager.NetworkCallback callback) {
         final ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         if (null == connectivityManager) {
-            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectToSpecifiedRouterViaRequestNetwork - ConnectivityManager is null!");
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectivityManagerUnregisterNetworkCallback - ConnectivityManager is null!");
             return -1;
         }
         try {
@@ -386,10 +490,36 @@ public final class ConnectivityUtils {
             return 1;
         }
         catch (Exception cause) {
-            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectToSpecifiedRouterViaRequestNetwork - Error on ConnectivityManager#unregisterNetworkCallback is null!", cause);
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectivityManagerUnregisterNetworkCallback - Error on ConnectivityManager#unregisterNetworkCallback is null!", cause);
             return 0;
         }
     }
+
+    ///
+
+    @SuppressLint("MissingPermission")
+    public static void connectivityManagerBindProcessToNetwork(@NonNull Context context, @Nullable Network network) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) { return; }
+        final ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (null == connectivityManager) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectivityManagerBindProcessToNetwork - ConnectivityManager is null!");
+            return;
+        }
+
+        try { connectivityManager.bindProcessToNetwork(network); }
+        catch (Exception cause) { LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectivityManagerBindProcessToNetwork - error on ConnectivityManager#bindProcessToNetwork", cause); }
+    }
+
+//    public static void connectivityManagerClearProcessBinding(@NonNull Context context) {
+//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) { return; }
+//        final ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+//        if (null == connectivityManager) {
+//            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectivityManagerClearProcessBinding - ConnectivityManager is null!");
+//            return;
+//        }
+//        try { connectivityManager.bindProcessToNetwork(null); }
+//        catch (Exception cause) { LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectivityManagerClearProcessBinding - ConnectivityManager#bindProcessToNetwork", cause); }
+//    }
 
     ///
 
@@ -408,41 +538,14 @@ public final class ConnectivityUtils {
 //            if (connection.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {return 0; }
             if (connection.hasCapability(transportType)) { return 1; }
             else {
-                LogWrapper.showLog(Log.ERROR, "ConnectivityManager ktx", "unknown transport type!");
+                LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "isNetworkInterestedTransportType - unknown transport type!");
                 return 0;
             }
         }
         else {
-            LogWrapper.showLog(Log.ERROR, "ConnectivityManager ktx", "NetworkCapability is null!");
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "isNetworkInterestedTransportType - NetworkCapability is null!");
             return -1;
         }
     }
-
-    ///
-
-    @SuppressLint("MissingPermission")
-    public static void connectivityManagerBindProcessToNetwork(@NonNull Context context, @Nullable Network network) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) { return; }
-        final ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (null == connectivityManager) {
-            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectivityManagerBindProcessToNetwork - ConnectivityManager is null!");
-            return;
-        }
-
-        try { connectivityManager.bindProcessToNetwork(network); }
-        catch (Exception cause) { LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "bindProcessToNetwork - ConnectivityManager#bindProcessToNetwork", cause); }
-    }
-
-//    public static void connectivityManagerClearProcessBinding(@NonNull Context context) {
-//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) { return; }
-//        final ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-//        if (null == connectivityManager) {
-//            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectivityManagerClearProcessBinding - ConnectivityManager is null!");
-//            return;
-//        }
-//        try { connectivityManager.bindProcessToNetwork(null); }
-//        catch (Exception cause) { LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectivityManagerClearProcessBinding - ConnectivityManager#bindProcessToNetwork", cause); }
-//    }
-
 }
 
