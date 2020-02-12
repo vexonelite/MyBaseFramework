@@ -41,6 +41,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -519,6 +520,23 @@ public final class CodeUtils {
     }
 
     // End of Log
+
+    //
+
+    @NonNull
+    public static <T> List<T> arrayToList(@NonNull T[] input) {
+        return Arrays.asList(input);
+    }
+
+    // https://www.techiedelight.com/convert-list-to-array-java/
+    // https://www.techiedelight.com/creating-generic-array-java/
+    // https://stackoverflow.com/questions/18581002/how-to-create-a-generic-array
+    @NonNull
+    public static <T> T[] listToArray(@NonNull List<T> input, @NonNull Class<T> type) {
+        //return input.toArray(new T[input.size()]); --> cannot do this in Java
+        final T[] array = (T[]) java.lang.reflect.Array.newInstance(type, input.size());
+        return input.toArray(array);
+    }
 
     ///
 
