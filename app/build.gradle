@@ -78,7 +78,7 @@ dependencies {
     //implementation "androidx.fragment:fragment-testing:${deps.versions.fragmentX}"
 
     implementation "androidx.recyclerview:recyclerview:${deps.versions.recyclerviewX}"
-    implementation "androidx.cardview:cardview:${deps.versions.materialX}"
+    implementation "androidx.cardview:cardview:${deps.versions.cardviewX}"
     implementation "androidx.viewpager2:viewpager2:${deps.versions.viewpager2X}"
 
     implementation "androidx.appcompat:appcompat:${deps.versions.androidX}"
