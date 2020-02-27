@@ -15,6 +15,8 @@ import androidx.appcompat.widget.AppCompatEditText;
 public final class PrefixEditText extends AppCompatEditText {
 
     float mOriginalLeftPadding = -1;
+
+    
     private String thePrefix = "";
 
     public void setPrefix(@NonNull String prefix) {
