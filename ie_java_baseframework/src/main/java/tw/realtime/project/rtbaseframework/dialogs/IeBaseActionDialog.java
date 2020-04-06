@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import tw.realtime.project.rtbaseframework.R;
 import tw.realtime.project.rtbaseframework.enumerations.DialogAction;
 import tw.realtime.project.rtbaseframework.delegates.ui.view.DialogDecisionDelegate;
-import tw.realtime.project.rtbaseframework.models.DialogDataBuilder;
 import tw.realtime.project.rtbaseframework.widgets.CommonItemWrapper;
 
 
@@ -30,6 +29,16 @@ public abstract class IeBaseActionDialog<T> extends BaseDialogFragment {
 	@ColorInt
 	private int confirmButtonColor;
 
+	/**
+	 * used to trace if the dialog has been shown.
+	 * There is a short period of time that the {@link androidx.fragment.app.FragmentManager}
+	 * has to do something such that the dialog ends up being shown on the screen.
+	 * During the duration, I cannot find the specific dialog fragment
+	 * via {@link androidx.fragment.app.FragmentManager#getFragments() }
+	 * <p>
+	 * added in 2020/03/05
+	 */
+	public boolean hasBeenShown = false;
 
 	public final IeBaseActionDialog setData(@NonNull DialogDataBuilder builder) {
 		this.title = builder.theTitle();
