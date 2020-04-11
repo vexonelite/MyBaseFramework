@@ -1,12 +1,17 @@
-package tw.realtime.project.rtbaseframework.widgets.ui.banner;
+package tw.realtime.project.rtbaseframework.widgets.recyclerviews.banner;
 
 import android.content.res.Resources;
-import androidx.annotation.DimenRes;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import androidx.annotation.DimenRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+/**
+ * {@link RecyclerView} relevant
+ */
 public final class MuzaffarPageIndicator {
 
     private int indicatorDrawable = 0;

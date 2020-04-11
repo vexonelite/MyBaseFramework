@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
@@ -32,7 +31,7 @@ import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.dialogs.ConfirmDialog;
 import tw.realtime.project.rtbaseframework.dialogs.ProgressDialog;
 import tw.realtime.project.rtbaseframework.delegates.fragment.FragmentManipulationDelegate;
-import tw.realtime.project.rtbaseframework.R;
+import tw.realtime.project.rtbaseframework.utils.CodeUtils;
 
 
 /**
@@ -225,13 +224,15 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
 
     public final void conductNavigationWithAnimation(@NonNull Fragment targetFragment, @IdRes final int containerResId) {
         try {
+            targetFragment.setEnterTransition(FragmentTransitions.defaultEnter1());
+            targetFragment.setExitTransition(FragmentTransitions.defaultExit1());
             getSupportFragmentManager()
                     .beginTransaction()
-                    .setCustomAnimations(
-                            R.animator.base_animator_fragment_slide_left_in2,
-                            R.animator.base_animator_fragment_slide_right_out2,
-                            R.animator.base_animator_fragment_slide_left_in2,
-                            R.animator.base_animator_fragment_slide_right_out2)
+//                    .setCustomAnimations(
+//                            R.animator.base_animator_fragment_slide_left_in2,
+//                            R.animator.base_animator_fragment_slide_right_out2,
+//                            R.animator.base_animator_fragment_slide_left_in2,
+//                            R.animator.base_animator_fragment_slide_right_out2)
                     .add(containerResId, targetFragment)
                     .addToBackStack(null)
                     .commit();
@@ -365,50 +366,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
     }
 
     /**
-     * 將軟鍵盤隱藏
-     */
-    public final void hideSoftKeyboard() {
-        if (null == getCurrentFocus()) {
-            return;
-        }
-        final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        if (null == inputMethodManager) {
-            LogWrapper.showLog(Log.WARN, getLogTag(), "hideSoftKeyboard - InputMethodManager is null!!");
-            return;
-
-        }
-        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-        getCurrentFocus().clearFocus();
-        //LogWrapper.showLog(Log.WARN, getLogTag(), "hideSoftKeyboard - done!!");
-    }
-
-    /**
      * 顯示軟鍵盤
      */
-    public final void showSoftKeyboard(@NonNull View view) {
-        final View currentFocusedView = getCurrentFocus();
-        if (null != currentFocusedView) {
-            currentFocusedView.clearFocus();
-        }
+    public final void showSoftKeyboard(@NonNull View view) { CodeUtils.showSoftKeyboard(this, view); }
 
-        /*
-         * Ref:
-         * https://github.com/codepath/android_guides/wiki/Working-with-the-Soft-Keyboard
-         */
-        if (view.requestFocus()) {
-            final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            if (null != inputMethodManager) {
-                inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
-                //LogWrapper.showLog(Log.WARN, getLogTag(), "showSoftKeyboard - done!!");
-            }
-            else {
-                LogWrapper.showLog(Log.WARN, getLogTag(), "showSoftKeyboard - InputMethodManager is null!!");
-            }
-        }
-        else {
-            LogWrapper.showLog(Log.WARN, getLogTag(), "showSoftKeyboard - Fail to view.requestFocus()!!");
-        }
-    }
+    /**
+     * 將軟鍵盤隱藏
+     */
+    public final void hideSoftKeyboard() { CodeUtils.hideSoftKeyboard(this); }
 
 
     public void showActionBar() {

@@ -1,7 +1,12 @@
-package tw.realtime.project.rtbaseframework.models;
+package tw.realtime.project.rtbaseframework.dialogs;
+
+import android.content.Context;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+
+import tw.realtime.project.rtbaseframework.R;
 
 
 public final class DialogDataBuilder {
@@ -80,4 +85,15 @@ public final class DialogDataBuilder {
 
     @ColorInt
     public int theConfirmButtonColor() { return confirmButtonColor; }
+
+    ///
+
+    @NonNull
+    public static DialogDataBuilder getDefaultBuilder(@NonNull Context context) {
+        return new DialogDataBuilder()
+                .setCancelButtonTitle(context.getApplicationContext().getString(R.string.base_action_cancel))
+                .setCancelButtonColor(ContextCompat.getColor(context.getApplicationContext(), R.color.base_grey_27))
+                .setConfirmButtonColor(ContextCompat.getColor(context.getApplicationContext(), android.R.color.holo_blue_dark))
+                .setDividerColor(ContextCompat.getColor(context.getApplicationContext(), R.color.base_grey_40));
+    }
 }

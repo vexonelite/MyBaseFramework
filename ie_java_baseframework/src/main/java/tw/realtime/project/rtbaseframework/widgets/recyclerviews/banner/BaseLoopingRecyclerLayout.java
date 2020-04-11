@@ -1,7 +1,12 @@
-package tw.realtime.project.rtbaseframework.widgets.ui.banner;
+package tw.realtime.project.rtbaseframework.widgets.recyclerviews.banner;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,10 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,9 @@ import io.reactivex.disposables.Disposable;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.adapters.recyclerview.BaseRecyclerViewAdapter;
 
+/**
+ * {@link RecyclerView} relevant
+ */
 public abstract class BaseLoopingRecyclerLayout<V, K extends RecyclerView.ViewHolder> extends FrameLayout {
 
     private static final long DEFAULT_INTERVAL_IN_MILLIS = 3000L;

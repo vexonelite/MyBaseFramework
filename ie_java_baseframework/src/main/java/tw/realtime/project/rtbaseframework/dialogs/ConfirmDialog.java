@@ -83,13 +83,9 @@ public final class ConfirmDialog extends DialogFragment {
      */
     private void setWindowStyle() {
         final Dialog theDialog = getDialog();
-        if (null == theDialog) {
-            return;
-        }
+        if (null == theDialog) { return; }
         final Window window = getDialog().getWindow();
-        if (null == window) {
-            return;
-        }
+        if (null == window) { return; }
         final WindowManager.LayoutParams params = window.getAttributes();
         // Use dimAmount to control the amount of dim
         params.dimAmount = 0.6f;

@@ -70,5 +70,17 @@ dependencies {
     androidTestImplementation "androidx.test:runner:${deps.versions.runner}"
     androidTestImplementation "androidx.test.espresso:espresso-core:${deps.versions.espresso}"
 
+    // Java language implementation
+    implementation "androidx.fragment:fragment:${deps.versions.fragmentX}"
+    // Kotlin
+    //implementation "androidx.fragment:fragment-ktx:${deps.versions.fragmentX}"
+    // Testing Fragments in Isolation
+    //implementation "androidx.fragment:fragment-testing:${deps.versions.fragmentX}"
+
+    implementation "androidx.recyclerview:recyclerview:${deps.versions.recyclerviewX}"
+    implementation "androidx.cardview:cardview:${deps.versions.cardviewX}"
+    implementation "androidx.viewpager2:viewpager2:${deps.versions.viewpager2X}"
+
     implementation "androidx.appcompat:appcompat:${deps.versions.androidX}"
+    implementation "androidx.constraintlayout:constraintlayout:${deps.versions.constraintLayoutX}"
 }

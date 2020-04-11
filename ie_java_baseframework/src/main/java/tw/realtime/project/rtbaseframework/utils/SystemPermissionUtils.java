@@ -18,7 +18,7 @@ import tw.realtime.project.rtbaseframework.LogWrapper;
 /**
  * A helper class used to access system permissions
  */
-public class SystemPermissionUtils {
+public final class SystemPermissionUtils {
 
     public static final int REQUEST_CODE_INTERNET_PERMISSION = 101;
     public static final int REQUEST_CODE_CAMERA_PERMISSION = 102;

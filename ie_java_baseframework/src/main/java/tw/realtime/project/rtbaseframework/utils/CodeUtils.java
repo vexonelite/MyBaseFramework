@@ -1,5 +1,6 @@
 package tw.realtime.project.rtbaseframework.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,7 +12,9 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
@@ -38,11 +41,14 @@ import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 
 /**
@@ -106,11 +112,18 @@ public final class CodeUtils {
     public static Point getRealScreenSize(@NonNull Context context) {
         try {
             final Point size = new Point();
-            final WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            manager.getDefaultDisplay().getRealSize(size);
-            return size;
-        } catch (Exception cause) {
-            LogWrapper.showLog(Log.ERROR, "error", "Exception on getRealScreenSize!", cause);
+            final WindowManager manager = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+            if (null != manager) {
+                manager.getDefaultDisplay().getRealSize(size);
+                return size;
+            }
+            else {
+                LogWrapper.showLog(Log.ERROR, "CodeUtil", "getRealScreenSize - WindowManager is null!");
+                return null;
+            }
+        }
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on getRealScreenSize!", cause);
             return null;
         }
     }
@@ -120,14 +133,21 @@ public final class CodeUtils {
     public static Point getScreenSize(@NonNull Context context) {
         try {
             final DisplayMetrics metrics = new DisplayMetrics();
-            final WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            manager.getDefaultDisplay().getMetrics(metrics);
-            final Point size = new Point();
-            size.x = metrics.widthPixels;
-            size.y = metrics.heightPixels;
-            return size;
-        } catch (Exception cause) {
-            LogWrapper.showLog(Log.ERROR, "error", "Exception on getScreenSize!", cause);
+            final WindowManager manager = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+            if (null != manager) {
+                manager.getDefaultDisplay().getMetrics(metrics);
+                final Point size = new Point();
+                size.x = metrics.widthPixels;
+                size.y = metrics.heightPixels;
+                return size;
+            }
+            else {
+                LogWrapper.showLog(Log.ERROR, "CodeUtil", "getScreenSize - WindowManager is null!");
+                return null;
+            }
+        }
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on getScreenSize!", cause);
             return null;
         }
     }
@@ -500,4 +520,54 @@ public final class CodeUtils {
     }
 
     // End of Log
+
+    //
+
+    @NonNull
+    public static <T> List<T> arrayToList(@NonNull T[] input) {
+        return Arrays.asList(input);
+    }
+
+    // https://www.techiedelight.com/convert-list-to-array-java/
+    // https://www.techiedelight.com/creating-generic-array-java/
+    // https://stackoverflow.com/questions/18581002/how-to-create-a-generic-array
+    @NonNull
+    public static <T> T[] listToArray(@NonNull List<T> input, @NonNull Class<T> type) {
+        //return input.toArray(new T[input.size()]); --> cannot do this in Java
+        final T[] array = (T[]) java.lang.reflect.Array.newInstance(type, input.size());
+        return input.toArray(array);
+    }
+
+    ///
+
+    public static void showSoftKeyboard(@NonNull Activity activity, @NonNull View view) {
+        final View currentFocusedView = activity.getCurrentFocus();
+        if (null != currentFocusedView) { currentFocusedView.clearFocus(); }
+
+        /*
+         * Ref:
+         * https://github.com/codepath/android_guides/wiki/Working-with-the-Soft-Keyboard
+         */
+        if (view.requestFocus()) {
+            final InputMethodManager inputMethodManager = (InputMethodManager) activity.getApplicationContext().getSystemService(INPUT_METHOD_SERVICE);
+            if (null != inputMethodManager) {
+                inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+                //LogWrapper.showLog(Log.WARN, getLogTag(), "showSoftKeyboard - done!!");
+            }
+            else { LogWrapper.showLog(Log.WARN, "IeUtils", "showSoftKeyboard - InputMethodManager is null!!"); }
+        }
+        else { LogWrapper.showLog(Log.WARN, "IeUtils", "showSoftKeyboard - Fail to view.requestFocus()!!"); }
+    }
+
+    public static void hideSoftKeyboard(@NonNull Activity activity) {
+        if (null == activity.getCurrentFocus()) { return; }
+        final InputMethodManager inputMethodManager = (InputMethodManager) activity.getApplicationContext().getSystemService(INPUT_METHOD_SERVICE);
+        if (null == inputMethodManager) {
+            LogWrapper.showLog(Log.WARN, "IeUtils", "hideSoftKeyboard - InputMethodManager is null!!");
+            return;
+        }
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+        activity.getCurrentFocus().clearFocus();
+        //LogWrapper.showLog(Log.INFO, "IeUtils", "hideSoftKeyboard - done!!");
+    }
 }

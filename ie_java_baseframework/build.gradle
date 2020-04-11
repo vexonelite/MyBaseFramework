@@ -73,7 +73,7 @@ dependencies {
 //    implementation "com.android.support:recyclerview-v7:${deps.versions.material}"
     implementation "androidx.appcompat:appcompat:${deps.versions.androidX}"
     implementation "com.google.android.material:material:${deps.versions.materialX}"
-//    implementation "androidx.recyclerview:recyclerview:${deps.versions.materialX}"
+    implementation "androidx.recyclerview:recyclerview:${deps.versions.recyclerviewX}"
 
     // needed for glide, https://github.com/bumptech/glide/issues/3185
 //    annotationProcessor "androidx.annotation:annotation:${deps.version.annotationX}"

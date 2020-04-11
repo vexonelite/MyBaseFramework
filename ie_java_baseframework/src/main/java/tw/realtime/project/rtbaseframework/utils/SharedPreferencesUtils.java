@@ -41,15 +41,25 @@ public final class SharedPreferencesUtils {
      */
     @NonNull
     public static String retrieveStringFromSharePreference(@NonNull Context context, @NonNull String key) {
+        return retrieveStringFromSharePreference(context, key, "");
+    }
+
+    /**
+     * 從 SharedPreference 中取出 key 值所對應的字串
+     * @param context
+     * @param key 指定的 key 值
+     * @return key 值所對應的字串
+     */
+    @NonNull
+    public static String retrieveStringFromSharePreference(
+            @NonNull Context context, @NonNull String key, @NonNull String defaultString) {
         if (!key.isEmpty()) {
             //LogWrapper.showLog(Log.INFO, "SharePreferenceUtils",  "retrieveStringFromSharePreference - key: $key")
             final SharedPreferences settings = context.getSharedPreferences(DEFAULT, Context.MODE_PRIVATE);
-            final String result = settings.getString(key, "");
-            return (null != result) ? result : "";
+            final String result = settings.getString(key, defaultString);
+            return (null != result) ? result : defaultString;
         }
-        else {
-            return "";
-        }
+        else { return defaultString; }
     }
 
     /**
@@ -82,9 +92,7 @@ public final class SharedPreferencesUtils {
             final SharedPreferences settings = context.getSharedPreferences(DEFAULT, Context.MODE_PRIVATE);
             return settings.getBoolean(key, false);
         }
-        else {
-            return false;
-        }
+        else { return false; }
     }
 
     /**
@@ -112,14 +120,17 @@ public final class SharedPreferencesUtils {
      * @return key 值所對應的浮點數值
      */
     public static float retrieveFloatFromSharePreference(@NonNull Context context, @NonNull String key) {
+        return retrieveFloatFromSharePreference(context, key, 0f);
+    }
+
+    public static float retrieveFloatFromSharePreference(
+            @NonNull Context context, @NonNull String key, final float defaultValue) {
         if (!key.isEmpty()) {
             //LogWrapper.showLog(Log.INFO, "SharePreferenceUtils",  "retrieveFloatFromSharePreference - key: $key")
             final SharedPreferences settings = context.getSharedPreferences(DEFAULT, Context.MODE_PRIVATE);
-            return settings.getFloat(key, 0f);
+            return settings.getFloat(key, defaultValue);
         }
-        else {
-            return 0f;
-        }
+        else { return defaultValue; }
     }
 
     /**
@@ -147,14 +158,23 @@ public final class SharedPreferencesUtils {
      * @return key 值所對應的整數值
      */
     public static int retrieveIntegerFromSharePreference(@NonNull Context context, @NonNull String key) {
+        return retrieveIntegerFromSharePreference(context, key, 0);
+    }
+
+    /**
+     * 從 SharedPreference 中取出 key 值所對應的整數值
+     * @param context
+     * @param key 指定的 key 值
+     * @return key 值所對應的整數值
+     */
+    public static int retrieveIntegerFromSharePreference(
+            @NonNull Context context, @NonNull String key, final int defaultValue) {
         if (!key.isEmpty()) {
             //LogWrapper.showLog(Log.INFO, "SharePreferenceUtils",  "retrieveIntegerFromSharePreference - key: $key")
             final SharedPreferences settings = context.getSharedPreferences(DEFAULT, Context.MODE_PRIVATE);
-            return settings.getInt(key, 0);
+            return settings.getInt(key, defaultValue);
         }
-        else {
-            return 0;
-        }
+        else { return defaultValue; }
     }
 
     /**
@@ -181,15 +201,24 @@ public final class SharedPreferencesUtils {
      * @param key 指定的 key 值
      * @return key 值所對應的長整數值
      */
-    public static long retrieveLongFromSharePreference (@NonNull Context context, final String key) {
-        if ( (null != key) && (!key.isEmpty()) ) {
+    public static long retrieveLongFromSharePreference(@NonNull Context context, @NonNull String key) {
+        return retrieveLongFromSharePreference(context, key, 0L);
+    }
+
+    /**
+     * 從 SharedPreference 中取出 key 值所對應的長整數值
+     * @param context
+     * @param key 指定的 key 值
+     * @return key 值所對應的長整數值
+     */
+    public static long retrieveLongFromSharePreference(
+            @NonNull Context context, @NonNull String key, final long defaultValue) {
+        if (!key.isEmpty()) {
             //LogWrapper.showLog(Log.INFO, "SharePreferenceUtils",  "retrieveLongFromSharePreference - key: $key")
             final SharedPreferences settings = context.getSharedPreferences(DEFAULT, Context.MODE_PRIVATE);
-            return settings.getLong(key, 0L);
+            return settings.getLong(key, defaultValue);
         }
-        else {
-            return 0L;
-        }
+        else { return defaultValue; }
     }
 
     //http://www.sherif.mobi/2012/05/string-arrays-and-object-arrays-in.html
@@ -227,6 +256,5 @@ public final class SharedPreferencesUtils {
         }
         return resultList;
     }
-
 }
 
