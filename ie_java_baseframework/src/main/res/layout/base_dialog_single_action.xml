@@ -60,7 +60,7 @@
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
                     android:gravity="center"
-                    android:maxLines="1"
+                    android:maxLines="2"
                     android:ellipsize="end"
                     android:text="@string/base_test_string_1"
                     android:textAppearance="?android:attr/textAppearanceMedium"
