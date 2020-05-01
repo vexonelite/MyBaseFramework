@@ -74,6 +74,8 @@ public final class ApacheFtp {
         public final List<String> fileNameList = new ArrayList<>();
         /** used for upload */
         public final Map<String, File> fileMap = new HashMap<>();
+        /** used for delete */
+        public final List<String> deleteFileNameList = new ArrayList<>();
 
         public Configuration(
                 @NonNull String hostName,
@@ -109,6 +111,15 @@ public final class ApacheFtp {
             if (!fileMap.isEmpty()) {
                 this.fileMap.clear();
                 this.fileMap.putAll(fileMap);
+            }
+            return this;
+        }
+
+        @NonNull
+        public Configuration setDeleteFileNameList(@NonNull final List<String> deleteFileNameList) {
+            if (!fileNameList.isEmpty()) {
+                this.deleteFileNameList.clear();
+                this.deleteFileNameList.addAll(deleteFileNameList);
             }
             return this;
         }
@@ -340,5 +351,36 @@ public final class ApacheFtp {
                 }
             }
         }
+
+        ///
+
+        @NonNull
+        public Map<String, Boolean> bulkDeleteMap() throws IeRuntimeException {
+            final Map<String, Boolean> deletedFileMap = new HashMap<>();
+
+            if (config.deleteFileNameList.isEmpty()) {
+                LogWrapper.showLog(Log.INFO, tag, "bulkDeleteMap - deleteFileNameList is empty - return empty map!!");
+                return deletedFileMap;
+            }
+
+            final FTPFile[] ftpFileList = getFileList();
+            for (final FTPFile ftpFile : ftpFileList) {
+                final String ftpFileName = ftpFile.getName();
+                LogWrapper.showLog(Log.INFO, tag, "bulkDeleteMap - ftpFileName: " + ftpFileName);
+                if (config.fileNameList.contains(ftpFileName)) {
+                    final boolean hasDeleted = deleteSingleFile(ftpFileName);
+                    deletedFileMap.put(ftpFileName, hasDeleted);
+                    LogWrapper.showLog(Log.INFO, tag, "bulkDeleteMap - delete ftpFile for " + ftpFileName + " - result: " + hasDeleted);
+                }
+            }
+            LogWrapper.showLog(Log.INFO, tag, "bulkDeleteMap - deleteFileNameList.size: " + config.deleteFileNameList.size() + ", deletedFileMap.size: " + deletedFileMap.size());
+            return deletedFileMap;
+        }
+
+        private boolean deleteSingleFile(@NonNull final String ftpFileName) throws IeRuntimeException {
+            try { return ftpClient.deleteFile(ftpFileName); }
+            catch (Exception cause) { throw new IeRuntimeException(cause, ErrorCodes.FTP.DELETE_FAILURE); }
+        }
+    }
     }
 }
