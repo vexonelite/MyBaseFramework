@@ -85,6 +85,7 @@ public final class ErrorCodes {
         String FAIL_TO_GET_FILE_LIST = "99394";
         String DOWNLOAD_FAILURE = "99393";
         String UPLOAD_FAILURE = "99392";
+        String DELETE_FAILURE = "99391";
 
         String GENERAL_OPERATION_FAILURE = "99379";
     }
