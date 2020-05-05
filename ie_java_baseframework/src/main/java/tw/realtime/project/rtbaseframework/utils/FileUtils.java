@@ -305,6 +305,23 @@ public final class FileUtils {
         }
     }
 
+    // addded in 2020/05/05
+    @Nullable
+    public static File renameFile(
+            @NonNull final File sourceFile, @NonNull final String originalFileName, @NonNull final String newFileName) {
+        final String filePath = sourceFile.getPath();
+        final String newFilePath = filePath.replace(originalFileName, newFileName);
+        LogWrapper.showLog(Log.INFO, "IeUtils", "renameFile - originalFileName: " + originalFileName + ", newFileName: " + newFileName);
+        LogWrapper.showLog(Log.INFO, "IeUtils", "renameFile - filePath: " + filePath);
+        LogWrapper.showLog(Log.INFO, "IeUtils", "renameFile - newFilePath: " + newFilePath);
+        final File renamedFile = new File(newFilePath);
+        if (sourceFile.renameTo(renamedFile)) { return renamedFile; }
+        else {
+            LogWrapper.showLog(Log.WARN, "IeUtils", "renameFile - fail to rename file!!");
+            return null;
+        }
+    }
+
     public static void deleteFileList(@NonNull List<File> fileList) {
         for (final File file : fileList) {
             LogWrapper.showLog(Log.INFO, "IeUtils", "Delete file: " + file.getPath() + " - result: " + file.delete());
