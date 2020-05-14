@@ -28,10 +28,9 @@ public final class OkHttpUtil {
 
     private volatile static OkHttpClient instance;
 
-    public static final class ClientFactory implements ParameterFactoryDelegate<OkHttpClient.Builder, OkHttpClient> {
+    public static final class ClientFactory {
         @NonNull
-        @Override
-        public OkHttpClient create(@NonNull OkHttpClient.Builder parameter) {
+        public OkHttpClient create(@NonNull final OkHttpClient.Builder parameter) {
             if (instance == null) {
                 synchronized (OkHttpClient.class) {
                     if (instance == null) {
@@ -44,7 +43,7 @@ public final class OkHttpUtil {
     }
 
     @NonNull
-    public static OkHttpClient.Builder defaultOkHttpClientBuilder(boolean enableHttpLoggingInterceptor) {
+    public static OkHttpClient.Builder defaultOkHttpClientBuilder(final boolean enableHttpLoggingInterceptor) {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(OkHttpSetting.CONNECTION_TIME, TimeUnit.MILLISECONDS)
                 .readTimeout(OkHttpSetting.READ_TIMEOUT, TimeUnit.MILLISECONDS)
@@ -68,9 +67,9 @@ public final class OkHttpUtil {
      */
     @NonNull
     public static okhttp3.Call generateRequestCall(
-            @NonNull RequestBody requestBody,
-            @NonNull String apiUrl,
-            boolean enableHttpLoggingInterceptor
+            @NonNull final RequestBody requestBody,
+            @NonNull final String apiUrl,
+            final boolean enableHttpLoggingInterceptor
     ) {
         final Request request = new Request.Builder()
                 //.header("Authorization", "Client-ID " + IMGUR_CLIENT_ID)
@@ -85,7 +84,8 @@ public final class OkHttpUtil {
     }
 
     @NonNull
-    public static FormBody.Builder getFormBodyBuilder(@NonNull String key, @NonNull String outString) {
+    public static FormBody.Builder getFormBodyBuilder(
+            @NonNull final String key, @NonNull final String outString) {
         final FormBody.Builder formBodyBuilder = new okhttp3.FormBody.Builder();
         if ( (!key.isEmpty()) && (!outString.isEmpty()) ) {
             formBodyBuilder.add(key, outString);
@@ -96,7 +96,7 @@ public final class OkHttpUtil {
 
     @NonNull
     public static MultipartBody.Builder getMultipartBodyBuilder(
-            @NonNull String key, @NonNull String outString) {
+            @NonNull final String key, @NonNull final String outString) {
         final MultipartBody.Builder multiPartBuilder = new MultipartBody.Builder();
         multiPartBuilder.setType(MultipartBody.FORM);
         //if ( (null != key) && (!key.isEmpty()) && (null != outString) && (!outString.isEmpty()) ) {
@@ -109,9 +109,9 @@ public final class OkHttpUtil {
 
     @NonNull
     public static okhttp3.Call generateHttpGetRequestCall(
-            @NonNull String apiUrl,
-            boolean enableHttpLoggingInterceptor,
-            boolean doesAddContentTypeForJson
+            @NonNull final String apiUrl,
+            final boolean enableHttpLoggingInterceptor,
+            final boolean doesAddContentTypeForJson
     ) {
         final Request.Builder builder = new Request.Builder()
                 .url(apiUrl);
@@ -132,13 +132,14 @@ public final class OkHttpUtil {
     public static MediaType getMultiFormPartMediaType() { return MultipartBody.FORM; }
 
     @NonNull
-    public static RequestBody getRequestBody(@NonNull MediaType mediaType, @NonNull String value) {
+    public static RequestBody getRequestBody(
+            @NonNull final MediaType mediaType, @NonNull final String value) {
         return RequestBody.create(mediaType, value);
     }
 
     @NonNull
     public static MultipartBody.Part getMultipartBodyFromFile(
-            @NonNull File file, @NonNull String parameterName) {
+            @NonNull final File file, @NonNull final String parameterName) {
         final RequestBody fileRequestBody = RequestBody.create(null, file);
         // MultipartBody.Part is used to send also the actual file name
         return MultipartBody.Part.createFormData(parameterName, file.getName(), fileRequestBody);
