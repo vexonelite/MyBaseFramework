@@ -52,13 +52,12 @@ public final class MuzaffarPageIndicator {
     }
 
     private void initIndicators() {
-        if (pageCount <= 0) {
-            return;
-        }
-
-        //mViewPager.addOnPageChangeListener(this)
         final Resources resources = container.getContext().getResources();
         container.removeAllViews();
+
+        if (pageCount <= 0) { return; }
+
+        //mViewPager.addOnPageChangeListener(this)
         for (int i = 0; i< pageCount; i++) {
             final View view = new View(container.getContext());
             final int dimen = (indicatorSize != 0)
