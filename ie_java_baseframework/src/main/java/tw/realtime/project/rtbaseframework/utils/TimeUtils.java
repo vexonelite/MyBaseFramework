@@ -148,14 +148,16 @@ public final class TimeUtils {
 
     @NonNull
     public static String timestampToDateFormattedString(
-            @NonNull Date date, @NonNull String formatPattern) {
-        return formatPattern.isEmpty()
+            @NonNull final Date date, @Nullable final String formatPattern) {
+        return ((null == formatPattern) || formatPattern.isEmpty())
                 ? new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(date)
                 : new SimpleDateFormat(formatPattern, Locale.getDefault()).format(date);
     }
 
     @NonNull
-    public static String parseTimestampString(@NonNull String timestampString) {
+    public static String parseTimestampString(@Nullable final String timestampString) {
+        LogWrapper.showLog(Log.INFO, "TimeUtils", "parseTimestampString - timestampString: " + timestampString);
+        if ((null == timestampString) || timestampString.isEmpty()) { return ""; }
         try {
             final Long timestamp = getTimestampFromString(timestampString);
             final Date date = timestampToDate(timestamp);
@@ -168,7 +170,9 @@ public final class TimeUtils {
     }
 
     @NonNull
-    public static String parseTimestampStringSimple(@NonNull String timestampString) {
+    public static String parseTimestampStringSimple(@Nullable final String timestampString) {
+        LogWrapper.showLog(Log.INFO, "TimeUtils", "parseTimestampStringSimple - timestampString: " + timestampString);
+        if ((null == timestampString) || timestampString.isEmpty()) { return ""; }
         try {
             final Long timestamp = getTimestampFromString(timestampString);
             final Date date = timestampToDate(timestamp);
@@ -181,7 +185,9 @@ public final class TimeUtils {
     }
 
     @Nullable
-    public static Date timestampStringToDate(@NonNull String timestampString) {
+    public static Date timestampStringToDate(@Nullable final String timestampString) {
+        LogWrapper.showLog(Log.INFO, "TimeUtils", "timestampStringToDate - timestampString: " + timestampString);
+        if ((null == timestampString) || timestampString.isEmpty()) { return null; }
         try {
             final Long timestamp = getTimestampFromString(timestampString);
             return timestampToDate(timestamp);
