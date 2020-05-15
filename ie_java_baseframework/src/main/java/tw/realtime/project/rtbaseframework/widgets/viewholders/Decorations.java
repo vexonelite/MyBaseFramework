@@ -90,9 +90,7 @@ public final class Decorations {
             private float bVerticalMargin = 8f;
             private float bVerticalOffset = 0f;
 
-            public Builder(@NonNull Context context) {
-                bContext = context;
-            }
+            public Builder(@NonNull Context context) { bContext = context; }
 
             /**
              *
@@ -112,16 +110,12 @@ public final class Decorations {
              * @return
              */
             public Builder setVerticalMargin(float verticalMargin) {
-                if (verticalMargin > 0f) {
-                    bVerticalMargin = verticalMargin;
-                }
+                if (verticalMargin > 0f) { bVerticalMargin = verticalMargin; }
                 return this;
             }
 
             public Builder setVerticalOffset(float verticalOffset) {
-                if (verticalOffset > 0f) {
-                    bVerticalOffset = verticalOffset;
-                }
+                if (verticalOffset > 0f) { bVerticalOffset = verticalOffset; }
                 return this;
             }
 
@@ -135,13 +129,10 @@ public final class Decorations {
             horizontalMargin = (int)(density * builder.bHorizontalMargin);
             verticalMargin = (int)(density * builder.bVerticalMargin);
             verticalOffset = (builder.bVerticalOffset > 0f)
-                    ? (int)(density * builder.bVerticalOffset)
-                    : 0;
+                    ? (int)(density * builder.bVerticalOffset) : 0;
         }
 
-        private String getLogTag () {
-            return this.getClass().getSimpleName();
-        }
+        private String getLogTag () { return this.getClass().getSimpleName(); }
 
         @Override
         public void getItemOffsets(
@@ -170,10 +161,19 @@ public final class Decorations {
         private final int verticalMargin;
         private final boolean ignoreTop;
 
-        public BuiltIn2(@NonNull Context context, int verticalUnitInDp, int horizontalUnitInDp, boolean ignoreTop) {
+        public BuiltIn2(@NonNull final Context context,
+                        final int verticalUnitInDp,
+                        final int horizontalUnitInDp,
+                        final boolean ignoreTop) {
             final float density = context.getResources().getDisplayMetrics().density;
-            verticalMargin = (int)(density * ((float)verticalUnitInDp));
-            horizontalMargin = (int)(density * ((float)horizontalUnitInDp));
+            this.verticalMargin = (int)(density * ((float)verticalUnitInDp));
+            this.horizontalMargin = (int)(density * ((float)horizontalUnitInDp));
+            this.ignoreTop = ignoreTop;
+        }
+
+        public BuiltIn2(final int verticalMargin, final int horizontalMargin, final boolean ignoreTop) {
+            this.verticalMargin = verticalMargin;
+            this.horizontalMargin = horizontalMargin;
             this.ignoreTop = ignoreTop;
         }
 
@@ -187,12 +187,8 @@ public final class Decorations {
             outRect.left = horizontalMargin;
             outRect.right = horizontalMargin;
             outRect.bottom = verticalMargin;
-            if (ignoreTop) {
-                outRect.top = verticalMargin;
-            }
-            else {
-                outRect.top = (position == 0) ? verticalMargin : 0;
-            }
+            if (ignoreTop) { outRect.top = verticalMargin; }
+            else { outRect.top = (position == 0) ? verticalMargin : 0; }
         }
     }
 
