@@ -346,27 +346,22 @@ public final class CodeUtils {
         return isEmoji;
     }
 
-    public static int compareAppVersion(@NonNull String currentVersion,
-                                        @NonNull String apiVersion) throws IllegalArgumentException {
-        if (currentVersion.isEmpty()) {
-            throw new IllegalArgumentException("currentVersion cannot be empty");
-        }
-        if (apiVersion.isEmpty()) {
-            throw new IllegalArgumentException("apiVersion cannot be empty");
-        }
-        LogWrapper.showLog(Log.INFO,"CodeUtil", "compareAppVersion - currentVersion: "
+    public static int compareAppVersion(
+            @Nullable final String currentVersion,
+            @Nullable final String apiVersion) throws IllegalArgumentException {
+        if (null == currentVersion) { throw new IllegalArgumentException("currentVersion cannot be null"); }
+        if (currentVersion.isEmpty()) { throw new IllegalArgumentException("currentVersion cannot be empty"); }
+        if (null == apiVersion) { throw new IllegalArgumentException("apiVersion cannot be null"); }
+        if (apiVersion.isEmpty()) { throw new IllegalArgumentException("apiVersion cannot be empty"); }
+        LogWrapper.showLog(Log.INFO, "IeUtils", "compareAppVersion - currentVersion: "
                 + currentVersion + ", apiVersion: " + apiVersion);
 
         final String[] currentArray = currentVersion.split("\\.");
         final String[] apiArray = apiVersion.split("\\.");
         final int currentSize = currentArray.length;
-        if (currentSize == 0) {
-            throw new IllegalArgumentException("currentSize is 0");
-        }
+        if (currentSize == 0) { throw new IllegalArgumentException("currentSize is 0"); }
         final int apiSize =  apiArray.length;
-        if (apiSize == 0) {
-            throw new IllegalArgumentException("apiSize is 0");
-        }
+        if (apiSize == 0) { throw new IllegalArgumentException("apiSize is 0"); }
         LogWrapper.showLog(Log.INFO,"CodeUtil", "compareAppVersion - currentSize: "
                 + currentSize + ", apiSize: " + apiSize);
 
@@ -517,6 +512,13 @@ public final class CodeUtils {
     public static String reverseUsingStringBuilder(@NonNull String input) {
         if (input.isEmpty()) { return input; }
         return new StringBuilder(input).reverse().toString();
+    }
+
+    /** https://stackoverflow.com/questions/9461306/how-to-change-spaces-to-underscore-and-make-string-case-insensitive */
+    @NonNull
+    public static String replaceAllSpaceWithUnderscore(@Nullable final String source) {
+        if ((null == source) || (source.isEmpty())) { return ""; }
+        return source.replaceAll("\\s+", "_");
     }
 
     // End of Log
