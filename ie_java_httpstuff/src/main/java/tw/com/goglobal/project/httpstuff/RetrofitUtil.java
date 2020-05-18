@@ -39,7 +39,7 @@ public final class RetrofitUtil {
     }
 
     @NonNull
-    private static Retrofit.Builder defaultRetrofitBuilder(
+    public static Retrofit.Builder defaultRetrofitBuilder(
             @NonNull final String baseApiUrl,
             final boolean enableHttpLoggingInterceptor,
             @NonNull final List<Interceptor> interceptors) {
