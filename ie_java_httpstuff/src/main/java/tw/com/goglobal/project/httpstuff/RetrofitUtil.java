@@ -1,14 +1,16 @@
 package tw.com.goglobal.project.httpstuff;
 
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
-import tw.realtime.project.rtbaseframework.factories.ParameterFactoryDelegate;
+import tw.realtime.project.rtbaseframework.LogWrapper;
 
 
 public final class RetrofitUtil {
@@ -22,7 +24,9 @@ public final class RetrofitUtil {
                 synchronized (Retrofit.class) {
                     if (instance == null) {
                         instance = parameter.build();
+                        LogWrapper.showLog(Log.INFO, "RetrofitUtil", "create - create new one");
                     }
+                    else { LogWrapper.showLog(Log.INFO, "RetrofitUtil", "create - existing"); }
                 }
             }
             return instance;
@@ -30,15 +34,8 @@ public final class RetrofitUtil {
     }
 
     @NonNull
-    public static Retrofit.Builder defaultRetrofitBuilder(
-            @NonNull final String baseApiUrl, final boolean enableHttpLoggingInterceptor) {
-
-        final OkHttpClient.Builder okHttpBuilder =
-                OkHttpUtil.defaultOkHttpClientBuilder(enableHttpLoggingInterceptor);
-
-        return new Retrofit.Builder()
-                .baseUrl(baseApiUrl)
-                .client(new OkHttpUtil.ClientFactory().create(okHttpBuilder));
+    public static Retrofit.Builder defaultRetrofitBuilder(@NonNull final String baseApiUrl) {
+        return defaultRetrofitBuilder(baseApiUrl, true, new ArrayList<>());
     }
 
     @NonNull
@@ -46,13 +43,9 @@ public final class RetrofitUtil {
             @NonNull final String baseApiUrl,
             final boolean enableHttpLoggingInterceptor,
             @NonNull final List<Interceptor> interceptors) {
-
-        final OkHttpClient.Builder okHttpBuilder =
-                OkHttpUtil.defaultOkHttpClientBuilder(enableHttpLoggingInterceptor);
-        for (final Interceptor theInterceptor : interceptors) {
-            okHttpBuilder.addInterceptor(theInterceptor);
-        }
-
+        final OkHttpClient.Builder okHttpBuilder = OkHttpUtil.defaultOkHttpClientBuilder();
+        if (enableHttpLoggingInterceptor) { OkHttpUtil.addHttpLoggingInterceptor(okHttpBuilder); }
+        OkHttpUtil.addNetworkInterceptors(okHttpBuilder, interceptors);
         return new Retrofit.Builder()
                 .baseUrl(baseApiUrl)
                 .client(new OkHttpUtil.ClientFactory().create(okHttpBuilder));

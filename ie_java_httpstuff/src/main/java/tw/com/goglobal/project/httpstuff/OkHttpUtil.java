@@ -6,9 +6,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.FormBody;
+import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -16,7 +18,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import tw.realtime.project.rtbaseframework.LogWrapper;
-import tw.realtime.project.rtbaseframework.factories.ParameterFactoryDelegate;
 
 
 /**
@@ -30,12 +31,14 @@ public final class OkHttpUtil {
 
     public static final class ClientFactory {
         @NonNull
-        public OkHttpClient create(@NonNull final OkHttpClient.Builder parameter) {
+        public OkHttpClient create(@NonNull final OkHttpClient.Builder builder) {
             if (instance == null) {
                 synchronized (OkHttpClient.class) {
                     if (instance == null) {
-                        instance = parameter.build();
+                        instance = builder.build();
+                        LogWrapper.showLog(Log.INFO, "OkHttpUtil", "create - create new one");
                     }
+                    else { LogWrapper.showLog(Log.INFO, "OkHttpUtil", "create - existing"); }
                 }
             }
             return instance;
@@ -43,7 +46,7 @@ public final class OkHttpUtil {
     }
 
     @NonNull
-    public static OkHttpClient.Builder defaultOkHttpClientBuilder(final boolean enableHttpLoggingInterceptor) {
+    public static OkHttpClient.Builder defaultOkHttpClientBuilder() {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(OkHttpSetting.CONNECTION_TIME, TimeUnit.MILLISECONDS)
                 .readTimeout(OkHttpSetting.READ_TIMEOUT, TimeUnit.MILLISECONDS)
@@ -51,13 +54,40 @@ public final class OkHttpUtil {
                 .followRedirects(true)
                 .followSslRedirects(true);
 
-        if (enableHttpLoggingInterceptor) {
-            final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            builder.addInterceptor(interceptor);
-        }
+//        if (enableHttpLoggingInterceptor) {
+//            final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+//            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+//            builder.addInterceptor(interceptor);
+//        }
         return builder;
     }
+
+    public static void addNetworkInterceptors(
+            @NonNull final OkHttpClient.Builder builder, @NonNull final List<Interceptor> interceptors) {
+        builder.networkInterceptors().addAll(interceptors);
+        for(final Interceptor theInterceptor : builder.networkInterceptors()) {
+            LogWrapper.showLog(Log.INFO, "OkHttpUtil", "OkHttpClient.Builder # - theInterceptor ${theInterceptor.getLogTag()}");
+        }
+    }
+
+    public static void addInterceptors(
+            @NonNull final OkHttpClient.Builder builder, @NonNull final List<Interceptor> interceptors) {
+        builder.interceptors().addAll(interceptors);
+        for(final Interceptor theInterceptor : builder.interceptors()) {
+            LogWrapper.showLog(Log.INFO, "OkHttpUtil", "OkHttpClient.Builder # addInterceptors - theInterceptor ${theInterceptor.getLogTag()}");
+        }
+    }
+
+    public static void addHttpLoggingInterceptor(@NonNull final OkHttpClient.Builder builder) {
+        final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        builder.addInterceptor(interceptor);
+        for(final Interceptor theInterceptor : builder.interceptors()) {
+            LogWrapper.showLog(Log.INFO, "OkHttpUtil", "OkHttpClient.Builder # addHttpLoggingInterceptor - theInterceptor ${theInterceptor.getLogTag()}");
+        }
+    }
+
+    ///
 
     /**
      * 產生 OkHttp Request Call
@@ -79,7 +109,8 @@ public final class OkHttpUtil {
                 .build();
         LogWrapper.showLog(Log.INFO, "okHttpUtils", "generateRequestCall - apiUrl: " + apiUrl);
 
-        final OkHttpClient.Builder okHttpBuilder = defaultOkHttpClientBuilder(enableHttpLoggingInterceptor);
+        final OkHttpClient.Builder okHttpBuilder = defaultOkHttpClientBuilder();
+        addHttpLoggingInterceptor(okHttpBuilder);
         return new ClientFactory().create(okHttpBuilder).newCall(request);
     }
 
@@ -121,7 +152,8 @@ public final class OkHttpUtil {
 
         LogWrapper.showLog(Log.INFO, "okHttpUtils", "generateHttpGetRequestCall - apiUrl: " + apiUrl);
 
-        final OkHttpClient.Builder okHttpBuilder = defaultOkHttpClientBuilder(enableHttpLoggingInterceptor);
+        final OkHttpClient.Builder okHttpBuilder = defaultOkHttpClientBuilder();
+        addHttpLoggingInterceptor(okHttpBuilder);
         return new ClientFactory().create(okHttpBuilder).newCall(builder.build());
     }
 
