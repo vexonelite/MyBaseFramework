@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RawRes;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -30,6 +31,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -215,7 +217,7 @@ public final class CodeUtils {
         return len;
     }
 
-    public static void sendEmailByIntent(@NonNull Context context, @NonNull String emailAddress) {
+    public static void sendEmailByIntent(@NonNull final Context context, @NonNull String emailAddress) {
         try {
             final Intent emailIntent = new Intent(Intent.ACTION_SENDTO,
                     Uri.fromParts("mailto", emailAddress, null));
@@ -234,6 +236,30 @@ public final class CodeUtils {
         catch (Exception cause) {
             LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on sendEmailByIntent", cause);
         }
+    }
+
+    /**
+     * You should declare and setup your own FileProvider properly before involving the method!
+     */
+    public static void sendEmailWithAttachment(
+            @NonNull final Context context,
+            @NonNull final String[] emailArray,
+            @NonNull final String title,
+            @NonNull final String message,
+            @NonNull final String fileProviderAuthority,
+            @NonNull final File attachment) {
+        final Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        intent.putExtra(Intent.EXTRA_EMAIL, emailArray /* new String[] { "user1234@gmail.com" } */ );
+        intent.putExtra(Intent.EXTRA_SUBJECT, title /* "Test Subject" */);
+        intent.putExtra(Intent.EXTRA_TEXT, message /* "Test Message" */ );
+        final Uri uri = FileProvider.getUriForFile(context, fileProviderAuthority, attachment);
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        intent.setType("message/rfc822");
+        //Intent new_intent = Intent.createChooser(emailIntent, "Send email...");
+        context.startActivity(intent);
     }
 
     public static void makePhoneCallByIntent(@NonNull Context context, @NonNull String phoneNumber) {
