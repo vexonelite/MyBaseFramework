@@ -29,7 +29,8 @@ versions.architecture = "1.1.1"
 
 versions.workManager = "2.3.0"
 
-versions.flexboxLayout = "1.1.0"
+versions.flexbox = "1.1.1"
+versions.flexbox2 = "2.0.1"
 
 versions.firebase = "16.0.4"
 versions.firebaseMessaging = "17.3.3"
