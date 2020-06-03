@@ -4,6 +4,8 @@
     <string name="base_data_been_loading">資料載入中&#8230;</string>
     <string name="base_been_processing">處理中&#8230;</string>
 
+    <string name="base_loading_eng">Load&#8230;</string>
+
     <string name="base_action_submit">送出</string>
     <string name="base_action_confirm">確定</string>
     <string name="base_action_cancel">取消</string>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="34dp"
+    android:layout_marginEnd="34dp"
+    android:background="@color/base_alpha_point_30_black"
+    >
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:id="@+id/progressBar"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:indeterminate="false"
+        android:progressDrawable="@drawable/sample_circular_progress_bar"
+        android:background="@drawable/sample_circle_shape"
+        android:progress="0"
+        android:max="100"
+        />
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        app:layout_constraintStart_toStartOf="@id/progressBar"
+        app:layout_constraintEnd_toEndOf="@id/progressBar"
+        app:layout_constraintTop_toTopOf="@id/progressBar"
+        android:layout_marginTop="2dp"
+        android:src="@drawable/base_circle_thumb_white"
+        android:contentDescription="@string/base_empty_string"/>
+
+
+    <TextView
+        android:id="@+id/progressValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/progressBar"
+        app:layout_constraintEnd_toEndOf="@id/progressBar"
+        app:layout_constraintTop_toTopOf="@id/progressBar"
+        app:layout_constraintBottom_toTopOf="@id/percentage"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:maxLines="1"
+        android:gravity="center"
+        android:textSize="24dp"
+        android:textColor="@android:color/holo_blue_light"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="0"
+        />
+<!--    android:background="@null"-->
+
+    <TextView
+        android:id="@+id/percentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/progressBar"
+        app:layout_constraintEnd_toEndOf="@id/progressBar"
+        app:layout_constraintTop_toBottomOf="@id/progressValue"
+        app:layout_constraintBottom_toBottomOf="@id/progressBar"
+        android:maxLines="1"
+        android:gravity="center"
+        android:textSize="12dp"
+        android:textColor="@android:color/holo_blue_light"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="%"
+        />
+<!--    android:background="@null"-->
+
+    <TextView
+        android:id="@+id/labelLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/progressBar"
+        app:layout_constraintEnd_toEndOf="@id/progressBar"
+        app:layout_constraintTop_toBottomOf="@id/progressBar"
+        android:layout_marginTop="14dp"
+        android:gravity="center"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/base_loading_eng"
+        />
+
+    <TextView
+        android:id="@+id/caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/progressBar"
+        app:layout_constraintEnd_toEndOf="@id/progressBar"
+        app:layout_constraintTop_toBottomOf="@id/labelLoading"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:textSize="14dp"
+        android:textColor="@android:color/white"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:lineSpacingExtra="2dp"
+        />
+<!--    android:text="Hello world"-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

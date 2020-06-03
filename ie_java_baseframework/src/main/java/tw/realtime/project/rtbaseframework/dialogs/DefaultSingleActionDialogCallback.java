@@ -8,12 +8,12 @@ import tw.realtime.project.rtbaseframework.delegates.ui.view.DialogDecisionDeleg
 import tw.realtime.project.rtbaseframework.enumerations.DialogAction;
 
 
-public final class DefaultSingleActionDialogCallback implements DialogDecisionDelegate<Boolean> {
+public final class DefaultSingleActionDialogCallback<T> implements DialogDecisionDelegate<T> {
     @Override
     public void onDecisionMade(
-            @NonNull DialogFragment dialogFragment,
-            @NonNull DialogAction action,
-            @Nullable Boolean item) {
+            @NonNull final DialogFragment dialogFragment,
+            @NonNull final DialogAction action,
+            @Nullable final T item) {
         dialogFragment.dismiss();
     }
 }
