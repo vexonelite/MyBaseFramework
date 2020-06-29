@@ -35,6 +35,8 @@ import tw.realtime.project.rtbaseframework.LogWrapper;
 
 public final class ConnectivityUtils {
 
+    public static final String UNKNOWN_SSID = "<unknown ssid>";
+
     @SuppressLint("MissingPermission")
     public static int isWifiEnabled(@NonNull Context context) {
         final WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -132,8 +134,16 @@ public final class ConnectivityUtils {
         try {
             final WifiInfo info = wifiManager.getConnectionInfo();
             LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "getSsidViaWifiInfo - SSID: " + info.getSSID() + ", NetworkId: " + info.getNetworkId() + ", SupplicantState: " + info.getSupplicantState());
-            if (info.getSupplicantState().equals(SupplicantState.COMPLETED)) {
-                return info.getSSID().replace("\"", "");
+            switch (info.getSupplicantState()) {
+                case COMPLETED: {
+                    return info.getSSID().replace("\"", "");
+                }
+                case SCANNING: {
+                    return info.getSSID();
+                }
+                default: {
+                    return "";
+                }
             }
         }
         catch (Exception cause) { LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "getSsidViaWifiInfo - Error on WifiManager.getConnectionInfo()", cause); }
