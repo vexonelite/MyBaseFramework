@@ -1,4 +1,4 @@
-package tw.com.goglobal.project.ie_elite_module.widgets.networks.wlan;
+package tw.realtime.project.rtbaseframework.widgets;
 
 import android.util.Log;
 
@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-import tw.com.goglobal.project.ie_elite_module.LogWrapper;
+import tw.realtime.project.rtbaseframework.LogWrapper;
+
 
 /**
  * [Semaphores in Java](https://www.baeldung.com/java-semaphore)
