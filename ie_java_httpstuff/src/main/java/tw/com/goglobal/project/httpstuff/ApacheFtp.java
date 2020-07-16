@@ -117,7 +117,7 @@ public final class ApacheFtp {
 
         @NonNull
         public Configuration setDeleteFileNameList(@NonNull final List<String> deleteFileNameList) {
-            if (!fileNameList.isEmpty()) {
+            if (!deleteFileNameList.isEmpty()) {
                 this.deleteFileNameList.clear();
                 this.deleteFileNameList.addAll(deleteFileNameList);
             }
@@ -367,7 +367,7 @@ public final class ApacheFtp {
             for (final FTPFile ftpFile : ftpFileList) {
                 final String ftpFileName = ftpFile.getName();
                 LogWrapper.showLog(Log.INFO, tag, "bulkDeleteMap - ftpFileName: " + ftpFileName);
-                if (config.fileNameList.contains(ftpFileName)) {
+                if (config.deleteFileNameList.contains(ftpFileName)) {
                     final boolean hasDeleted = deleteSingleFile(ftpFileName);
                     deletedFileMap.put(ftpFileName, hasDeleted);
                     LogWrapper.showLog(Log.INFO, tag, "bulkDeleteMap - delete ftpFile for " + ftpFileName + " - result: " + hasDeleted);
