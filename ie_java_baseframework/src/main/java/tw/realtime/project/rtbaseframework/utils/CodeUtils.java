@@ -241,23 +241,69 @@ public final class CodeUtils {
     /**
      * You should declare and setup your own FileProvider properly before involving the method!
      */
-    public static void sendEmailWithAttachment(
+    public static void sendEmailWithSingleAttachment(
             @NonNull final Context context,
             @NonNull final String[] emailArray,
             @NonNull final String title,
             @NonNull final String message,
             @NonNull final String fileProviderAuthority,
-            @NonNull final File attachment) {
+            @NonNull final File attachmentFile) {
         final Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setType("message/rfc822");
 
         intent.putExtra(Intent.EXTRA_EMAIL, emailArray /* new String[] { "user1234@gmail.com" } */ );
         intent.putExtra(Intent.EXTRA_SUBJECT, title /* "Test Subject" */);
         intent.putExtra(Intent.EXTRA_TEXT, message /* "Test Message" */ );
-        final Uri uri = FileProvider.getUriForFile(context, fileProviderAuthority, attachment);
-        intent.putExtra(Intent.EXTRA_STREAM, uri);
-        intent.setType("message/rfc822");
+
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        final Uri attachmentUri = FileProvider.getUriForFile(context, fileProviderAuthority, attachmentFile);
+        intent.putExtra(Intent.EXTRA_STREAM, attachmentUri);
+
+        //Intent new_intent = Intent.createChooser(emailIntent, "Send email...");
+        context.startActivity(intent);
+    }
+
+    /**
+     *
+     * [Attached Multiple images/PDF with Email](http://codeofandroid.blogspot.com/2016/02/email-with-attachment-in-android.html)
+     * [Android multiple email attachments using Intent](https://stackoverflow.com/questions/2264622/android-multiple-email-attachments-using-intent)
+     * [Sending email with attachment using FileProvider](https://stackoverflow.com/questions/53889141/sending-email-with-attachment-using-fileprovider)
+     * [Cant send email with multiple attachment in android programmatically](https://stackoverflow.com/questions/27126220/cant-send-email-with-multiple-attachment-in-android-programmatically/27126664)
+     * @param context
+     * @param emailArray
+     * @param title
+     * @param message
+     * @param fileProviderAuthority
+     * @param fileList
+     */
+    public static void sendEmailWithMultipleAttachments(
+            @NonNull final Context context,
+            @NonNull final String[] emailArray,
+            @NonNull final String title,
+            @NonNull final String message,
+            @NonNull final String fileProviderAuthority,
+            @NonNull final List<File> fileList) {
+        final Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+        intent.setType("text/plain");
+
+        intent.putExtra(Intent.EXTRA_EMAIL, emailArray /* new String[] { "user1234@gmail.com" } */ );
+        intent.putExtra(Intent.EXTRA_SUBJECT, title /* "Test Subject" */);
+
+        final ArrayList<String> messageList = new ArrayList<>();
+        messageList.add(message);
+        intent.putStringArrayListExtra(Intent.EXTRA_TEXT, messageList); // must use ArrayList; otherwise, Error log ==> Bundle: Key android.intent.extra.TEXT expected ArrayList<CharSequence> but value was a java.lang.String
+
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        //intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+        final ArrayList<Uri> attachmentUriList = new ArrayList<>();
+        for(final File attachment : fileList) {
+            attachmentUriList.add(Uri.fromFile(attachment));
+        }
+        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, attachmentUriList); // must use ArrayList!!
+
         //Intent new_intent = Intent.createChooser(emailIntent, "Send email...");
         context.startActivity(intent);
     }
