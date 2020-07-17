@@ -36,6 +36,8 @@ public final class ErrorCodes {
         String THREAD_INTERRUPTED = "99949";
 
         String CALCULATE_DIFF_RESULT_ERROR = "99948";
+
+        String NULL_POINTER_ERROR = "99947";
     }
 
     public interface Ping {
