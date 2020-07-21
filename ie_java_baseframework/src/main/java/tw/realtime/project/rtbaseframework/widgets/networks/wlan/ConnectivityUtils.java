@@ -8,6 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.net.DhcpInfo;
+import android.net.LinkAddress;
+import android.net.LinkProperties;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
@@ -26,11 +29,22 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
+import java.io.IOException;
+import java.math.BigInteger;
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.net.SocketFactory;
+
 import tw.realtime.project.rtbaseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.apis.errors.ErrorCodes;
+import tw.realtime.project.rtbaseframework.apis.errors.IeRuntimeException;
 
 
 public final class ConnectivityUtils {
@@ -91,7 +105,6 @@ public final class ConnectivityUtils {
                 if (activeNetwork.getType() == networkType) { return true; }
             }
         }
-
         return false;
     }
 
@@ -138,12 +151,7 @@ public final class ConnectivityUtils {
                 case COMPLETED: {
                     return info.getSSID().replace("\"", "");
                 }
-                case SCANNING: {
-                    return info.getSSID();
-                }
-                default: {
-                    return "";
-                }
+                default: { return info.getSSID(); }
             }
         }
         catch (Exception cause) { LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "getSsidViaWifiInfo - Error on WifiManager.getConnectionInfo()", cause); }
@@ -508,7 +516,7 @@ public final class ConnectivityUtils {
     ///
 
     @SuppressLint("MissingPermission")
-    public static void connectivityManagerBindProcessToNetwork(@NonNull Context context, @Nullable Network network) {
+    public static void connectivityManagerBindProcessToNetwork(@NonNull final Context context, @Nullable final Network network) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) { return; }
         final ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         if (null == connectivityManager) {
@@ -516,7 +524,10 @@ public final class ConnectivityUtils {
             return;
         }
 
-        try { connectivityManager.bindProcessToNetwork(network); }
+        try {
+            connectivityManager.bindProcessToNetwork(network);
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectivityManagerBindProcessToNetwork - network is null?: " + (null == network));
+        }
         catch (Exception cause) { LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "connectivityManagerBindProcessToNetwork - error on ConnectivityManager#bindProcessToNetwork", cause); }
     }
 
@@ -557,5 +568,256 @@ public final class ConnectivityUtils {
             return -1;
         }
     }
+
+    ///
+
+    // [start] added in 2020/04/23
+    @SuppressLint("MissingPermission")
+    @NonNull
+    public static Socket createSocketViaFactory(@NonNull final Context context) throws IOException {
+        Socket socket = null;
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            final ConnectivityManager connManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (null != connManager) {
+                final Network network = connManager.getBoundNetworkForProcess();
+                if (null != network) {
+                    final NetworkCapabilities connection = connManager.getNetworkCapabilities(network);
+                    if (null != connection) {
+                        if (connection.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "createSocketViaFactory - network is WIFI");
+                        }
+                        if (connection.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "createSocketViaFactory - network is CELLULAR");
+                        }
+                    }
+                    socket = network.getSocketFactory().createSocket();
+                    LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "socket created by network.getSocketFactory().createSocket()");
+                }
+                if (null == socket) {
+
+                }
+            }
+        }
+        if (null == socket) {
+            socket = SocketFactory.getDefault().createSocket();
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "socket created by SocketFactory.getDefault().createSocket()");
+        }
+        return socket;
+    }
+
+    public static final class IeSocketFactory {
+
+        @NonNull
+        public Socket create(@NonNull final Context context) throws IOException {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                final ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                if (null != connectivityManager) {
+                    return createViaNetworkIfPossible(connectivityManager);
+                }
+                else {
+                    LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "IeSocketFactory - connectivityManager is null!!");
+                    return createViaDefaultFactory();
+                }
+            }
+            else { return createViaDefaultFactory(); }
+        }
+
+        @NonNull
+        private Socket createViaDefaultFactory() throws IOException {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "IeSocketFactory - socket created by SocketFactory.getDefault().createSocket()");
+            return SocketFactory.getDefault().createSocket();
+        }
+
+        @SuppressLint("MissingPermission")
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        private Socket createViaNetworkIfPossible(final ConnectivityManager connectivityManager) throws IOException {
+            Socket socket = null;
+            final Network boundNetwork = connectivityManager.getBoundNetworkForProcess();
+            if (null != boundNetwork) {
+                LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "IeSocketFactory - createViaNetworkIfPossible: get bound Network!!");
+                socket = createViaNetwork(connectivityManager, boundNetwork);
+            }
+            if (null != socket) { return socket; }
+
+            final Network activeNetwork = connectivityManager.getActiveNetwork();
+            if (null != activeNetwork) {
+                LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "IeSocketFactory - createViaNetworkIfPossible: get Active Network!!");
+                socket = createViaNetwork(connectivityManager, activeNetwork);
+            }
+            if (null != socket) { return socket; }
+
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "IeSocketFactory - createViaNetworkIfPossible - Network is unavailable!!");
+            return createViaDefaultFactory();
+        }
+
+        @SuppressLint("MissingPermission")
+        @Nullable
+        private Socket createViaNetwork(
+                final ConnectivityManager connectivityManager, @NonNull final Network network) throws IOException {
+            final NetworkCapabilities connection = connectivityManager.getNetworkCapabilities(network);
+            if (null != connection) {
+                if (connection.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "IeSocketFactory - createViaNetwork - network is WIFI!!");
+                    LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "IeSocketFactory - createViaNetwork - socket created by network.getSocketFactory().createSocket()");
+                    return network.getSocketFactory().createSocket();
+                }
+                if (connection.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "IeSocketFactory - createViaNetwork - network is CELLULAR!!");
+                }
+            }
+            return null;
+        }
+    }
+    // [end] added in 2020/04/23
+
+    // [start] added in 2020/07/08
+    @SuppressLint("MissingPermission")
+    @Nullable
+    public static DhcpInfo getDhcpInfo(@NonNull final Context context) {
+        final WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (null == wifiManager) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "getDhcpInfo - WifiManager is null!");
+            return null;
+        }
+        return wifiManager.getDhcpInfo();
+    }
+
+    /**
+     * https://en.it1352.com/article/3a9d64293f3a4c5fa5d9aeb514c128db.html
+     */
+    @NonNull
+    public static InetAddress integerToIpAddress(final int value) throws java.io.IOException {
+        final int reversedValue = Integer.reverseBytes(value);
+        final byte[] intToByteArray = BigInteger.valueOf(reversedValue).toByteArray();
+        return InetAddress.getByAddress(intToByteArray);
+    }
+
+    @Nullable
+    public static InterfaceAddress getHostInterfaceAddressFrom(@Nullable final DhcpInfo dhcpInfo) throws java.io.IOException {
+        if (null == dhcpInfo) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "getHostInterfaceAddressFrom - dhcpInfo is null!!");
+            return null;
+        }
+        final InetAddress hostAddress = integerToIpAddress(dhcpInfo.ipAddress);
+        final String hostIpAddress = hostAddress.getHostAddress();
+        LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "getHostInterfaceAddressFrom - ipAddress - Int: " + dhcpInfo.ipAddress + " to InetAddress: " + hostIpAddress);
+
+        final NetworkInterface hostNetworkInterface = NetworkInterface.getByInetAddress(hostAddress);
+        if (null == hostNetworkInterface) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "getHostInterfaceAddressFrom - hostNetworkInterface is null!!");
+            return null;
+        }
+
+        for (final InterfaceAddress netAddress : hostNetworkInterface.getInterfaceAddresses()) {
+            final InetAddress iNetAddress = netAddress.getAddress();
+            if (null != iNetAddress) {
+                final String iNetHostAddress = (null != iNetAddress.getHostAddress()) ? iNetAddress.getHostAddress() : "NULL";
+                LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "getHostInterfaceAddressFrom - iNetAddress: " +  iNetHostAddress + ", prefixLength: " + netAddress.getNetworkPrefixLength());
+                if (hostIpAddress.equals(iNetHostAddress) ) {
+                    return netAddress;
+                }
+            }
+            else {
+                LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "getHostInterfaceAddressFrom - iNetAddress is null! - prefixLength: " + netAddress.getNetworkPrefixLength());
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Reference:
+     * [Find netMask on Android device](https://stackoverflow.com/questions/40058690/find-netmask-on-android-device)
+     * <p>
+     * Android bug:
+     * [netmask of WifiManager.getDhcpInfo() is always zero on Android 5.0](https://issuetracker.google.com/issues/37015180)
+     */
+    @SuppressLint("MissingPermission")
+    @Nullable
+    public static LinkAddress getLinkAddressFromNetwork(
+            @Nullable final NetEssentialData netEssentialData) throws java.io.IOException {
+        if (null == netEssentialData) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "getLinkAddressFromNetwork - netEssentialData is null!");
+            return null;
+        }
+        if (null == netEssentialData.connectivityManager) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "getLinkAddressFromNetwork - connectivityManager is null!");
+            return null;
+        }
+        if (null == netEssentialData.network) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "getLinkAddressFromNetwork - network is null!");
+            return null;
+        }
+        if (null == netEssentialData.dhcpInfo) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "getLinkAddressFromNetwork - dhcpInfo is null!");
+            return null;
+        }
+
+        LinkProperties linkProperties = null;
+        try { linkProperties = netEssentialData.connectivityManager.getLinkProperties(netEssentialData.network); }
+        catch (Exception cause) { LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "getLinkAddressFromNetwork - error on connectivityManager.getLinkProperties(network)", cause); }
+        if (null == linkProperties) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "getLinkAddressFromNetwork - linkProperties is null!");
+            return null;
+        }
+
+        final InetAddress hostAddress = integerToIpAddress(netEssentialData.dhcpInfo.ipAddress);
+        final String hostIpAddress = hostAddress.getHostAddress();
+        LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "getHostInterfaceAddressFrom - ipAddress - Int: " + netEssentialData.dhcpInfo.ipAddress + " to InetAddress: " + hostIpAddress);
+
+        for(final LinkAddress linkAddress : linkProperties.getLinkAddresses()) {
+            final InetAddress linkHostAddress = linkAddress.getAddress();
+            if (null != linkHostAddress) {
+                final String linkHostIpAddress = (null != linkHostAddress.getHostAddress()) ? linkHostAddress.getHostAddress() : "NULL";
+                LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "getLinkAddressFromNetwork - linkHostAddress: " + linkHostIpAddress + ", prefixLength: " + linkAddress.getPrefixLength());
+                if (hostIpAddress.equals(linkHostIpAddress)) {
+                    return linkAddress;
+                }
+            }
+            else { LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "getLinkAddressFromNetwork - linkAddress.getAddress() return null!, PrefixLength: " + linkAddress.getPrefixLength()); }
+        }
+
+        return null;
+    }
+    // [end] added in 2020/07/08
+
+    // [start] added in 2020/07/15
+
+    public static final class NetEssentialData {
+        public final DhcpInfo dhcpInfo;
+        public final ConnectivityManager connectivityManager;
+        public final Network network;
+
+        public NetEssentialData(
+                @NonNull final DhcpInfo dhcpInfo,
+                @NonNull final ConnectivityManager connectivityManager,
+                @NonNull final Network network) {
+            this.dhcpInfo = dhcpInfo;
+            this.connectivityManager = connectivityManager;
+            this.network = network;
+        }
+    }
+
+    @NonNull
+    public static NetEssentialData verifyEssentialData(@NonNull final Context context) throws IeRuntimeException {
+        final DhcpInfo dhcpInfo = ConnectivityUtils.getDhcpInfo(context);
+        if (null == dhcpInfo) {
+            throw new IeRuntimeException("ConnectivityUtils.getDhcpInfo() returns null!!", ErrorCodes.Base.INTERNAL_CONVERSION_ERROR);
+        }
+
+        final ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (null == connectivityManager) {
+            throw new IeRuntimeException("Cannot get null ConnectivityManager instance!!", ErrorCodes.Base.INTERNAL_CONVERSION_ERROR);
+        }
+
+        final Network network = QWiFiNetworkManager.getInstance().getCurrentNetwork();
+        if (null == network) {
+            throw new IeRuntimeException("QWiFiNetworkManager.getCurrentNetwork() returns null!!", ErrorCodes.Base.INTERNAL_CONVERSION_ERROR);
+        }
+
+        return new NetEssentialData(dhcpInfo, connectivityManager, network);
+    }
+
+    // [end] added in 2020/07/15
 }
 

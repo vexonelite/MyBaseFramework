@@ -27,7 +27,7 @@ public final class QWiFiNetworkManager {
 
     private volatile static QWiFiNetworkManager instance;
 
-    private final List<IeNetworkDelegate> networkCallbackList;
+
 
     @NonNull
     public final ConnectivityManager.NetworkCallback monitorWiFiNetworkCallback;
@@ -49,7 +49,6 @@ public final class QWiFiNetworkManager {
     }
 
     private QWiFiNetworkManager() {
-        networkCallbackList = new ArrayList<>();
         monitorWiFiNetworkCallback = new MonitorWiFiNetworkCallback();
     }
 
