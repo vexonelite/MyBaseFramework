@@ -56,9 +56,7 @@ public final class FileUtils {
             @Nullable String givenEnvironmentFolder) {
 
         final File mediaStorageDir = getOutputFolder(context, givenFolderName, givenEnvironmentFolder);
-        if (null == mediaStorageDir) {
-            return null;
-        }
+        if (null == mediaStorageDir) { return null; }
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
