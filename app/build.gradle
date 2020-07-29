@@ -83,4 +83,13 @@ dependencies {
 
     implementation "androidx.appcompat:appcompat:${deps.versions.androidX}"
     implementation "androidx.constraintlayout:constraintlayout:${deps.versions.constraintLayoutX}"
+
+    // [start] added in 2020/07/29
+    // Dependency Injection - Dagger2
+//    api "com.google.dagger:dagger:${deps.versions.dagger2}"
+//    annotationProcessor "com.google.dagger:dagger-compiler:${deps.versions.dagger2}"
+    // Dependency Injection - Dagger2 Android
+//    api "com.google.dagger:dagger-android:${deps.versions.dagger2}"
+//    annotationProcessor "com.google.dagger:dagger-android-processor:${deps.versions.dagger2}"
+    // [end] added in 2020/07/29
 }

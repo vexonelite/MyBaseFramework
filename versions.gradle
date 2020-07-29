@@ -49,6 +49,8 @@ versions.okHttp4 = "4.2.0"
 
 versions.retrofit2 = "2.9.0" //updated in 2020/07/20
 
+versions.dagger2 = "2.28.3" // added in 2020/07/29
+
 versions.apacheCommonsNet = "3.6"
 
 versions.seancfoleyIpaddress5 = "5.3.1" // added in 2020/07/20
