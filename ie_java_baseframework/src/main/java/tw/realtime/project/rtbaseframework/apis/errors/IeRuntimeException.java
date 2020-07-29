@@ -27,7 +27,5 @@ public class IeRuntimeException extends RuntimeException {
      *
      */
     @NonNull
-    public final String getExceptionCode () {
-        return exceptionCode;
-    }
+    public final String getExceptionCode () { return exceptionCode; }
 }
