@@ -13,14 +13,13 @@ import java.util.List;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.apis.converters.IeBaseConverter;
 import tw.realtime.project.rtbaseframework.apis.filters.IFilterFunction;
-import tw.realtime.project.rtbaseframework.delegates.ui.view.CellTypeDelegate;
-import tw.realtime.project.rtbaseframework.delegates.ui.view.IdentifierDelegate;
+import tw.realtime.project.rtbaseframework.delegates.ui.view.IdentifierCellTypeDelegate;
 import tw.realtime.project.rtbaseframework.utils.CryptUtils;
 
 
 public final class WiFiScans {
 
-    public interface Delegate extends IdentifierDelegate, CellTypeDelegate, WiFiSsidDelegate {
+    public interface Delegate extends IdentifierCellTypeDelegate, WiFiSsidDelegate {
         @NonNull
         String theStrength();
 
