@@ -22,7 +22,7 @@ public abstract class IeMultipleSelectionListAdapter<T extends IdentifierCellTyp
 
     protected final AdapterMultiSelectionHelper<T> multiSelectionHelper = new AdapterMultiSelectionHelper<>();
 
-    private AdapterSelection adapterSelection;
+    private AdapterSelection adapterSelection = AdapterSelection.SINGLE;
 
     public HolderCellClickDelegate<T> holderCellClickCallback;
 
@@ -51,13 +51,16 @@ public abstract class IeMultipleSelectionListAdapter<T extends IdentifierCellTyp
     }
 
     @NonNull
-    public final List<String> getSelectedBackupIdList() {
-        return multiSelectionHelper.getSelectedBackupIdList();
+    public final AdapterSelection getAdapterSelection() { return adapterSelection; }
+
+    @NonNull
+    public final List<String> getSelectedItemIdList() {
+        return multiSelectionHelper.getSelectedItemIdList();
     }
 
     @NonNull
-    public final List<T> getSelectedBackupList() {
-        return multiSelectionHelper.getSelectedBackupList();
+    public final List<T> getSelectedItemList() {
+        return multiSelectionHelper.getSelectedItemList();
     }
 
     public final void updateListViaSelection(@NonNull final T delegate, final int selectedIndex) {

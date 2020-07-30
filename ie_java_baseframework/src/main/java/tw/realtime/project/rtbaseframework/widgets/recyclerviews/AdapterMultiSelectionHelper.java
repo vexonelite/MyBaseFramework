@@ -31,13 +31,13 @@ public final class AdapterMultiSelectionHelper<T extends IdentifierDelegate> {
     }
 
     @NonNull
-    public List<String> getSelectedBackupIdList() {
+    public List<String> getSelectedItemIdList() {
         final Set<String> keySet = selectionMap.keySet();
         return new ArrayList<>(keySet);
     }
 
     @NonNull
-    public List<T> getSelectedBackupList() {
+    public List<T> getSelectedItemList() {
         final Set<String> keySet = selectionMap.keySet();
         final List<T> resultList = new ArrayList<>();
         for (final String key : keySet) {
@@ -99,7 +99,7 @@ public final class AdapterMultiSelectionHelper<T extends IdentifierDelegate> {
     }
 
     public int getCurrentSelectedIndexSingleSelection() {
-        final List<String> list = getSelectedBackupIdList();
+        final List<String> list = getSelectedItemIdList();
         //LogWrapper.showLog(Log.INFO, getLogTag(), "getCurrentSelectedIndexSingleSelection - list.size: " + list.size());
         if (list.size() == 1) {
             //LogWrapper.showLog(Log.INFO, getLogTag(), "getCurrentSelectedIndexSingleSelection - key: " + list.get(0));
