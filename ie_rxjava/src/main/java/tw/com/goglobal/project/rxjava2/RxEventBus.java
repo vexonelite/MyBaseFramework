@@ -2,11 +2,19 @@ package tw.com.goglobal.project.rxjava2;
 
 import androidx.annotation.NonNull;
 
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
 /**
  * @see <a href="https://blog.mindorks.com/implementing-eventbus-with-rxjava-rxbus-e6c940a94bd8">Reference</a>
+ * <p>
+ *  To subscribe:
+ *  .getEventBus()
+ *  .toObservable()
+ *  .observeOn(AndroidSchedulers.mainThread()) // should add this
+ *  .subscribe(callback);
  */
 public final class RxEventBus {
 
@@ -16,6 +24,16 @@ public final class RxEventBus {
 
     @NonNull
     public Observable<Object> toObservable() { return this.publisher; }
+
+    @NonNull
+    public Flowable<Object> toFlowable() {
+        return this.toFlowable(BackpressureStrategy.BUFFER);
+    }
+
+    @NonNull
+    public Flowable<Object> toFlowable(@NonNull final BackpressureStrategy strategy) {
+        return this.publisher.toFlowable(strategy);
+    }
 }
 
 /*
@@ -26,6 +44,7 @@ private void subscribeNetworkEvent() {
         rxDisposeIfPossible();
         disposable = ((ConnectDetailActivity) activity).getEventBus()
                 .toObservable()
+                .observeOn(AndroidSchedulers.mainThread()) // should add this
                 .subscribe(new NetworkEventCallback());
         LogWrapper.showLog(Log.INFO, getLogTag(), "subscribeNetworkEvent");
     }
