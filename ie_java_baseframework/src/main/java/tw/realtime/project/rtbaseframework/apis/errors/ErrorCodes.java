@@ -68,6 +68,7 @@ public final class ErrorCodes {
 
     public interface HTTP {
         String FAIL_TO_EXECUTE_API_REQUEST = "99599";
+        /** catch the {@link java.io.IOException} */
         String REQUEST_ERROR = "99598";
         String RESPONSE_ERROR = "99597";
         String RESPONSE_PARSING_ERROR = "99596";
