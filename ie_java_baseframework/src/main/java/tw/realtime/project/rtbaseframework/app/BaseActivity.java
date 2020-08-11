@@ -31,6 +31,7 @@ import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.dialogs.ConfirmDialog;
 import tw.realtime.project.rtbaseframework.dialogs.ProgressDialog;
 import tw.realtime.project.rtbaseframework.delegates.fragment.FragmentManipulationDelegate;
+import tw.realtime.project.rtbaseframework.enumerations.LifeCycleState;
 import tw.realtime.project.rtbaseframework.utils.CodeUtils;
 
 
@@ -44,21 +45,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
     private ProgressDialog mProgressDialog;
 
     private LifeCycleState mLifeCycleState = LifeCycleState.DEFAULT;
-
-
-    private enum LifeCycleState {
-        DEFAULT,
-        ON_CREATE,
-        ON_START,
-        ON_RESTART,
-        ON_RESUME,
-        ON_RESUME_FRAGMENT,
-        ON_POST_RESUME,
-        ON_PAUSE,
-        ON_SAVE_INSTANCE,
-        ON_STOP
-    }
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
