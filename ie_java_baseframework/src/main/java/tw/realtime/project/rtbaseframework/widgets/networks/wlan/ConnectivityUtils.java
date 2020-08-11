@@ -30,6 +30,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -52,7 +53,7 @@ public final class ConnectivityUtils {
     public static final String UNKNOWN_SSID = "<unknown ssid>";
 
     @SuppressLint("MissingPermission")
-    public static int isWifiEnabled(@NonNull Context context) {
+    public static int isWifiEnabled(@NonNull final Context context) {
         final WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (null == wifiManager) {
             LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "isWifiEnabled - WifiManager is null!");
@@ -63,7 +64,7 @@ public final class ConnectivityUtils {
     }
 
     @SuppressLint("MissingPermission")
-    public static int isWifiEnabled2(@NonNull Context context) {
+    public static int isWifiEnabled2(@NonNull final Context context) {
         final WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (null == wifiManager) {
             LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "isWifiEnabled2 - WifiManager is null!");
@@ -74,14 +75,14 @@ public final class ConnectivityUtils {
     }
 
     @SuppressLint("MissingPermission")
-    public static void enableWiFi(@NonNull Activity activity, final int requestCode) {
+    public static void enableWiFi(@NonNull final Activity activity, final int requestCode) {
         final WifiManager wifiManager = (WifiManager) activity.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (null == wifiManager) {
-            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "enableWiFi - WifiManager is null!");
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "enableWiFi[Activity] - WifiManager is null!");
             return;
         }
         if (wifiManager.isWifiEnabled()) {
-            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "enableWiFi - Wifi is Enabled now!");
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "enableWiFi[Activity] - Wifi is Enabled now!");
             return;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -90,6 +91,25 @@ public final class ConnectivityUtils {
         }
         else { wifiManager.setWifiEnabled(true); }
     }
+
+    @SuppressLint("MissingPermission")
+    public static void enableWiFi(@NonNull final Context context, @NonNull final Fragment fragment, final int requestCode) {
+        final WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (null == wifiManager) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "enableWiFi[Fragment] - WifiManager is null!");
+            return;
+        }
+        if (wifiManager.isWifiEnabled()) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "enableWiFi[Fragment] - Wifi is Enabled now!");
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            final Intent panelIntent = new Intent(Settings.Panel.ACTION_WIFI);
+            fragment.startActivityForResult(panelIntent, requestCode);
+        }
+        else { wifiManager.setWifiEnabled(true); }
+    }
+
 
     ///
 
@@ -799,7 +819,8 @@ public final class ConnectivityUtils {
     }
 
     @NonNull
-    public static NetEssentialData verifyEssentialData(@NonNull final Context context) throws IeRuntimeException {
+    public static NetEssentialData verifyEssentialData(
+            @NonNull final Context context, @Nullable final Network network) throws IeRuntimeException {
         final DhcpInfo dhcpInfo = ConnectivityUtils.getDhcpInfo(context);
         if (null == dhcpInfo) {
             throw new IeRuntimeException("ConnectivityUtils.getDhcpInfo() returns null!!", ErrorCodes.Base.INTERNAL_CONVERSION_ERROR);
@@ -810,7 +831,7 @@ public final class ConnectivityUtils {
             throw new IeRuntimeException("Cannot get null ConnectivityManager instance!!", ErrorCodes.Base.INTERNAL_CONVERSION_ERROR);
         }
 
-        final Network network = QWiFiNetworkManager.getInstance().getCurrentNetwork();
+        //final Network network = QWiFiNetworkManager.getInstance().getCurrentNetwork();
         if (null == network) {
             throw new IeRuntimeException("QWiFiNetworkManager.getCurrentNetwork() returns null!!", ErrorCodes.Base.INTERNAL_CONVERSION_ERROR);
         }
