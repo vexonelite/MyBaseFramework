@@ -1,4 +1,4 @@
-package tw.com.goglobal.project.rxjava2.reactives;
+package tw.com.goglobal.project.rxjava2.reactives.wlans;
 
 import android.annotation.TargetApi;
 import android.content.Context;
