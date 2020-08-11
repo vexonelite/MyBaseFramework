@@ -78,6 +78,7 @@ dependencies {
     //implementation "androidx.fragment:fragment-testing:${deps.versions.fragmentX}"
 
     implementation "androidx.recyclerview:recyclerview:${deps.versions.recyclerviewX}"
+    //implementation "androidx.swiperefreshlayout:swiperefreshlayout:${deps.versions.swiperefreshlayout}"
     implementation "androidx.cardview:cardview:${deps.versions.cardviewX}"
     implementation "androidx.viewpager2:viewpager2:${deps.versions.viewpager2X}"
 

@@ -74,6 +74,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:${deps.versions.androidX}"
     implementation "com.google.android.material:material:${deps.versions.materialX}"
     implementation "androidx.recyclerview:recyclerview:${deps.versions.recyclerviewX}"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:${deps.versions.swiperefreshlayout}"
 
     // needed for glide, https://github.com/bumptech/glide/issues/3185
 //    annotationProcessor "androidx.annotation:annotation:${deps.version.annotationX}"
