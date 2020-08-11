@@ -222,6 +222,7 @@ public final class NetTasks {
             ConnectivityUtils.disconnectToWiFi(context);
         }
 
+        @SuppressLint("MissingPermission")
         private void connectToSSID() {
             LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - connectToSSID");
             subscribeNetworkConnectionEvent(new ConnectSsidEventCallback());
