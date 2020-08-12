@@ -21,7 +21,7 @@ import tw.realtime.project.rtbaseframework.delegates.app.RequireContextDelegate;
 import tw.realtime.project.rtbaseframework.widgets.Mutexs;
 import tw.realtime.project.rtbaseframework.widgets.networks.wlan.ConnectivityUtils;
 import tw.realtime.project.rtbaseframework.widgets.networks.wlan.IeNetworkCallbackState;
-import tw.realtime.project.rtbaseframework.widgets.networks.wlan.IeNetworkStateInfo;
+import tw.realtime.project.rtbaseframework.widgets.networks.wlan.IeNetworkStateInfoDelegate;
 
 
 public final class RxQWiFiNetworkManager {
@@ -74,7 +74,7 @@ public final class RxQWiFiNetworkManager {
             @Nullable final NetworkCapabilities networkCapabilities,
             @Nullable final LinkProperties linkProperties) {
         if (null == eventBus) { return; }
-        eventBus.post(new IeNetworkStateInfo(callbackState, network, networkCapabilities, linkProperties));
+        eventBus.post(new IeNetworkStateInfoDelegate(callbackState, network, networkCapabilities, linkProperties));
         LogWrapper.showLog(Log.INFO, getLogTag(), "[Monitor] postEventThroughBus");
     }
 
