@@ -410,6 +410,31 @@ public final class ConnectivityUtils {
         }
     }
 
+    @SuppressLint("MissingPermission")
+    public static int removeSsidSuggestion(
+            @NonNull final Context context, @NonNull final String ssid, @NonNull final String pwd) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) { return -1; }
+        final WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (null == wifiManager) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "removeSsidSuggestion - WifiManager is null!");
+            return -1;
+        }
+        final WifiNetworkSuggestion suggestion = new WifiNetworkSuggestion.Builder()
+                .setSsid(ssid)
+                .setWpa2Passphrase(pwd)
+                .build();
+        final List<WifiNetworkSuggestion> suggestedList = new ArrayList<>();
+        suggestedList.add(suggestion);
+        try {
+            wifiManager.removeNetworkSuggestions(suggestedList);
+            return 1;
+        }
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", " removeSsidSuggestion - Error on WifiManager.removeNetworkSuggestions()", cause);
+            return 0;
+        }
+    }
+
     /**
      * The method can only be involved for the case (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
      */
