@@ -8,4 +8,7 @@ public interface WiFiSsidDelegate {
 
     @NonNull
     String theBSSID();
+
+    @NonNull
+    String thePassword();
 }
