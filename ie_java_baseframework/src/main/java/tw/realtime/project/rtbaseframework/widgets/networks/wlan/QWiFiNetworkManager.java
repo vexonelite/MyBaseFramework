@@ -53,26 +53,26 @@ public final class QWiFiNetworkManager {
     }
 
     public void onTerminate() {
-        networkCallbackList.clear();
+        //networkCallbackList.clear();
     }
 
     private static String getLogTag() { return QWiFiNetworkManager.class.getSimpleName(); }
 
-    public void addIeNetworkDelegate(@NonNull IeNetworkDelegate callback) {
-        LogWrapper.showLog(Log.INFO, getLogTag(), "addIeNetworkDelegate - [pre] networkCallbackList.size: " + networkCallbackList.size());
-        if (!networkCallbackList.contains(callback)) {
-            networkCallbackList.add(callback);
-            LogWrapper.showLog(Log.INFO, getLogTag(), "addIeNetworkDelegate - [post] networkCallbackList.size: " + networkCallbackList.size());
-        }
-    }
+//    public void addIeNetworkDelegate(@NonNull IeNetworkDelegate callback) {
+//        LogWrapper.showLog(Log.INFO, getLogTag(), "addIeNetworkDelegate - [pre] networkCallbackList.size: " + networkCallbackList.size());
+//        if (!networkCallbackList.contains(callback)) {
+//            networkCallbackList.add(callback);
+//            LogWrapper.showLog(Log.INFO, getLogTag(), "addIeNetworkDelegate - [post] networkCallbackList.size: " + networkCallbackList.size());
+//        }
+//    }
 
-    public void removeIeNetworkDelegate(@NonNull IeNetworkDelegate callback) {
-        LogWrapper.showLog(Log.INFO, getLogTag(), "removeIeNetworkDelegate - [pre] networkCallbackList.size: " + networkCallbackList.size());
-        if (networkCallbackList.contains(callback)) {
-            networkCallbackList.remove(callback);
-            LogWrapper.showLog(Log.INFO, getLogTag(), "removeIeNetworkDelegate - [post] networkCallbackList.size: " + networkCallbackList.size());
-        }
-    }
+//    public void removeIeNetworkDelegate(@NonNull IeNetworkDelegate callback) {
+//        LogWrapper.showLog(Log.INFO, getLogTag(), "removeIeNetworkDelegate - [pre] networkCallbackList.size: " + networkCallbackList.size());
+//        if (networkCallbackList.contains(callback)) {
+//            networkCallbackList.remove(callback);
+//            LogWrapper.showLog(Log.INFO, getLogTag(), "removeIeNetworkDelegate - [post] networkCallbackList.size: " + networkCallbackList.size());
+//        }
+//    }
 
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -83,9 +83,9 @@ public final class QWiFiNetworkManager {
         @Override
         public void onLost(@NonNull Network network) {
             LogWrapper.showLog(Log.INFO, getLogTag(), "[Monitor] onLost - from " + cachedSSID);
-            for (final IeNetworkDelegate callback : networkCallbackList) {
-                callback.onLost(network);
-            }
+//            for (final IeNetworkDelegate callback : networkCallbackList) {
+//                callback.onLost(network);
+//            }
         }
 
 //        @Override
@@ -102,9 +102,9 @@ public final class QWiFiNetworkManager {
         public void onAvailable(@NonNull Network network) {
             updateCachedSSID();
             LogWrapper.showLog(Log.INFO, getLogTag(), "[Monitor] onAvailable - cachedSSID: " + cachedSSID);
-            for (final IeNetworkDelegate callback : networkCallbackList) {
-                callback.onAvailable(network);
-            }
+//            for (final IeNetworkDelegate callback : networkCallbackList) {
+//                callback.onAvailable(network);
+//            }
         }
 
         @Override
@@ -112,9 +112,9 @@ public final class QWiFiNetworkManager {
                                           @NonNull NetworkCapabilities networkCapabilities) {
             updateCachedSSID();
             LogWrapper.showLog(Log.INFO, getLogTag(), "[Monitor] onCapabilitiesChanged - for " + cachedSSID);
-            for (final IeNetworkDelegate callback : networkCallbackList) {
-                callback.onCapabilitiesChanged(network, networkCapabilities);
-            }
+//            for (final IeNetworkDelegate callback : networkCallbackList) {
+//                callback.onCapabilitiesChanged(network, networkCapabilities);
+//            }
         }
 
         @Override
