@@ -11,15 +11,12 @@ import android.net.NetworkSpecifier;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiNetworkSpecifier;
-import android.net.wifi.WifiNetworkSuggestion;
 import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
@@ -54,7 +51,7 @@ public final class NetTasks {
 
         @Override
         public void runTask() {
-            //LogWrapper.showLog(Log.INFO, "KNetworks", "ParseWiFiScanResultTask - runTask - on Thread: " + Thread.currentThread().getName());
+            //LogWrapper.showLog(Log.INFO, "NetTasks", "ParseWiFiScanResultTask - runTask - on Thread: " + Thread.currentThread().getName());
             rxDisposeIfPossible();
             setDisposable(
                     Single.fromCallable(this)
@@ -151,7 +148,7 @@ public final class NetTasks {
 
         protected final String getLogTag() { return this.getClass().getSimpleName() + "[" + wiFiAp.theSSID() + "]"; }
 
-        public void onCleared() { /* LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - onCleared"); */ }
+        public void onCleared() { /* LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - onCleared"); */ }
 
         protected final void verifyEssentialComponents() {
             if (null == wifiManager) {
@@ -188,7 +185,7 @@ public final class NetTasks {
 
         @Override
         public void onCleared() {
-            LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - onCleared");
+            LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - onCleared");
             networkDisconnectionEventDisposeIfPossible();
             networkConnectionEventDisposeIfPossible();
             wiFiConnectionTimeoutDisposableIfPossible();
@@ -200,35 +197,34 @@ public final class NetTasks {
 
             if (wifiManager.isWifiEnabled()) {
                 final String currentSSID = ConnectivityUtils.getSsidViaWifiInfo(context);
-                LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - startConnectToSSID - " + currentSSID + " =? " + ConnectivityUtils.UNKNOWN_SSID);
+                LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - startConnectToSSID - " + currentSSID + " =? " + ConnectivityUtils.UNKNOWN_SSID);
                 if (currentSSID.equals(ConnectivityUtils.UNKNOWN_SSID)) {
-                    LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - startConnectToSSID -> Wi-Fi is enabled but has not yet connected to any SSID --> connectToSSID");
+                    LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - startConnectToSSID -> Wi-Fi is enabled but has not yet connected to any SSID --> connectToSSID");
                     connectToSSID();
                 }
                 else {
-                    LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - startConnectToSSID -> Wi-Fi is enabled and has connected to " + currentSSID + " --> disconnectAndConnectToSSID");
+                    LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - startConnectToSSID -> Wi-Fi is enabled and has connected to " + currentSSID + " --> disconnectAndConnectToSSID");
                     disconnectAndConnectToSSID();
                 }
             }
             else {
-                LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - startConnectToSSID -> Wi-Fi is disabled --> connectToSSID");
+                LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - startConnectToSSID -> Wi-Fi is disabled --> connectToSSID");
                 connectToSSID();
             }
         }
 
         private void disconnectAndConnectToSSID() {
-            LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - disconnectAndConnectToSSID");
+            LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - disconnectAndConnectToSSID");
             subscribeNetworkDisconnectionEvent(new DisconnectEventCallback());
             ConnectivityUtils.disconnectToWiFi(context);
         }
 
         @SuppressLint("MissingPermission")
         private void connectToSSID() {
-            LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - connectToSSID");
+            LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - connectToSSID");
             subscribeNetworkConnectionEvent(new ConnectSsidEventCallback());
             wifiManager.setWifiEnabled(true);
-            ConnectivityUtils.connectToSpecifiedRouterIfPossible(
-                    context, wiFiAp.theSSID(), CodeUtils.reverseUsingStringBuilder(wiFiAp.theSSID()));
+            ConnectivityUtils.connectToSpecifiedRouterIfPossible(context, wiFiAp.theSSID(), wiFiAp.thePassword());
         }
 
         ///
@@ -237,10 +233,10 @@ public final class NetTasks {
             if (null != wiFiConnectionTimeoutDisposable) {
                 if (!wiFiConnectionTimeoutDisposable.isDisposed()) {
                     wiFiConnectionTimeoutDisposable.dispose();
-                    LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - wiFiConnectionTimeoutDisposableIfPossible - wiFiConnectionTimeoutDisposable - dispose");
+                    LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - wiFiConnectionTimeoutDisposableIfPossible - wiFiConnectionTimeoutDisposable - dispose");
                 }
                 wiFiConnectionTimeoutDisposable = null;
-                LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - wiFiConnectionTimeoutDisposableIfPossible - wiFiConnectionTimeoutDisposable - reset");
+                LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - wiFiConnectionTimeoutDisposableIfPossible - wiFiConnectionTimeoutDisposable - reset");
             }
         }
 
@@ -254,7 +250,7 @@ public final class NetTasks {
         private class WiFiConnectionTimeoutTask implements Consumer<Object> {
             @Override
             public void accept(final Object result) throws Exception {
-                LogWrapper.showLog(Log.ERROR, "KNetworks", getLogTag() + " - WiFiConnectionTimeoutTask - Connecting to [" + wiFiAp.theSSID() + "]: Timeout");
+                LogWrapper.showLog(Log.ERROR, "NetTasks", getLogTag() + " - WiFiConnectionTimeoutTask - Connecting to [" + wiFiAp.theSSID() + "]: Timeout");
                 onCleared();
                 final IeRuntimeException cause = new IeRuntimeException(wiFiAp.theSSID(), ErrorCodes.WiFi.TIMEOUT);
                 callback.onError(cause);
@@ -267,10 +263,10 @@ public final class NetTasks {
             if (null != networkDisconnectionEventDisposable) {
                 if (!networkDisconnectionEventDisposable.isDisposed()) {
                     networkDisconnectionEventDisposable.dispose();
-                    LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - networkDisconnectionEventDisposeIfPossible - networkDisconnectionEventDisposable - dispose");
+                    LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - networkDisconnectionEventDisposeIfPossible - networkDisconnectionEventDisposable - dispose");
                 }
                 networkDisconnectionEventDisposable = null;
-                LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - networkDisconnectionEventDisposeIfPossible - networkDisconnectionEventDisposable - reset");
+                LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - networkDisconnectionEventDisposeIfPossible - networkDisconnectionEventDisposable - reset");
             }
         }
 
@@ -281,26 +277,26 @@ public final class NetTasks {
                     .toObservable()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(callback);
-            LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - subscribeNetworkDisconnectionEvent");
+            LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - subscribeNetworkDisconnectionEvent");
         }
 
         private class DisconnectEventCallback extends AbsRxNetworkStateCallback {
 
             @Override
             public void onLost(@NonNull final Network network) {
-                LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - DisconnectEventCallback - onLost");
+                LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - DisconnectEventCallback - onLost");
                 networkDisconnectionEventDisposeIfPossible();
                 connectToSSID();
             }
 
             @Override
             public void onAvailable(@NonNull Network network) {
-                LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - DisconnectEventCallback - onAvailable");
+                LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - DisconnectEventCallback - onAvailable");
             }
 
             @Override
             public void onCapabilitiesChanged(@NonNull Network network, @NonNull NetworkCapabilities networkCapabilities) {
-                LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - DisconnectEventCallback - onCapabilitiesChanged");
+                LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - DisconnectEventCallback - onCapabilitiesChanged");
             }
         }
 
@@ -310,10 +306,10 @@ public final class NetTasks {
             if (null != networkConnectionEventDisposable) {
                 if (!networkConnectionEventDisposable.isDisposed()) {
                     networkConnectionEventDisposable.dispose();
-                    LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - networkConnectionEventDisposeIfPossible - networkConnectionEventDisposable - dispose");
+                    LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - networkConnectionEventDisposeIfPossible - networkConnectionEventDisposable - dispose");
                 }
                 networkConnectionEventDisposable = null;
-                LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - networkConnectionEventDisposeIfPossible - networkConnectionEventDisposable - reset");
+                LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - networkConnectionEventDisposeIfPossible - networkConnectionEventDisposable - reset");
             }
         }
 
@@ -324,28 +320,28 @@ public final class NetTasks {
                     .toObservable()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(callback);
-            LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - subscribeNetworkConnectionEvent");
+            LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - subscribeNetworkConnectionEvent");
         }
 
         private class ConnectSsidEventCallback extends AbsRxNetworkStateCallback {
 
             @Override
             public void onLost(@NonNull Network network) {
-                LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - ConnectSsidEventCallback - onLost - retryCount: " + retryCount);
+                LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - ConnectSsidEventCallback - onLost - retryCount: " + retryCount);
                 networkConnectionEventDisposeIfPossible();
                 failureHandler();
             }
 
             @Override
             public void onAvailable(@NonNull Network network) {
-                LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - ConnectSsidEventCallback - onAvailable");
+                LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - ConnectSsidEventCallback - onAvailable");
                 // devices before Android N might need to wait very long time to have the onCapabilitiesChanged() get called!!
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) { readyToJoinSSID(); }
             }
 
             @Override
             public void onCapabilitiesChanged(@NonNull Network network, @NonNull NetworkCapabilities networkCapabilities) {
-                LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - ConnectSsidEventCallback - onCapabilitiesChanged");
+                LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - ConnectSsidEventCallback - onCapabilitiesChanged");
                 // devices before Android N might need to wait very long time to have the onCapabilitiesChanged() get called!!
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) { readyToJoinSSID(); }
             }
@@ -353,14 +349,14 @@ public final class NetTasks {
             // added in 2020/07/16
             private void readyToJoinSSID() {
                 final String currentSSID = ConnectivityUtils.getSsidViaWifiInfo(context);
-                LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - ConnectSsidEventCallback - readyToJoinSSID - currentSSID: " + currentSSID + "");
+                LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - ConnectSsidEventCallback - readyToJoinSSID - currentSSID: " + currentSSID + "");
                 networkConnectionEventDisposeIfPossible();
                 if (currentSSID.equals(wiFiAp.theSSID())) {
-                    LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - ConnectSsidEventCallback - readyToJoinSSID - connected");
+                    LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - ConnectSsidEventCallback - readyToJoinSSID - connected");
                     callback.onSuccess(wiFiAp);
                 }
                 else {
-                    LogWrapper.showLog(Log.ERROR, "KNetworks", getLogTag() + " - ConnectSsidEventCallback - readyToJoinSSID - wrong ssid - retryCount: " + retryCount);
+                    LogWrapper.showLog(Log.ERROR, "NetTasks", getLogTag() + " - ConnectSsidEventCallback - readyToJoinSSID - wrong ssid - retryCount: " + retryCount);
                     failureHandler();
                 }
             }
@@ -372,7 +368,7 @@ public final class NetTasks {
                     startConnectToSSID();
                 }
                 else {
-                    LogWrapper.showLog(Log.ERROR, "KNetworks", getLogTag() + " - ConnectSsidEventCallback - Connecting to [" + wiFiAp.theSSID() + "]: Reach Retry Limit!");
+                    LogWrapper.showLog(Log.ERROR, "NetTasks", getLogTag() + " - ConnectSsidEventCallback - Connecting to [" + wiFiAp.theSSID() + "]: Reach Retry Limit!");
                     final IeRuntimeException cause = new IeRuntimeException(wiFiAp.theSSID(), ErrorCodes.WiFi.REACH_RETRY_LIMIT);
                     callback.onError(cause);
                 }
@@ -400,19 +396,22 @@ public final class NetTasks {
             verifyEssentialComponents();
 
             unregisterNetworkCallback();
-            removeSsid();
+            ConnectivityUtils.removeSsidSuggestion(context, wiFiAp.theSSID(), wiFiAp.thePassword());
 
-            LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - startConnectToSSID");
+            LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - startConnectToSSID");
             final NetworkSpecifier specifier = new WifiNetworkSpecifier.Builder()
                     .setSsid(wiFiAp.theSSID())
-                    .setWpa2Passphrase(CodeUtils.reverseUsingStringBuilder(wiFiAp.theSSID()))
+                    .setWpa2Passphrase(wiFiAp.thePassword())
                     .build();
             final NetworkRequest request = new NetworkRequest.Builder()
                     .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
                     .removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                     .setNetworkSpecifier(specifier)
                     .build();
-            if (null == networkCallback) { networkCallback = new RequestNetworkCallback(); }
+            if (null == networkCallback) {
+                networkCallback = new RequestNetworkCallback();
+                LogWrapper.showLog(Log.INFO, "NetTasks",getLogTag() + " - startConnectToSSID - use Built-in network callback [RequestNetworkCallback]!");
+            }
             connectivityManager.requestNetwork(request, networkCallback);
         }
 
@@ -422,23 +421,9 @@ public final class NetTasks {
                     connectivityManager.unregisterNetworkCallback(networkCallback);
                     networkCallback = null;
                 }
-                catch (Exception cause) { LogWrapper.showLog(Log.ERROR, "KNetworks",getLogTag() + " - Error on connectivityManager.unregisterNetworkCallback()", cause); }
+                catch (Exception cause) { LogWrapper.showLog(Log.ERROR, "NetTasks",getLogTag() + " - Error on connectivityManager.unregisterNetworkCallback()", cause); }
             }
-            LogWrapper.showLog(Log.INFO, "KNetworks",getLogTag() + " - unregisterNetworkCallback");
-        }
-
-        @SuppressLint("MissingPermission")
-        private void removeSsid(){
-            final WifiNetworkSuggestion suggestion = new WifiNetworkSuggestion.Builder()
-                    .setSsid(wiFiAp.theSSID())
-                    .setWpa2Passphrase(CodeUtils.reverseUsingStringBuilder(wiFiAp.theSSID()))
-                    .build();
-            final List<WifiNetworkSuggestion> suggestedList = new ArrayList<>();
-            suggestedList.add(suggestion);
-            try { wifiManager.removeNetworkSuggestions(suggestedList); }
-            catch (Exception cause) {
-                LogWrapper.showLog(Log.ERROR, "KNetworks", getLogTag() + " removeSsid - Error on WifiManager.removeNetworkSuggestions()", cause);
-            }
+            LogWrapper.showLog(Log.INFO, "NetTasks",getLogTag() + " - unregisterNetworkCallback");
         }
 
         /**
@@ -453,17 +438,17 @@ public final class NetTasks {
 
             @Override
             public void onAvailable(@NonNull final Network network) {
-                LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - RequestNetworkCallback - onAvailable");
+                LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - RequestNetworkCallback - onAvailable");
             }
 
             @Override
             public void onCapabilitiesChanged(@NonNull final Network network,
                                               @NonNull final NetworkCapabilities networkCapabilities) {
                 final String currentSSID = ConnectivityUtils.getSsidViaWifiInfo(context);
-                LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - RequestNetworkCallback - onCapabilitiesChanged - currentSSID: " + currentSSID + "");
+                LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - RequestNetworkCallback - onCapabilitiesChanged - currentSSID: " + currentSSID + "");
 
                 if (currentSSID.equals(wiFiAp.theSSID())) {
-                    LogWrapper.showLog(Log.INFO, "KNetworks", getLogTag() + " - RequestNetworkCallback - onCapabilitiesChanged - connected");
+                    LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - RequestNetworkCallback - onCapabilitiesChanged - connected");
                     if (!hasNotifiedCallback) {
                         hasNotifiedCallback = true;
                         callback.onSuccess(wiFiAp);
@@ -481,13 +466,13 @@ public final class NetTasks {
 
             @Override
             public void onLost(@NonNull Network network) {
-                LogWrapper.showLog(Log.INFO, getLogTag(), "RequestNetworkCallback - onLost");
+                LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - RequestNetworkCallback - onLost");
                 //unregisterNetworkCallback(); should not do this within the callback
             }
 
             @Override
             public void onUnavailable() {
-                LogWrapper.showLog(Log.INFO, getLogTag(), "RequestNetworkCallback - onUnavailable");
+                LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - RequestNetworkCallback - onUnavailable");
                 //unregisterNetworkCallback(); should not do this within the callback
             }
         }
