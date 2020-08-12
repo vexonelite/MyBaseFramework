@@ -472,7 +472,13 @@ public final class NetTasks {
 
             @Override
             public void onUnavailable() {
+                // the method gets called when user has cancel the connection process
                 LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - RequestNetworkCallback - onUnavailable");
+                if (!hasNotifiedCallback) {
+                    hasNotifiedCallback = true;
+                    final IeRuntimeException cause = new IeRuntimeException(wiFiAp.theSSID(), ErrorCodes.WiFi.FAIL_TO_CONNECT_TO_SSID);
+                    callback.onError(cause);
+                }
                 //unregisterNetworkCallback(); should not do this within the callback
             }
         }
