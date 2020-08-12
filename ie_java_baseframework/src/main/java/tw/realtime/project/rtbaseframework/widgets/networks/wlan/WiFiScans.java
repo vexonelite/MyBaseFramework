@@ -35,6 +35,7 @@ public final class WiFiScans {
         private final String bSSID;
         private final String strength;
         private final String capabilities;
+        private final String password;
 
         public AccessPointImpl(
                 @NonNull final String identifier,
@@ -42,18 +43,20 @@ public final class WiFiScans {
                 @NonNull final String ssid,
                 @NonNull final String bSSID,
                 @NonNull final String strength,
-                @NonNull final String capabilities) {
+                @NonNull final String capabilities,
+                @NonNull final String password) {
             this.identifier = (identifier.isEmpty()) ? CryptUtils.generateRandomStringViaUuid() : identifier;
             this.cellType = cellType;
             this.ssid = ssid;
             this.bSSID = bSSID;
             this.strength = strength;
             this.capabilities = capabilities;
+            this.password = password;
         }
 
         @Override
         public String toString() {
-            return "WiFiAccessPointImpl { SSID: " + ssid + ", BSSID: " + bSSID + ", Strength: " + strength + ", Capabilities: " + capabilities + " }";
+            return "WiFiAccessPointImpl { SSID: " + ssid + ", BSSID: " + bSSID + ", Strength: " + strength + ", Capabilities: " + capabilities + ", PWD: " + password + " }";
         }
 
         @NonNull
@@ -73,6 +76,10 @@ public final class WiFiScans {
 
         @NonNull
         @Override
+        public String thePassword() { return password; }
+
+        @NonNull
+        @Override
         public String theStrength() { return strength; }
 
         @NonNull
@@ -84,7 +91,7 @@ public final class WiFiScans {
     @NonNull
     public static List<Delegate> getDefaultListByCellType(final int cellType) {
         final Delegate delegate = new AccessPointImpl(
-                "", cellType, "", "", "", "");
+                "", cellType, "", "", "", "", "");
         final List<Delegate> list = new ArrayList<>();
         list.add(delegate);
         return list;
@@ -136,7 +143,8 @@ public final class WiFiScans {
                         scanResult.SSID,
                         scanResult.BSSID,
                         "" + scanResult.level,
-                        scanResult.capabilities);
+                        scanResult.capabilities,
+                        "");
                 wiFiApList.add(wifiAccessPoint);
             }
             LogWrapper.showLog(Log.INFO, "WiFiScans", getLogTag() + " - scanResult.size: " + input.size() + ", wiFiApList.size: " + wiFiApList.size() + " on Thread: " + Thread.currentThread().getName());
@@ -165,7 +173,8 @@ public final class WiFiScans {
                         scanResult.SSID,
                         scanResult.BSSID,
                         "" + scanResult.level,
-                        scanResult.capabilities);
+                        scanResult.capabilities,
+                        "");
                 if (filter.predicate(wifiAccessPoint)) { wiFiApList.add(wifiAccessPoint); }
             }
             LogWrapper.showLog(Log.INFO, "WiFiScans", getLogTag() + " - scanResult.size: " + input.size() + ", wiFiApList.size: " + wiFiApList.size() + " on Thread: " + Thread.currentThread().getName());
