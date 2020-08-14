@@ -113,7 +113,15 @@ public final class ErrorCodes {
     public interface WiFi {
         String TIMEOUT = "99299";
         String REACH_RETRY_LIMIT = "99298";
+        /** general case for the device cannot connect to the specific Wi-Fi router */
         String FAIL_TO_CONNECT_TO_SSID = "99297";
+        /** used when {@link android.net.ConnectivityManager.NetworkCallback#onUnavailable} gets called */
+        String NETWORK_UNAVAILABLE = "99296";
+        /** used when either {@link android.net.ConnectivityManager.NetworkCallback#onAvailable} or
+         * {@link android.net.ConnectivityManager.NetworkCallback#onCapabilitiesChanged} gets called
+         * but the SSID of connected Wi-Fi is not the specific one!
+         */
+        String CONNECTED_SSID_IS_UNEXPECTED = "99295";
     }
 }
 
