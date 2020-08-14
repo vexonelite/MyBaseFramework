@@ -458,7 +458,7 @@ public final class NetTasks {
                     unregisterNetworkCallback();
                     if (!hasNotifiedCallback) {
                         hasNotifiedCallback = true;
-                        final IeRuntimeException cause = new IeRuntimeException(wiFiAp.theSSID(), ErrorCodes.WiFi.FAIL_TO_CONNECT_TO_SSID);
+                        final IeRuntimeException cause = new IeRuntimeException(wiFiAp.theSSID(), ErrorCodes.WiFi.CONNECTED_SSID_IS_UNEXPECTED);
                         callback.onError(cause);
                     }
                 }
@@ -476,7 +476,7 @@ public final class NetTasks {
                 LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - RequestNetworkCallback - onUnavailable");
                 if (!hasNotifiedCallback) {
                     hasNotifiedCallback = true;
-                    final IeRuntimeException cause = new IeRuntimeException(wiFiAp.theSSID(), ErrorCodes.WiFi.FAIL_TO_CONNECT_TO_SSID);
+                    final IeRuntimeException cause = new IeRuntimeException(wiFiAp.theSSID(), ErrorCodes.WiFi.NETWORK_UNAVAILABLE);
                     callback.onError(cause);
                 }
                 //unregisterNetworkCallback(); should not do this within the callback
