@@ -272,7 +272,7 @@ public final class FileUtils {
             return bytesArray;
         }
         catch (Exception cause) {
-            LogWrapper.showLog(Log.ERROR, "IeUtils", "Exception on fileToByteArray");
+            LogWrapper.showLog(Log.ERROR, "FileUtils", "Exception on fileToByteArray");
             throw new IeRuntimeException(cause, ErrorCodes.Base.INTERNAL_CONVERSION_ERROR);
         }
     }
@@ -283,7 +283,7 @@ public final class FileUtils {
         OutputStream outputStream = null;
         try {
             final File file = new File(path + "/" + fileName);
-            LogWrapper.showLog(Log.INFO, "IeUtils", "saveByteArrayToFile - file: " + file.getPath());
+            LogWrapper.showLog(Log.INFO, "FileUtils", "saveByteArrayToFile - file: " + file.getPath());
             outputStream = new FileOutputStream(file);
             outputStream.write(byteArray);
             return file;
@@ -297,7 +297,7 @@ public final class FileUtils {
                     outputStream.close();
                 }
                 catch (Exception cause) {
-                    LogWrapper.showLog(Log.ERROR, "IeUtils", "Error on outputStream.close()!");
+                    LogWrapper.showLog(Log.ERROR, "FileUtils", "Error on outputStream.close()!");
                 }
             }
         }
@@ -309,28 +309,36 @@ public final class FileUtils {
             @NonNull final File sourceFile, @NonNull final String originalFileName, @NonNull final String newFileName) {
         final String filePath = sourceFile.getPath();
         final String newFilePath = filePath.replace(originalFileName, newFileName);
-        LogWrapper.showLog(Log.INFO, "IeUtils", "renameFile - originalFileName: " + originalFileName + ", newFileName: " + newFileName);
-        LogWrapper.showLog(Log.INFO, "IeUtils", "renameFile - filePath: " + filePath);
-        LogWrapper.showLog(Log.INFO, "IeUtils", "renameFile - newFilePath: " + newFilePath);
+        LogWrapper.showLog(Log.INFO, "FileUtils", "renameFile - originalFileName: " + originalFileName + ", newFileName: " + newFileName);
+        LogWrapper.showLog(Log.INFO, "FileUtils", "renameFile - filePath: " + filePath);
+        LogWrapper.showLog(Log.INFO, "FileUtils", "renameFile - newFilePath: " + newFilePath);
         final File renamedFile = new File(newFilePath);
         if (sourceFile.renameTo(renamedFile)) { return renamedFile; }
         else {
-            LogWrapper.showLog(Log.WARN, "IeUtils", "renameFile - fail to rename file!!");
+            LogWrapper.showLog(Log.WARN, "FileUtils", "renameFile - fail to rename file!!");
             return null;
         }
     }
 
-    public static void deleteFileList(@NonNull List<File> fileList) {
+    public static void deleteFileList(@Nullable final List<File> fileList) {
+        if ((null == fileList) || (fileList.isEmpty())) {
+            LogWrapper.showLog(Log.INFO, "FileUtils", "deleteFileList - fileList is either null or empty!");
+            return;
+        }
         for (final File file : fileList) {
-            LogWrapper.showLog(Log.INFO, "IeUtils", "Delete file: " + file.getPath() + " - result: " + file.delete());
+            LogWrapper.showLog(Log.INFO, "FileUtils", "deleteFileList - Delete file: " + file.getPath() + " - result: " + file.delete());
         }
     }
 
-    public static void deleteFileMap(@NonNull Map<String, File> fileMap) {
+    public static void deleteFileMap(@Nullable final Map<String, File> fileMap) {
+        if ((null == fileMap) || (fileMap.isEmpty())) {
+            LogWrapper.showLog(Log.INFO, "FileUtils", "deleteFileMap - fileList is either null or empty!");
+            return;
+        }
         final Set<String> keySet = fileMap.keySet();
         for (final String key : keySet) {
             final File file = fileMap.get(key);
-            LogWrapper.showLog(Log.INFO, "IeUtils", "Delete file: " + file.getPath() + " - result: " + file.delete());
+            LogWrapper.showLog(Log.INFO, "FileUtils", " - deleteFileMapDelete file: " + file.getPath() + " - result: " + file.delete());
         }
     }
 
@@ -340,7 +348,7 @@ public final class FileUtils {
             return Base64.decode(given, Base64.NO_WRAP);
         }
         catch (Exception cause) {
-            LogWrapper.showLog(Log.ERROR, "IeUtils", "Exception on getByteArrayFromString");
+            LogWrapper.showLog(Log.ERROR, "FileUtils", "Exception on getByteArrayFromString");
             throw new IeRuntimeException(cause, ErrorCodes.Base.INTERNAL_CONVERSION_ERROR);
         }
     }
