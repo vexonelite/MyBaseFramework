@@ -105,13 +105,12 @@ public final class TimeUtils {
         try {
             final String internalDateFormat = (dateFormat.isEmpty()) ? "yyyy-MM-dd hh:mm:ss" : dateFormat;
             final Locale locale = Locale.getDefault();
-            //LogWrapper.showLog(Log.INFO, "CodeUtil", "convertStringToDate: " + locale);
+            //LogWrapper.showLog(Log.INFO, "TimeUtils", "convertStringToDate: " + locale);
             final SimpleDateFormat fmt = new SimpleDateFormat(internalDateFormat, locale);
             return fmt.parse(dateString);
-
         }
         catch (Exception e) {
-            LogWrapper.showLog(Log.ERROR, "CodeUtil", "Exception on convertStringToDate", e);
+            LogWrapper.showLog(Log.ERROR, "TimeUtils", "Exception on convertStringToDate", e);
             return null;
         }
     }
@@ -122,7 +121,7 @@ public final class TimeUtils {
             final String internalDateFormat = (dateFormat.isEmpty()) ? "yyyyMMdd_HHmmss" : dateFormat;
             final Locale locale = Locale.getDefault();
             final SimpleDateFormat fmt = new SimpleDateFormat(internalDateFormat, locale);
-            //Logger.d(fmt.format(date));
+            LogWrapper.showLog(Log.INFO, "TimeUtils", "convertDateToString: " + fmt.format(date));
             return fmt.format(date);
         } catch (Exception e) {
             LogWrapper.showLog(Log.ERROR, "TimeUtils", "Exception on convertDateToString", e);
@@ -132,19 +131,15 @@ public final class TimeUtils {
 
 ///
 
-    public static int timeDifferenceToInMinutes(long timeDifference) {
+    public static int timeDifferenceToInMinutes(final long timeDifference) {
         return ((int) TimeUnit.SECONDS.toMinutes(timeDifference)) / 1000;
     }
 
     @NonNull
-    public static Long getTimestampFromString(@NonNull String given) {
-        return Long.parseLong(given) * 1000L;
-    }
+    public static Long getTimestampFromString(@NonNull final String given) { return Long.parseLong(given) * 1000L; }
 
     @NonNull
-    public static Date timestampToDate(@NonNull Long timestamp) {
-        return new Date(timestamp);
-    }
+    public static Date timestampToDate(@NonNull final Long timestamp) { return new Date(timestamp); }
 
     @NonNull
     public static String timestampToDateFormattedString(
@@ -156,8 +151,11 @@ public final class TimeUtils {
 
     @NonNull
     public static String parseTimestampString(@Nullable final String timestampString) {
+        if ((null == timestampString) || timestampString.isEmpty()) {
+            LogWrapper.showLog(Log.ERROR, "TimeUtils", "parseTimestampString - timestampString is either null or empty!!");
+            return "";
+        }
         LogWrapper.showLog(Log.INFO, "TimeUtils", "parseTimestampString - timestampString: " + timestampString);
-        if ((null == timestampString) || timestampString.isEmpty()) { return ""; }
         try {
             final Long timestamp = getTimestampFromString(timestampString);
             final Date date = timestampToDate(timestamp);
@@ -171,15 +169,18 @@ public final class TimeUtils {
 
     @NonNull
     public static String parseTimestampStringSimple(@Nullable final String timestampString) {
+        if ((null == timestampString) || timestampString.isEmpty()) {
+            LogWrapper.showLog(Log.ERROR, "TimeUtils", "parseTimestampStringSimple - timestampString is either null or empty!!");
+            return "";
+        }
         LogWrapper.showLog(Log.INFO, "TimeUtils", "parseTimestampStringSimple - timestampString: " + timestampString);
-        if ((null == timestampString) || timestampString.isEmpty()) { return ""; }
         try {
             final Long timestamp = getTimestampFromString(timestampString);
             final Date date = timestampToDate(timestamp);
             return timestampToDateFormattedString(date, "yyyy/MM/dd");
         }
         catch (Exception cause) {
-            LogWrapper.showLog(Log.ERROR, "TimeUtils", "Exception on parseTimestampString", cause);
+            LogWrapper.showLog(Log.ERROR, "TimeUtils", "Exception on parseTimestampStringSimple", cause);
             return "";
         }
     }
