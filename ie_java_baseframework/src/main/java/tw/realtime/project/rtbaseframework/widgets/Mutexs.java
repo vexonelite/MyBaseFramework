@@ -6,7 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Semaphore;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
@@ -41,7 +43,7 @@ public final class Mutexs {
 
         public boolean hasQueuedThreads() { return mutex.hasQueuedThreads(); }
 
-        public void clearList() throws InterruptedException {
+        public void clear() throws InterruptedException {
             this.mutex.acquire();
             this.dataList.clear();
             this.mutex.release();
@@ -50,7 +52,7 @@ public final class Mutexs {
         @NonNull
         public List<T> readList() { return dataList; }
 
-        public void  updateCurrentList(@Nullable final T givenData, final boolean isAddition) throws InterruptedException {
+        public void  updateCurrentData(@Nullable final T givenData, final boolean isAddition) throws InterruptedException {
             if (null == givenData) { return; }
             this.mutex.acquire();
             if (isAddition) {
@@ -65,6 +67,43 @@ public final class Mutexs {
                 if (this.dataList.contains(givenData)) {
                     this.dataList.remove(givenData);
                     LogWrapper.showLog(Log.INFO, "Mutexs_ListWrapper", "updateCurrentData [Remove][Post] dataList.size: " + dataList.size());
+                }
+            }
+            this.mutex.release();
+        }
+    }
+
+    public static final class HashMapWrapper<K, T> {
+
+        private Semaphore mutex = new Semaphore(1);
+        private final HashMap<K, T> hashMap = new HashMap<>();
+
+        public boolean hasQueuedThreads() { return mutex.hasQueuedThreads(); }
+
+        public void clear() throws InterruptedException {
+            this.mutex.acquire();
+            this.hashMap.clear();
+            this.mutex.release();
+        }
+
+        @NonNull
+        public Map<K, T> readHashMap() { return hashMap; }
+
+        public void  updateCurrentData(
+                @Nullable final K key, @Nullable final T givenData, final boolean isAddition) throws InterruptedException {
+            if ( (null == key) || (null == givenData) ) { return; }
+            this.mutex.acquire();
+            if (isAddition) {
+                LogWrapper.showLog(Log.INFO, "Mutexs_HashMapWrapper", "updateCurrentData [Add][Pre] hashMap.size: " + hashMap.size());
+                this.hashMap.put(key, givenData);
+                LogWrapper.showLog(Log.INFO, "Mutexs_HashMapWrapper", "updateCurrentData [Add][Post] hashMap.size: " + hashMap.size());
+            }
+            else {
+                LogWrapper.showLog(Log.INFO, "Mutexs_HashMapWrapper", "updateCurrentData [Remove][Pre] hashMap.size: " + hashMap.size());
+                if (this.hashMap.containsKey(key)) {
+                    //final T removedOne = this.hashMap.remove(key);
+                    this.hashMap.remove(key);
+                    LogWrapper.showLog(Log.INFO, "Mutexs_HashMapWrapper", "updateCurrentData [Remove][Post] hashMap.size: " + hashMap.size());
                 }
             }
             this.mutex.release();
