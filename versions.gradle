@@ -44,6 +44,7 @@ versions.googleAuth = "16.0.1"
 
 versions.rxJava2 = "2.2.11"
 versions.rxAndroid2 = "2.1.1"
+versions.rxJava3Extensions = "3.0.1" // added in 2020/08/24
 
 versions.okHttp3 = "3.14.2"
 versions.okHttp4 = "4.2.0"
