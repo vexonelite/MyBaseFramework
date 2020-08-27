@@ -84,10 +84,10 @@ versions.socketIO = "1.0.0"
 versions.atAAR = "@aar"
 
 versions.junit = "4.13" //updated in 2020/07/20
-versions.runner = "1.2.0"
-versions.espresso = "3.2.0"
-versions.mockito = "1.10.19"
-versions.mockito2 = "2.8.9"
+versions.runner = "1.3.0"       //updated in 2020/08/27
+versions.espresso = "3.3.0"     //updated in 2020/08/27
+versions.mockito = "1.10.19"    // added in 2020/08/27
+versions.mockito2 = "2.10.0"    // added in 2020/08/27
 
 // next would be 2 (2019/03/18)
 versions.versionCode = 1
