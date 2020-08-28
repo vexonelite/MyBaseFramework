@@ -38,6 +38,8 @@ versions.firebaseMessaging = "17.3.3"
 versions.firebaseAuth = "19.3.2" // updated in 2020/07/20
 versions.firebaseAnalytics = "17.4.0"   // added in 2020/07/20
 versions.firebaseCrashlytics = "17.1.1" // added in 2020/07/20
+
+versions.googlePlayCore = "1.8.0"       // added in 2020/08/27
 versions.googleMobileAds = "16.0.0"
 versions.googleAnalytics = "16.0.4"
 versions.googleAuth = "16.0.1"
