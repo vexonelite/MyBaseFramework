@@ -38,6 +38,8 @@ public final class ErrorCodes {
         String CALCULATE_DIFF_RESULT_ERROR = "99948";
 
         String NULL_POINTER_ERROR = "99947";
+
+        String DEFAULT_UNIT_TEST_ERROR = "99946";
     }
 
     public interface Ping {
