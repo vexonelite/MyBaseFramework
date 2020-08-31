@@ -640,8 +640,11 @@ public final class CodeUtils {
             LogWrapper.showLog(Log.WARN, "IeUtils", "hideSoftKeyboard - InputMethodManager is null!!");
             return;
         }
-        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
-        activity.getCurrentFocus().clearFocus();
-        //LogWrapper.showLog(Log.INFO, "IeUtils", "hideSoftKeyboard - done!!");
+        final View currentFocus = activity.getCurrentFocus();
+        if (null != currentFocus) {
+            inputMethodManager.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+            currentFocus.clearFocus();
+            //LogWrapper.showLog(Log.INFO, "IeUtils", "hideSoftKeyboard - done!!");
+        }
     }
 }
