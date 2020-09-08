@@ -82,20 +82,21 @@ public final class ErrorCodes {
     }
 
     public interface Socket {
-        String CONNECTION_FAILURE = "99499";
-        String CONNECTION_TIMEOUT = "99498";
-        String SOCKET_HAS_BEEN_CLOSED = "99497";
-        String CHANNEL_REGISTRATION_FAILURE = "99496";
-        String FAIL_TO_SEND_OUT_PACKET = "99495";
-        String FAIL_TO_READ_FROM_OUT_PACKET = "99494";
-        String INVALID_INCOMING_PACKET_FORMAT = "99493";
-        String INVALID_CALIBRATION_CHANNEL_VALUE = "99492";
-    
-        String SELECTOR_IS_NULL = "99491";
-        String NO_SELECTED_RESULT = "99490";
-        String NO_WORKABLE_RESULT = "99489";
+        String CREATION_FAILURE = "99499";
+        String CONNECTION_FAILURE = "99498";
+        String CONNECTION_TIMEOUT = "99497";
+        String SOCKET_HAS_BEEN_CLOSED = "99496";
+        String CHANNEL_REGISTRATION_FAILURE = "99495";
+        String FAIL_TO_SEND_OUT_PACKET = "99494";
+        String FAIL_TO_READ_FROM_OUT_PACKET = "99493";
+        String INVALID_INCOMING_PACKET_FORMAT = "99492";
+        String INVALID_CALIBRATION_CHANNEL_VALUE = "99491";
 
-        String GENERAL_OPERATION_FAILURE = "99479";
+        String SELECTOR_IS_NULL = "99490";
+        String NO_SELECTED_RESULT = "99489";
+        String NO_WORKABLE_RESULT = "99488";
+
+        String GENERAL_OPERATION_FAILURE = "99401";
     }
 
     public interface FTP {
