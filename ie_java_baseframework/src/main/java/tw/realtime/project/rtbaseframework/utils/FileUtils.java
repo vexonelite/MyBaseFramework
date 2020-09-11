@@ -14,6 +14,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -28,6 +29,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -273,6 +276,23 @@ public final class FileUtils {
         }
         catch (Exception cause) {
             LogWrapper.showLog(Log.ERROR, "FileUtils", "Exception on fileToByteArray");
+            throw new IeRuntimeException(cause, ErrorCodes.Base.INTERNAL_CONVERSION_ERROR);
+        }
+    }
+
+    // https://www.baeldung.com/reading-file-in-java
+    @NonNull
+    public static byte[] fileToByteArray2(@NonNull final File file) throws IeRuntimeException {
+        try {
+            final DataInputStream reader = new DataInputStream(new FileInputStream(file));
+            final int numberOfBytesToRead = reader.available();
+            Logger.getLogger("FileManipulationTest").log(Level.INFO, "fileToByteArray2 - numberOfBytesToRead: " + numberOfBytesToRead);
+            final byte[] readByteArray = new byte[numberOfBytesToRead];
+            if (numberOfBytesToRead > 0) { reader.read(readByteArray); }
+            return readByteArray;
+        }
+        catch (Exception cause) {
+            Logger.getLogger("IeUtils").log(Level.SEVERE, "Exception on fileToByteArray2");
             throw new IeRuntimeException(cause, ErrorCodes.Base.INTERNAL_CONVERSION_ERROR);
         }
     }

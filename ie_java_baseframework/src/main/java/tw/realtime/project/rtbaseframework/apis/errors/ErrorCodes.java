@@ -96,6 +96,8 @@ public final class ErrorCodes {
         String NO_SELECTED_RESULT = "99489";
         String NO_WORKABLE_RESULT = "99488";
 
+        String READ_TIMEOUT = "99487";
+
         String GENERAL_OPERATION_FAILURE = "99401";
     }
 
