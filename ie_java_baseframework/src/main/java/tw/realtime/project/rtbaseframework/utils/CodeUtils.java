@@ -39,6 +39,8 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -47,6 +49,7 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
 
@@ -533,6 +536,35 @@ public final class CodeUtils {
         return String.format("%02X", byteData);
     }
 
+    public static int byteArrayToIntegerWithOrder(
+            @NonNull final byte[] input, @NonNull final ByteOrder byteOrder, final int defaultValue) {
+        try {
+//            final ByteBuffer byteBuffer = ByteBuffer.wrap(input);
+//            java.util.logging.Logger.getLogger("CodeUtil").log(Level.INFO, "byteArrayToIntegerWithOrder - byteBuffer.order(): " + byteBuffer.order());
+//            if (byteBuffer.order() != byteOrder) {
+//                byteBuffer.order(byteOrder);
+//                java.util.logging.Logger.getLogger("CodeUtil").log(Level.INFO, "byteArrayToIntegerWithOrder - change order: " + byteBuffer.order());
+//            }
+//            final byte[] output = Arrays.copyOf(byteBuffer.array(), byteBuffer.limit());
+//            java.util.logging.Logger.getLogger("CodeUtil").log(Level.INFO, "byteArrayToIntegerWithOrder - input: " + byteArrayToHexString(input) + ", output: " + byteArrayToHexString(output));
+            //this statement must be executed as a stream
+            final int value = ByteBuffer.wrap(input).order(byteOrder).getInt();
+            java.util.logging.Logger.getLogger("CodeUtil").log(Level.INFO, "byteArrayToIntegerWithOrder - int value: " + value);
+            return value;
+        }
+        catch (Exception cause) { return defaultValue; }
+    }
+
+    public static long byteArrayToLongWithOrder(
+            @NonNull final byte[] input, @NonNull final ByteOrder byteOrder, final long defaultValue) {
+        try {
+            //this statement must be executed as a stream
+            final long value = ByteBuffer.wrap(input).order(byteOrder).getLong();
+            //java.util.logging.Logger.getLogger("IeUtils").log(Level.INFO, "byteArrayToLongWithOrder - long value: " + value);
+            return value;
+        }
+        catch (Exception cause) { return defaultValue; }
+    }
 
     @NonNull
     public static <T> String elementsToString(@NonNull List<T> itemList, @Nullable String newLine) {
