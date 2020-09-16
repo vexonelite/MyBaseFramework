@@ -48,7 +48,8 @@ dependencies {
     implementation "com.squareup.moshi:moshi:${deps.versions.moshi}"
 
     testImplementation "junit:junit:${deps.versions.junit}"
-    androidTestImplementation "androidx.test:runner:${deps.versions.runner}"
+    testImplementation "androidx.test:core:${deps.versions.testCore}"
+    androidTestImplementation "androidx.test:runner:${deps.versions.testRunner}"
     androidTestImplementation "androidx.test.espresso:espresso-core:${deps.versions.espresso}"
 
     implementation "androidx.annotation:annotation:${deps.versions.annotationX}"

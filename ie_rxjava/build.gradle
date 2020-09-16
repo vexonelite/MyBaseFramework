@@ -36,7 +36,8 @@ dependencies {
     implementation project(path: ':ie_java_httpstuff')
 
     testImplementation "junit:junit:${deps.versions.junit}"
-    androidTestImplementation "androidx.test:runner:${deps.versions.runner}"
+    testImplementation "androidx.test:core:${deps.versions.testCore}"
+    androidTestImplementation "androidx.test:runner:${deps.versions.testRunner}"
     androidTestImplementation "androidx.test.espresso:espresso-core:${deps.versions.espresso}"
 
     implementation "androidx.appcompat:appcompat:${deps.versions.androidX}"
