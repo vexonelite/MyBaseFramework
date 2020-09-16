@@ -32,7 +32,7 @@ public final class RandomAccessFileHelper {
     public RandomAccessFileHelper readBytes(@NonNull final String propertyName) {
         try {
             randomAccessFile.read(byteArray);
-            LogWrapper.showLog(Log.INFO, getLogTag(), "readBytes - [" + propertyName + "] FilePointer: " + randomAccessFile.getFilePointer() + ", Hex: " + IeUtils.byteArrayToHexString(byteArray));
+            LogWrapper.showLog(Log.INFO, getLogTag(), "readBytes - [" + propertyName + "] FilePointer: " + randomAccessFile.getFilePointer() + ", Hex: " + CodeUtils.byteArrayToHexString(byteArray));
         }
         catch (Exception cause) {
             LogWrapper.showLog(Log.ERROR, getLogTag(), "error on readBytes - [" + propertyName + "]", cause.fillInStackTrace());
