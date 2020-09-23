@@ -43,11 +43,7 @@ public final class RandomAccessFileHelper {
     @NonNull
     public String convertIntoString(@NonNull final String defaultValue) {
         if (null != byteArray) {
-            try { return new String(byteArray, StandardCharsets.UTF_8); }
-            catch (Exception cause) {
-                LogWrapper.showLog(Log.ERROR, getLogTag(), "error on convertIntoString", cause.fillInStackTrace());
-                return defaultValue;
-            }
+            return CodeUtils.byteArrayToString(byteArray, true, defaultValue);
         }
         else {
             LogWrapper.showLog(Log.ERROR, getLogTag(), "convertIntoString - byteArray is nul!!");
