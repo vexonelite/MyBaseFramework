@@ -23,15 +23,15 @@ public abstract class FifoQueueTask<T, R> {
     }
 
     protected final void onNext() {
-        LogWrapper.showLog(Log.INFO, "KDongles", "MultipleSocketIoTask - onNext - queueTaskList.size: " + queueTaskList.size() + ", resultMap.size: " + resultMap.size());
+        LogWrapper.showLog(Log.INFO, "FifoQueueTask", "onNext - queueTaskList.size: " + queueTaskList.size() + ", resultMap.size: " + resultMap.size());
         if (queueTaskList.size() > 0) {
             final T nextTask = queueTaskList.remove(0);
             if (null != nextTask) {
-                LogWrapper.showLog(Log.INFO, "KDongles", "MultipleSocketIoTask - onNext --> executeIndividualTask(nextTask)");
+                LogWrapper.showLog(Log.INFO, "FifoQueueTask", "onNext --> executeIndividualTask(nextTask)");
                 executeIndividualTask(nextTask);
             }
             else {
-                LogWrapper.showLog(Log.ERROR, "KDongles", "MultipleSocketIoTask - onNext - cannot get nextTask!! --> onNext()");
+                LogWrapper.showLog(Log.ERROR, "FifoQueueTask", "onNext - cannot get nextTask!! --> onNext()");
                 onNext();
             }
         }
