@@ -57,8 +57,8 @@ public final class AdapterMultiSelectionHelper<T extends IdentifierDelegate> {
 
     public int updateSelectionMapForMultipleSelection(@NonNull final T delegate, final int selectedIndex) throws InterruptedException {
         final boolean hasExisted = selectionMap.containsKey(delegate.theIdentifier());
+        this.mutex.acquire();
         if (hasExisted) {
-            this.mutex.acquire();
             final Integer removedIndex = selectionIndexMap.remove(delegate.theIdentifier());
             final T removedItem = selectionMap.remove(delegate.theIdentifier());
             this.mutex.release();
@@ -69,7 +69,6 @@ public final class AdapterMultiSelectionHelper<T extends IdentifierDelegate> {
             else { return -1; }
         }
         else {
-            this.mutex.acquire();
             selectionMap.put(delegate.theIdentifier(), delegate);
             selectionIndexMap.put(delegate.theIdentifier(), selectedIndex);
             this.mutex.release();
