@@ -522,19 +522,50 @@ public final class CodeUtils {
     /// Log:
 
     @NonNull
-    public static String byteArrayToHexString(@NonNull byte[] byteArray) {
-        String result = "";
+    public static String byteArrayToHexString(@NonNull final byte[] byteArray) {
+        final StringBuilder builder = new StringBuilder();
+        //String result = "";
         for (byte byteData : byteArray) {
             final String hexStr = byteToHexString(byteData);
-            result += hexStr + "-";
+            //result += hexStr + "-";
+            builder.append(hexStr);
         }
-        return result;
+        //return result;
+        return builder.toString();
     }
 
     @NonNull
-    public static String byteToHexString(byte byteData) {
-        return String.format("%02X", byteData);
+    public static String byteArrayToString(
+            @NonNull final byte[] byteArray, final boolean characterEncoding, @NonNull final String defaultValue) {
+        final byte zeroByte = (byte)0x00;
+
+        int index = 0;
+        for (int i = 0; i< byteArray.length; i++) {
+            final byte theByte = byteArray[i];
+            if (theByte == zeroByte) {
+                index = i;
+                break;
+            }
+        }
+
+        final byte[] cloneByteArray = new byte[index];
+        for (int i = 0; i< cloneByteArray.length; i++) {
+            cloneByteArray[i] = byteArray[i];
+        }
+
+        try {
+            return characterEncoding
+                    ? new String(cloneByteArray, StandardCharsets.UTF_8)
+                    : new String(cloneByteArray);
+        }
+        catch (Exception cause) {
+            LogWrapper.showLog(Log.ERROR, "CodeUtil", "error on byteArrayToString", cause.fillInStackTrace());
+            return defaultValue;
+        }
     }
+
+    @NonNull
+    public static String byteToHexString(final byte byteData) { return String.format("%02X", byteData); }
 
     public static int byteArrayToIntegerWithOrder(
             @NonNull final byte[] input, @NonNull final ByteOrder byteOrder, final int defaultValue) {
