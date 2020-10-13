@@ -262,6 +262,12 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         }
     }
 
+    @Nullable
+    protected final Fragment findFragmentByTag(@Nullable final String fragmentTag) {
+        if ( (null == fragmentTag) || (fragmentTag.isEmpty()) ) { return null; }
+        return getSupportFragmentManager().findFragmentByTag(fragmentTag);
+    }
+
     public final void showAlertDialog(
             boolean isSingleOption,
             @Nullable String title,
@@ -536,9 +542,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
     }
 
 
-    protected final String getLogTag() {
-        return this.getClass().getSimpleName();
-    }
+    protected final String getLogTag() { return BaseActivity.this.getClass().getSimpleName(); }
 
     protected final void enableImmersiveMode () {
         getWindow().getDecorView().setSystemUiVisibility(getSystemUiVisibility());
