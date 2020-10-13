@@ -5,26 +5,24 @@ def deps = [:]
 def versions = [:]
 
 versions.kotlinCoroutines = "1.3.7"     // updated in 2020/07/20
-versions.kotlinCoreKtx = "1.3.1"        // updated in 2020/08/31
+versions.kotlinCoreKtx = "1.3.2"        // updated in 2020/10/13
 
 versions.androidX = "1.2.0"             // updated in 2020/08/31
 // needed for glide
 versions.annotationX = "1.1.0"
 versions.transitionX = "1.3.0"
 
-versions.materialX = "1.2.0"            //updated in 2020/08/11
+versions.materialX = "1.2.1"            // updated in 2020/10/08
 versions.viewpagerX = "1.0.0"
 versions.viewpager2X = "1.0.0"
-//versions.recyclerviewX = "1.0.0"
 versions.recyclerviewX = "1.1.0"
 versions.cardviewX = "1.0.0"
 versions.swiperefreshlayout = "1.1.0"   // added in 2020/08/11
 versions.vectorDrawableX = "1.1.0"
 
-//versions.constraintLayoutX = "1.1.3"
-versions.constraintLayoutX = "2.0.1"    // updated in 2020/08/31
+versions.constraintLayoutX = "2.0.2"    // updated in 2020/10/13
 
-versions.fragmentX = "1.2.5"            //updated in 2020/07/20
+versions.fragmentX = "1.2.5"            // updated in 2020/07/20
 versions.lifecycleX = "2.2.0"
 versions.roomX = "2.2.5"
 versions.architecture = "1.1.1"
@@ -34,14 +32,14 @@ versions.workManager = "2.3.0"
 versions.flexbox = "1.1.1"
 versions.flexbox2 = "2.0.1"
 
-versions.firebaseCore = "17.4.4"        // added in 2020/07/20
+versions.firebaseCore = "17.4.4"            // added in 2020/07/20
 versions.firebaseMessaging = "17.3.3"
-versions.firebaseAuth = "19.3.2"        // updated in 2020/07/20
-versions.firebaseAnalytics = "17.4.0"   // added in 2020/07/20
-versions.firebaseCrashlytics = "17.1.1" // added in 2020/07/20
+versions.firebaseAuth = "19.3.2"            // updated in 2020/07/20
+versions.firebaseAnalytics = "17.4.0"       // added in 2020/07/20
+versions.firebaseCrashlytics = "17.1.1"     // added in 2020/07/20
 
 //https://developers.google.com/android/guides/setup
-versions.googlePlayCore = "1.8.0"       // added in 2020/08/27
+versions.googlePlayCore = "1.8.0"           // added in 2020/08/27
 versions.googleMobileAds = "16.0.0"
 versions.googleAnalytics = "16.0.4"
 versions.googleAuth = "18.1.0"              // added in 2020/08/31
@@ -50,26 +48,25 @@ versions.googleCloudMessaging = "17.0.0"    // added in 2020/08/31
 
 versions.rxJava2 = "2.2.11"
 versions.rxAndroid2 = "2.1.1"
-versions.rxJava3Extensions = "3.0.1" // added in 2020/08/24
+versions.rxJava3Extensions = "3.0.1"        // added in 2020/08/24
 
 versions.okHttp3 = "3.14.2"
 versions.okHttp4 = "4.2.0"
 
-versions.retrofit2 = "2.9.0" //updated in 2020/07/20
+versions.retrofit2 = "2.9.0"                // updated in 2020/07/20
 
-versions.dagger2 = "2.28.3" // added in 2020/07/29
+versions.dagger2 = "2.28.3"                 // added in 2020/07/29
 
 versions.apacheCommonsNet = "3.6"
 
-versions.seancfoleyIpaddress5 = "5.3.1" // added in 2020/07/20
-versions.seancfoleyIpaddress4 = "4.3.3" // added in 2020/07/20
+versions.seancfoleyIpaddress5 = "5.3.1"     // added in 2020/07/20
+versions.seancfoleyIpaddress4 = "4.3.3"     // added in 2020/07/20
 
 versions.glide = "4.10.0"
 
 versions.gson = "2.8.5"
-versions.moshi = "1.9.2" //updated in 2020/07/20
+versions.moshi = "1.9.2"                    // updated in 2020/07/20
 
-versions.facebook4 = "4.37.0"
 versions.facebook5 = "5.15.3" //updated in 2020/07/01
 
 versions.twitter = "3.3.0"
@@ -83,19 +80,23 @@ versions.photoView = "1.3.0"
 
 versions.leakcanary = "1.6.1"
 
-versions.zxing = "3.4.0"
+versions.zxing = "3.3.0"
 
 versions.socketIO = "1.0.0"
 
 versions.atAAR = "@aar"
 
 //https://developer.android.com/training/testing/set-up-project
-versions.junit = "4.13"         // updated in 2020/07/20
-versions.testRunner = "1.3.0"       // updated in 2020/08/27
-versions.testCore = "1.3.0"         // updated in 2020/09/14
-versions.espresso = "3.3.0"     // updated in 2020/08/27
-versions.mockito = "1.10.19"    // added in 2020/08/27
-versions.mockito2 = "2.10.0"    // added in 2020/08/27
+versions.junit = "4.13"                 // updated in 2020/07/20
+versions.testCore = "1.3.0"             // updated in 2020/09/14
+versions.testRunner = "1.3.0"           // updated in 2020/08/27
+versions.testRules = "1.3.0"            // updated in 2020/08/27
+versions.testExtensionJUnit = "1.1.2"   // updated in 2020/09/14
+versions.testExtensionTruth = "1.3.0"   // updated in 2020/09/14
+versions.espresso = "3.3.0"             // updated in 2020/08/27
+versions.mockito = "1.10.19"            // added in 2020/08/27
+versions.mockito2 = "2.10.0"            // added in 2020/08/27
+versions.googleTruth = "0.42"           // updated in 2020/09/14
 
 // next would be 2 (2019/03/18)
 versions.versionCode = 1

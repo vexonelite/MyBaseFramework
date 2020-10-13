@@ -82,6 +82,8 @@ dependencies {
 
     implementation "androidx.constraintlayout:constraintlayout:${deps.versions.constraintLayoutX}"
 
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${deps.versions.lifecycleX}"
+
     implementation "com.squareup.okhttp3:okhttp:${deps.versions.okHttp3}"
     implementation "com.squareup.okhttp3:logging-interceptor:${deps.versions.okHttp3}"
 //    implementation "com.squareup.okhttp3:okhttp-urlconnection:${deps.versions.okHttp}"
