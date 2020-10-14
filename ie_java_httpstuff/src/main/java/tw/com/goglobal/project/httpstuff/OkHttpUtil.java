@@ -157,6 +157,31 @@ public final class OkHttpUtil {
         return new ClientFactory().create(okHttpBuilder).newCall(builder.build());
     }
 
+    @NonNull
+    public static okhttp3.Call generateHttpGetRequestCall(
+            @NonNull final String apiUrl,
+            final boolean enableHttpLoggingInterceptor,
+            final boolean doesAddContentTypeForJson,
+            @NonNull final OkHttpConfigure configure
+    ) {
+        final Request.Builder builder = new Request.Builder()
+                .url(apiUrl);
+        if (doesAddContentTypeForJson) {
+            builder.addHeader("Content-Type", "application/json");
+        }
+
+        LogWrapper.showLog(Log.INFO, "okHttpUtils", "generateHttpGetRequestCall - apiUrl: " + apiUrl);
+
+        final OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder()
+                .connectTimeout(configure.connectionTimeOut, TimeUnit.MILLISECONDS)
+                .readTimeout(configure.readTimeOut, TimeUnit.MILLISECONDS)
+                .writeTimeout(configure.writeTimeOut, TimeUnit.MILLISECONDS)
+                .followRedirects(configure.redirectsFlag)
+                .followSslRedirects(configure.sslRedirectsFlag);
+        addHttpLoggingInterceptor(okHttpBuilder);
+        return new ClientFactory().create(okHttpBuilder).newCall(builder.build());
+    }
+
     @Nullable
     public static MediaType getJsonMediaType() { return MediaType.parse("application/json; charset=utf-8"); }
 
