@@ -27,6 +27,9 @@ versions.lifecycleX = "2.2.0"
 versions.roomX = "2.2.5"
 versions.architecture = "1.1.1"
 
+//versions.cameraX = "1.0.0-beta10"     // added in 2020/10/14
+versions.cameraX = "1.0.0-SNAPSHOT"     // added in 2020/10/14
+
 versions.workManager = "2.3.0"
 
 versions.flexbox = "1.1.1"
