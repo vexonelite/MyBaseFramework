@@ -71,6 +71,16 @@ public final class Mutexs {
             }
             this.mutex.release();
         }
+
+        public void updateList(@Nullable final List<T> givenList) throws InterruptedException {
+            if ( (null == givenList) || (givenList.isEmpty()) ) { return; }
+            final int preSize = this.dataList.size();
+            this.mutex.acquire();
+            this.dataList.clear();
+            this.dataList.addAll(givenList);
+            LogWrapper.showLog(Log.INFO, "Mutexs_ListWrapper", "updateList - preSize: " + preSize + ", postSize: " + dataList.size());
+            this.mutex.release();
+        }
     }
 
     public static final class HashMapWrapper<K, T> {
