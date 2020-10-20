@@ -30,6 +30,17 @@ versions.architecture = "1.1.1"
 //versions.cameraX = "1.0.0-beta10"     // added in 2020/10/14
 versions.cameraX = "1.0.0-SNAPSHOT"     // added in 2020/10/14
 
+// ML Kit
+versions.mlkitBarcodeScanning = "16.0.3"        // added in 2020/10/20
+versions.mlkitObjectDetection = "16.2.1"        // added in 2020/10/20
+versions.mlkitObjectDetectionCustom = "16.2.1"  // added in 2020/10/20
+versions.mlkitFaceDetection = "16.2.1"          // added in 2020/10/20
+versions.mlkitImageLabeling = "17.0.0"          // added in 2020/10/20
+versions.mlkitImageLabelingAutoml = "16.2.1"    // added in 2020/10/20
+versions.mlkitImageLabelingCustom = "16.2.1"    // added in 2020/10/20
+versions.mlkitPoseDetection = "17.0.0"          // added in 2020/10/20
+versions.mlkitPoseDetectionAccurate = "17.0.0"  // added in 2020/10/20
+
 versions.workManager = "2.3.0"
 
 versions.flexbox = "1.1.1"
