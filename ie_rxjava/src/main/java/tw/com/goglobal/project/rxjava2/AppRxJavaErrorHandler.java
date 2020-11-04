@@ -11,6 +11,9 @@ import io.reactivex.functions.Consumer;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 
 
+/**
+ * https://github.com/ReactiveX/RxJava/wiki/What's-different-in-2.0#error-handling
+ */
 public final class AppRxJavaErrorHandler implements Consumer<Throwable> {
 
     private final String logTag;
@@ -23,7 +26,7 @@ public final class AppRxJavaErrorHandler implements Consumer<Throwable> {
     public void accept(Throwable throwable) throws Exception {
         if (throwable instanceof UndeliverableException) {
             LogWrapper.showLog(Log.ERROR, logTag, "AppRxJavaErrorHandler - UndeliverableException", throwable);
-            //throwable = throwable.getCause();
+            throwable = throwable.getCause();
         }
         if ((throwable instanceof IOException) || (throwable instanceof SocketException)) {
             // fine, irrelevant network problem or API that throws on cancellation
@@ -37,13 +40,16 @@ public final class AppRxJavaErrorHandler implements Consumer<Throwable> {
         }
         if ((throwable instanceof NullPointerException) || (throwable instanceof IllegalArgumentException)) {
             // that's likely a bug in the application
-            LogWrapper.showLog(Log.ERROR, logTag, "AppRxJavaErrorHandler - NullPointerException or IllegalArgumentException", throwable);
+            LogWrapper.showLog(Log.ERROR, logTag, "AppRxJavaErrorHandler - NullPointerException or IllegalArgumentException [that's likely a bug in the application]: " + throwable.getLocalizedMessage());
+            Thread.currentThread().getUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), throwable);
             return;
         }
         if (throwable instanceof IllegalStateException) {
             // that's a bug in RxJava or in a custom operator
-            LogWrapper.showLog(Log.ERROR, logTag, "AppRxJavaErrorHandler - IllegalStateException", throwable);
-            //return;
+            LogWrapper.showLog(Log.ERROR, logTag, "AppRxJavaErrorHandler - IllegalStateException [that's a bug in RxJava or in a custom operator]: " + throwable.getLocalizedMessage());
+            Thread.currentThread().getUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), throwable);
+            return;
         }
+        LogWrapper.showLog(Log.ERROR, logTag, "Undeliverable exception received, not sure what to do", throwable);
     }
 }
