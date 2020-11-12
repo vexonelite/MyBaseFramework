@@ -3,6 +3,7 @@ package tw.realtime.project.rtbaseframework.utils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 
@@ -12,6 +13,7 @@ import org.json.JSONObject;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.apis.errors.ErrorCodes;
 import tw.realtime.project.rtbaseframework.apis.errors.IeRuntimeException;
+import tw.realtime.project.rtbaseframework.models.IePair;
 
 
 /**
@@ -294,5 +296,157 @@ public final class JSONUtils {
         }
     }
 
+    // [start] added in 2020/11/11
+
+    @Nullable
+    public static String[] dismantleJsonString(
+            @Nullable final String json, @Nullable final String startChar, @Nullable final String endChar) {
+        if (null == json) {
+            LogWrapper.showLog(Log.ERROR, "JSONUtils", "dismantleJsonString - json is null!!");
+            return null;
+        }
+        if (null == startChar) {
+            LogWrapper.showLog(Log.ERROR, "JSONUtils", "dismantleJsonString - startChar is null!!");
+            return null;
+        }
+        if (null == endChar) {
+            LogWrapper.showLog(Log.ERROR, "JSONUtils", "dismantleJsonString - endChar is null!!");
+            return null;
+        }
+        final int firstIndex = json.indexOf(startChar);
+        final int lastIndex = json.lastIndexOf(endChar);
+        LogWrapper.showLog(Log.INFO, "JSONUtils", "dismantleJsonString - firstIndex: " + firstIndex + ", lastIndex: " + lastIndex);
+        if (lastIndex <= firstIndex) {
+            LogWrapper.showLog(Log.ERROR, "JSONUtils", "dismantleJsonString - error: lastIndex(" + lastIndex + ") <= firstIndex(" + firstIndex + ")");
+            //throw new IllegalArgumentException("lastIndex(" + lastIndex + ") <= firstIndex(" + firstIndex + ")");
+            return null;
+        }
+        final String innerJson = json.substring(firstIndex + 1, lastIndex);
+        LogWrapper.showLog(Log.INFO, "JSONUtils", "dismantleJsonString - innerJson: " + innerJson);
+        final String[] keyValueArray = innerJson.split(",");
+        for(final String keyValue : keyValueArray) {
+            LogWrapper.showLog(Log.INFO, "JSONUtils", "dismantleJsonString - keyValue: [" + keyValue + "]");
+        }
+        return keyValueArray;
+    }
+
+    @Nullable
+    public static String getInnerJsonString(
+            @Nullable final String json, @Nullable final String startChar, @Nullable final String endChar) {
+        if (null == json) {
+            LogWrapper.showLog(Log.ERROR, "JSONUtils", "getInnerJsonString - json is null!!");
+            return null;
+        }
+        if (null == startChar) {
+            LogWrapper.showLog(Log.ERROR, "JSONUtils", "getInnerJsonString - startChar is null!!");
+            return null;
+        }
+        if (null == endChar) {
+            LogWrapper.showLog(Log.ERROR, "JSONUtils", "getInnerJsonString - endChar is null!!");
+            return null;
+        }
+        final int firstIndex = json.indexOf(startChar);
+        final int lastIndex = json.lastIndexOf(endChar);
+        LogWrapper.showLog(Log.INFO, "JSONUtils", "getInnerJsonString - firstIndex: " + firstIndex + ", lastIndex: " + lastIndex);
+        if (lastIndex <= firstIndex) {
+            LogWrapper.showLog(Log.ERROR, "JSONUtils", "getInnerJsonString - error: lastIndex(" + lastIndex + ") <= firstIndex(" + firstIndex + ")");
+            //throw new IllegalArgumentException("lastIndex(" + lastIndex + ") <= firstIndex(" + firstIndex + ")");
+            return null;
+        }
+        final String innerJson = json.substring(firstIndex + 1, lastIndex);
+        LogWrapper.showLog(Log.INFO, "JSONUtils", "getInnerJsonString - innerJson: " + innerJson);
+        return innerJson;
+    }
+
+    @Nullable
+    public static String[] getJsonArrayString(
+            @Nullable final String json, @Nullable final String startChar, @Nullable final String endChar) {
+        if (null == json) {
+            LogWrapper.showLog(Log.ERROR, "JSONUtils", "dismantleJsonString - json is null!!");
+            return null;
+        }
+        if (null == startChar) {
+            LogWrapper.showLog(Log.ERROR, "JSONUtils", "dismantleJsonString - startChar is null!!");
+            return null;
+        }
+        if (null == endChar) {
+            LogWrapper.showLog(Log.ERROR, "JSONUtils", "dismantleJsonString - endChar is null!!");
+            return null;
+        }
+        final int firstIndex = json.indexOf(startChar);
+        final int lastIndex = json.lastIndexOf(endChar);
+        LogWrapper.showLog(Log.INFO, "JSONUtils", "dismantleJsonString - firstIndex: " + firstIndex + ", lastIndex: " + lastIndex);
+        if (lastIndex <= firstIndex) {
+            LogWrapper.showLog(Log.ERROR, "JSONUtils", "dismantleJsonString - error: lastIndex(" + lastIndex + ") <= firstIndex(" + firstIndex + ")");
+            //throw new IllegalArgumentException("lastIndex(" + lastIndex + ") <= firstIndex(" + firstIndex + ")");
+            return null;
+        }
+        final String innerJson = json.substring(firstIndex + 1, lastIndex);
+        LogWrapper.showLog(Log.INFO, "JSONUtils", "dismantleJsonString - innerJson: " + innerJson);
+        final String[] keyValueArray = innerJson.split(",");
+        for(final String keyValue : keyValueArray) {
+            LogWrapper.showLog(Log.INFO, "JSONUtils", "dismantleJsonString - keyValue: [" + keyValue + "]");
+        }
+        return keyValueArray;
+    }
+
+    @Nullable
+    public static IePair<String, String> parseKeyValueString(
+            @Nullable final String expectedKey,
+            @Nullable final String keyValueString,
+            final boolean isNumberFormat) {
+        if (null == keyValueString) {
+            LogWrapper.showLog(Log.ERROR, "JSONUtils", "parseKeyValueString - keyValueString is null!!");
+            return null;
+        }
+        if (null == expectedKey) {
+            LogWrapper.showLog(Log.ERROR, "JSONUtils", "parseKeyValueString - expectedKey is null!!");
+            return null;
+        }
+
+        //LogWrapper.showLog(Log.INFO, "JSONUtils", "parseKeyValueString - keyValueString: " + keyValueString);
+        final String[] keyValueArray = keyValueString.split(":");
+        if (keyValueArray.length != 2) {
+            LogWrapper.showLog(Log.ERROR, "JSONUtils", "parseKeyValueString - keyValueArray.length != 2 for [ESSID]!");
+            return null;
+        }
+
+        final String keyString = keyValueArray[0];
+        //LogWrapper.showLog(Log.INFO, "JSONUtils", "parseKeyValueString - [" + expectedKey + "] - keyString: " + keyString);
+        final int firstIndex2 = keyString.indexOf("\"");
+        final int lastIndex2 = keyString.lastIndexOf("\"");
+        //LogWrapper.showLog(Log.INFO, "JSONUtils", "parseKeyValueString - [" + expectedKey + "] firstIndex2: " + firstIndex2 + ", lastIndex2: " + lastIndex2);
+        if (lastIndex2 <= firstIndex2) {
+            LogWrapper.showLog(Log.ERROR, "JSONUtils", "parseKeyValueString - error: lastIndex2(" + lastIndex2 + ") <= firstIndex2(" + firstIndex2 + ")");
+            //throw new IllegalArgumentException("lastIndex(" + lastIndex + ") <= firstIndex(" + firstIndex + ")");
+            return null;
+        }
+
+        final String decodedKey = keyString.substring(firstIndex2 + 1, lastIndex2);
+
+        final String valueString = keyValueArray[1];
+        //LogWrapper.showLog(Log.INFO, "JSONUtils", "parseKeyValueString - [" + expectedKey + "] - valueString: " + valueString);
+
+        if (isNumberFormat) {
+            LogWrapper.showLog(Log.INFO, "JSONUtils", "parseKeyValueString - [" + expectedKey + "] decodedKey: [" + decodedKey + "], decodedValue: [" + valueString + "]");
+            return new IePair<>(decodedKey, valueString);
+        }
+        else { // String format
+            final int firstIndex1 = valueString.indexOf("\"");
+            final int lastIndex1 = valueString.lastIndexOf("\"");
+            //LogWrapper.showLog(Log.INFO, "JSONUtils", "parseKeyValueString - [" + expectedKey + "] firstIndex1: " + firstIndex1 + ", lastIndex1: " + lastIndex1);
+            if (lastIndex1 <= firstIndex1) {
+                LogWrapper.showLog(Log.ERROR, "JSONUtils", "parseKeyValueString - error: lastIndex1(" + lastIndex1 + ") <= firstIndex1(" + firstIndex1 + ")");
+                //throw new IllegalArgumentException("lastIndex(" + lastIndex + ") <= firstIndex(" + firstIndex + ")");
+                return null;
+            }
+
+            final String decodedValue = valueString.substring(firstIndex1 + 1, lastIndex1);
+            LogWrapper.showLog(Log.INFO, "JSONUtils", "parseKeyValueString - [" + expectedKey + "] decodedKey: [" + decodedKey + "], decodedValue: [" + decodedValue + "]");
+            return new IePair<>(decodedKey, decodedValue);
+        }
+    }
+
+    // [end] added in 2020/11/11
 }
 
