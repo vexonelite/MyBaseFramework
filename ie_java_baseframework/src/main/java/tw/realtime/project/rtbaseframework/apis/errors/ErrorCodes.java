@@ -3,8 +3,6 @@ package tw.realtime.project.rtbaseframework.apis.errors;
 public final class ErrorCodes {
 
     public interface Base {
-        String INTERNAL_CONVERSION_ERROR = "99999";
-
         String ILLEGAL_ARGUMENT_ERROR = "99998";
 
         String FAIL_TO_WRITE_TO_FILE = "99997";
@@ -40,6 +38,11 @@ public final class ErrorCodes {
         String NULL_POINTER_ERROR = "99947";
 
         String DEFAULT_UNIT_TEST_ERROR = "99946";
+
+        String INTERNAL_GENERATION_ERROR = "99945";
+        String INTERNAL_CONVERSION_ERROR = "99944";
+        String INTERNAL_FILTERING_ERROR = "99943";
+        String INTERNAL_PROCESS_ERROR = "99942";
     }
 
     public interface Ping {
