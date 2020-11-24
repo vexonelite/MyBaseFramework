@@ -165,13 +165,22 @@ public final class ConnectivityUtils {
             return "";
         }
         try {
-            final WifiInfo info = wifiManager.getConnectionInfo();
-            LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "getSsidViaWifiInfo - SSID: " + info.getSSID() + ", NetworkId: " + info.getNetworkId() + ", SupplicantState: " + info.getSupplicantState());
-            switch (info.getSupplicantState()) {
+            final WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+            final String ssid = wifiInfo.getSSID();
+            LogWrapper.showLog(Log.INFO, "ConnectivityUtils", "getSsidViaWifiInfo - SSID: " + ssid + ", NetworkId: " + wifiInfo.getNetworkId() + ", SupplicantState: " + wifiInfo.getSupplicantState());
+            switch (wifiInfo.getSupplicantState()) {
                 case COMPLETED: {
-                    return info.getSSID().replace("\"", "");
+                    // [start] revision in 2020/11/23
+                    //return wifiInfo.getSSID().replace("\"", "");
+                    final int firstIndex = ssid.indexOf("\"");
+                    final int lastIndex = ssid.lastIndexOf("\"");
+                    if (lastIndex > firstIndex) {
+                        return ssid.substring(firstIndex + 1, lastIndex);
+                    }
+                    else { return ssid; }
+                    // [end] revision in 2020/11/23
                 }
-                default: { return info.getSSID(); }
+                default: { return wifiInfo.getSSID(); }
             }
         }
         catch (Exception cause) { LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "getSsidViaWifiInfo - Error on WifiManager.getConnectionInfo()", cause); }
