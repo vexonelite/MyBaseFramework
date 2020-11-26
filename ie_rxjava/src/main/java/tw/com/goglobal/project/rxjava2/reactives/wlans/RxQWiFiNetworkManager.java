@@ -74,7 +74,7 @@ public final class RxQWiFiNetworkManager {
             @Nullable final NetworkCapabilities networkCapabilities,
             @Nullable final LinkProperties linkProperties) {
         if (null == eventBus) { return; }
-        eventBus.post(new IeNetworkStateInfoDelegate(callbackState, network, networkCapabilities, linkProperties));
+        eventBus.post(new IeNetworkStateInfoDelegate.Impl(callbackState, network, networkCapabilities, linkProperties));
         LogWrapper.showLog(Log.INFO, getLogTag(), "[Monitor] postEventThroughBus");
     }
 

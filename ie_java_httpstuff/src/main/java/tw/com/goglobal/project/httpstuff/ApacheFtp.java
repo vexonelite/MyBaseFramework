@@ -382,5 +382,4 @@ public final class ApacheFtp {
             catch (Exception cause) { throw new IeRuntimeException(cause, ErrorCodes.FTP.DELETE_FAILURE); }
         }
     }
-    }
 }
