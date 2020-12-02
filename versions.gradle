@@ -21,7 +21,7 @@ versions.cardviewX = "1.0.0"
 versions.swiperefreshlayout = "1.1.0"   // added in 2020/08/11
 versions.vectorDrawableX = "1.1.0"
 
-versions.constraintLayoutX = "2.0.2"    // updated in 2020/10/13
+versions.constraintLayoutX = "2.0.4"    // updated in 2020/12/02
 
 versions.fragmentX = "1.2.5"            // updated in 2020/07/20
 versions.lifecycleX = "2.2.0"
@@ -51,7 +51,7 @@ versions.firebaseCore = "17.4.4"            // added in 2020/07/20
 versions.firebaseMessaging = "17.3.3"
 versions.firebaseAuth = "19.3.2"            // updated in 2020/07/20
 versions.firebaseAnalytics = "17.4.0"       // added in 2020/07/20
-versions.firebaseCrashlytics = "17.1.1"     // added in 2020/07/20
+versions.firebaseCrashlytics = "17.3.0"     // updated in 2020/12/02
 
 //https://developers.google.com/android/guides/setup
 versions.googlePlayCore = "1.8.0"           // added in 2020/08/27
