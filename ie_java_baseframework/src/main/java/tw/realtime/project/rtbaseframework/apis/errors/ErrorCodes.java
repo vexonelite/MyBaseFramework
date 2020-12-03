@@ -101,6 +101,8 @@ public final class ErrorCodes {
 
         String READ_TIMEOUT = "99487";
 
+        String FAIL_TO_READ_TO_UDP_PACKET = "99486";
+
         String GENERAL_OPERATION_FAILURE = "99401";
     }
 
