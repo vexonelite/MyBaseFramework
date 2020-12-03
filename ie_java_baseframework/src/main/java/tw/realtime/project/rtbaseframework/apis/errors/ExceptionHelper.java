@@ -53,4 +53,24 @@ public final class ExceptionHelper {
         }
     }
 
+    @NonNull
+    public static IeSocketException toIeSocketException(@NonNull Exception cause) {
+        if (cause instanceof IeSocketException) {
+            return (IeSocketException) cause;
+        }
+        else {
+            return new IeSocketException("unknown error", "00000");
+        }
+    }
+
+    @NonNull
+    public static IeSocketException toIeSocketException(@NonNull Throwable cause) {
+        if (cause instanceof IeSocketException) {
+            return (IeSocketException) cause;
+        }
+        else {
+            return new IeSocketException("unknown error", "00000");
+        }
+    }
+
 }
