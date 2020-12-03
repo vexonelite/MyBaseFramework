@@ -27,6 +27,8 @@ public interface IeNetworkStateInfoDelegate {
      */
     @Nullable LinkProperties theLinkProperties();
 
+    ///
+
     final class Impl implements IeNetworkStateInfoDelegate {
 
         public final IeNetworkCallbackState callbackState;
