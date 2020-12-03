@@ -50,6 +50,10 @@ import tw.realtime.project.rtbaseframework.apis.errors.IeRuntimeException;
 
 public final class ConnectivityUtils {
 
+    /**
+     * Please use {@link WifiManager.UNKNOWN_SSID} instead!!
+     */
+    @Deprecated
     public static final String UNKNOWN_SSID = "<unknown ssid>";
 
     @SuppressLint("MissingPermission")
