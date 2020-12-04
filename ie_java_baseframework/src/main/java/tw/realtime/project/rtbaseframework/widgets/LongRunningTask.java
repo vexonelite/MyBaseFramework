@@ -16,7 +16,7 @@ import tw.realtime.project.rtbaseframework.LogWrapper;
 public final class LongRunningTask implements Runnable {
 
     private final byte[] lock = new byte[0];
-    private boolean isStillLongRunning = true;
+    private boolean isStillLongRunning = false;
     private ExecutorService executorService;
     private Runnable task;
 
@@ -32,6 +32,7 @@ public final class LongRunningTask implements Runnable {
 
         executorService = Executors.newSingleThreadExecutor();
         LogWrapper.showLog(Log.INFO, getLogTag(), "startTask - Executors.newSingleThreadExecutor() !!");
+        modifyIsStillLongRunningFlag(true);
         executorService.submit(this);
         LogWrapper.showLog(Log.INFO, getLogTag(), "startTask - executorService.submit!!");
     }
@@ -59,6 +60,8 @@ public final class LongRunningTask implements Runnable {
             LogWrapper.showLog(Log.INFO, getLogTag(), "stopTask - executorService is null!!");
         }
     }
+
+    public boolean isStillLongRunning() { return this.isStillLongRunning; }
 
     public void modifyIsStillLongRunningFlag(final boolean flag) {
         synchronized(lock) {
