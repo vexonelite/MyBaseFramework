@@ -55,4 +55,8 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:${deps.versions.rxJava2}"
     // RxAndroid 2.X
     implementation "io.reactivex.rxjava2:rxandroid:${deps.versions.rxAndroid2}"
+
+    // IP Address - may be I should add an additional module - added in 2020/07/08
+    //implementation "com.github.seancfoley:ipaddress:${deps.versions.seancfoleyIpaddress4}"
+    implementation "com.github.seancfoley:ipaddress:${deps.versions.seancfoleyIpaddress5}"
 }
