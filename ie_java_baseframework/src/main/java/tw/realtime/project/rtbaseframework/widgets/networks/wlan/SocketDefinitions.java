@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
 import java.net.SocketException;
 
 import tw.realtime.project.rtbaseframework.LogWrapper;
@@ -68,9 +69,18 @@ public class SocketDefinitions {
         @NonNull
         public DatagramSocket createUdpSocket() throws IeSocketException {
             try {
-                final DatagramSocket socket = new DatagramSocket(this.portNumber);
-                socket.setSoTimeout(this.timeout);
+                // [reference](https://www.itread01.com/p/1350249.html)
+                // [start] revision in 2020/12/08
+//                final DatagramSocket socket = new DatagramSocket(this.portNumber);
+//                socket.setSoTimeout(this.timeout);
+//                socket.setBroadcast(this.broadcastFlag);
+
+                final DatagramSocket socket = new DatagramSocket(null);
+                socket.setReuseAddress(true);
                 socket.setBroadcast(this.broadcastFlag);
+                socket.bind(new InetSocketAddress(this.portNumber));
+                LogWrapper.showLog(Log.INFO, "SocketDefinitions_UdpConfiguration", "createUdpSocket [*** Done ***]");
+                // [end] revision in 2020/12/08
                 return socket;
             }
             catch (SocketException cause) {
