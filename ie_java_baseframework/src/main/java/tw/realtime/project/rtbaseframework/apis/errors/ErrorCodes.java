@@ -114,6 +114,7 @@ public final class ErrorCodes {
         String DOWNLOAD_FAILURE = "99393";
         String UPLOAD_FAILURE = "99392";
         String DELETE_FAILURE = "99391";
+        String REMOTE_PASV_MODE_FAILURE = "99390";
 
         String GENERAL_OPERATION_FAILURE = "99379";
     }

@@ -21,6 +21,9 @@ versions.cardviewX = "1.0.0"
 versions.swiperefreshlayout = "1.1.0"   // added in 2020/08/11
 versions.vectorDrawableX = "1.1.0"
 
+versions.dataStore = '1.0.0-alpha05'    // added in 2020/12/09
+versions.protobuf = '3.14.0'            // added in 2020/12/09
+
 versions.constraintLayoutX = "2.0.4"    // updated in 2020/12/02
 
 versions.fragmentX = "1.2.5"            // updated in 2020/07/20
