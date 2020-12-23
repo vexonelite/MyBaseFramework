@@ -1,4 +1,4 @@
-package tw.com.goglobal.project.ie_elite_module.widgets;
+package tw.realtime.project.rtbaseframework.widgets;
 
 import android.util.Log;
 
@@ -15,13 +15,13 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
-import tw.com.goglobal.project.ie_elite_module.LogWrapper;
-import tw.com.goglobal.project.ie_elite_module.delegates.IdentifierDelegate;
-import tw.com.goglobal.project.ie_elite_module.delegates.apis.IeApiResponse;
-import tw.com.goglobal.project.ie_elite_module.errors.ErrorCodes;
-import tw.com.goglobal.project.ie_elite_module.errors.IeRuntimeException;
-import tw.com.goglobal.project.ie_elite_module.errors.IeSocketException;
-import tw.com.goglobal.project.ie_elite_module.widgets.networks.wlan.ConnectivityUtils;
+import tw.realtime.project.rtbaseframework.LogWrapper;
+import tw.realtime.project.rtbaseframework.apis.errors.ErrorCodes;
+import tw.realtime.project.rtbaseframework.apis.errors.IeRuntimeException;
+import tw.realtime.project.rtbaseframework.apis.errors.IeSocketException;
+import tw.realtime.project.rtbaseframework.delegates.apis.IeApiResponse;
+import tw.realtime.project.rtbaseframework.delegates.ui.view.IdentifierDelegate;
+import tw.realtime.project.rtbaseframework.widgets.networks.wlan.ConnectivityUtils;
 
 
 public final class IeSocketManager {
