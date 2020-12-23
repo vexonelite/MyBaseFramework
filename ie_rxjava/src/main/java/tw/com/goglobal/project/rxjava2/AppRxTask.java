@@ -95,6 +95,7 @@ public abstract class AppRxTask {
             );
         }
 
+        @NonNull
         protected abstract Function<List<T>, Publisher<IePair<T, IeApiResponse<R>>>> getParallelFlatMapper();
     }
 
@@ -119,6 +120,7 @@ public abstract class AppRxTask {
                     .sequential();
         }
 
+        @NonNull
         protected abstract Function<T, IePair<T, IeApiResponse<R>>> getSingleCommunicationFlatMapper();
     }
 

@@ -681,7 +681,7 @@ public final class ConnectivityUtils {
         }
 
         @NonNull
-        private Socket createViaDefaultFactory() throws IOException {
+        public Socket createViaDefaultFactory() throws IOException {
             LogWrapper.showLog(Log.ERROR, "ConnectivityUtils", "IeSocketFactory - socket created by SocketFactory.getDefault().createSocket()");
             return SocketFactory.getDefault().createSocket();
         }
