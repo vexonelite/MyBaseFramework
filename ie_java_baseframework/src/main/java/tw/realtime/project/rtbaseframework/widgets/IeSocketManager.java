@@ -371,8 +371,29 @@ public final class IeSocketManager {
         @NonNull
         public IeApiResponse<String> readDataFromRemote(
                 @NonNull final StringBuilder stringBuilder, final int waitingTime, final int retryLimit, final int retryCount) {
+//            LogWrapper.showLog(Log.INFO, "IeSocketManager_SocketHelper", "readDataFromRemote - retryCount: [" + retryCount + "], [On Thread: " + Thread.currentThread().getName() + "]");
+
+            try { Thread.sleep(waitingTime); } catch (InterruptedException cause) {}
+
             try {
-                final byte[] buffer = new byte[8196];
+                final int incomingSize = bufferedInputStream.available();
+//                LogWrapper.showLog(Log.INFO, "IeSocketManager_SocketHelper", "readDataFromRemote - incomingSize ["
+//                        + incomingSize + "], [On Thread: " + Thread.currentThread().getName() + "]");
+                if (incomingSize <= 0) {
+                    if (retryCount + 1 <= retryLimit) {
+                        return readDataFromRemote(stringBuilder, waitingTime, retryLimit, retryCount + 1);
+                    }
+                    else {
+                        return readDataFromRemote(stringBuilder, waitingTime, retryLimit, retryCount + 1);
+                    }
+                }
+
+                LogWrapper.showLog(Log.INFO, "IeSocketManager_SocketHelper", "readDataFromRemote - " +
+                        "retryCount: [" + retryCount + "], incomingSize [" + incomingSize + "], [On Thread: " + Thread.currentThread().getName() + "]");
+
+                //final byte[] buffer = new byte[8196];
+                final byte[] buffer = new byte[incomingSize];
+                // This method blocks until some input is available!!
                 final int numberOfReadBytes = bufferedInputStream.read(buffer);
                 LogWrapper.showLog(Log.INFO, "IeSocketManager_SocketHelper", "readDataFromRemote - numberOfReadBytes ["
                         + numberOfReadBytes + "], [On Thread: " + Thread.currentThread().getName() + "]");
@@ -387,10 +408,6 @@ public final class IeSocketManager {
                 }
 
                 final String json = stringBuilder.toString();
-                if (json.isEmpty()) {
-                    return readDataFromRemote(stringBuilder, waitingTime, retryLimit, retryCount + 1);
-                }
-
                 LogWrapper.showLog(Log.INFO, "IeSocketManager_SocketHelper", "readDataFromRemote - current json ["
                         + json + "], [On Thread: " + Thread.currentThread().getName() + "]");
                 if (isJSONValid(json.trim())) {
@@ -399,14 +416,17 @@ public final class IeSocketManager {
                     return new IeApiResponse<>(json, null);
                 }
 
-                try { Thread.sleep(waitingTime); } catch (InterruptedException cause) {}
-
                 LogWrapper.showLog(Log.INFO, "IeSocketManager_SocketHelper", "readDataFromRemote - retryLimit: ["
                         + retryLimit + "], retryCount: [" + retryCount + "], [On Thread: " + Thread.currentThread().getName() + "]");
+
                 if (retryCount + 1 <= retryLimit) {
+                    LogWrapper.showLog(Log.INFO, "IeSocketManager_SocketHelper", "readDataFromRemote - retry -> readDataFromRemote");
                     return readDataFromRemote(stringBuilder, waitingTime, retryLimit, retryCount + 1);
                 }
-                else { return new IeApiResponse<>(json, null); }
+                else {
+                    LogWrapper.showLog(Log.INFO, "IeSocketManager_SocketHelper", "readDataFromRemote - return");
+                    return new IeApiResponse<>(json, null);
+                }
             }
             catch (Exception cause) {
                 LogWrapper.showLog(Log.ERROR, "IeSocketManager_SocketHelper", "error on readDataFromRemote for ["
@@ -428,6 +448,11 @@ public final class IeSocketManager {
                     final String readStr = new String(dataArray, 0, dataArray.length, StandardCharsets.UTF_8);
                     LogWrapper.showLog(Log.INFO, "IeSocketManager_SocketHelper", "readDataAndNoReturn - readStr ["
                             + readStr + "], [On Thread: " + Thread.currentThread().getName() + "]");
+
+                    if (numberOfReadBytes == 8196) {
+                        LogWrapper.showLog(Log.INFO, "IeSocketManager_SocketHelper", "readDataAndNoReturn - read more -> readDataAndNoReturn!!");
+                        readDataAndNoReturn();
+                    }
                 }
             }
             catch (Exception cause) {
