@@ -92,7 +92,7 @@ public abstract class AbstractRxTask<T> implements IeTaskDelegate, RxDisposeDele
         public ApiCompletableObserver(@NonNull T result) { this.result = result; }
 
         @Override
-        public void onSubscribe(Disposable disposable) {
+        public void onSubscribe(@NonNull Disposable disposable) {
             LogWrapper.showLog(Log.INFO, getLogTag(), "ApiCompletableObserver - onSubscribe - Tid: " + Thread.currentThread().getId());
             setDisposable(disposable);
         }
@@ -105,7 +105,7 @@ public abstract class AbstractRxTask<T> implements IeTaskDelegate, RxDisposeDele
         }
 
         @Override
-        public void onError(Throwable cause) {
+        public void onError(@NonNull Throwable cause) {
             LogWrapper.showLog(Log.ERROR, getLogTag(), "ApiCompletableObserver - onError - Tid: " + Thread.currentThread().getId(), cause);
             rxDisposeIfPossible();
             notifyCallbackOnError(cause);
@@ -115,20 +115,20 @@ public abstract class AbstractRxTask<T> implements IeTaskDelegate, RxDisposeDele
     public final class ApiMaybeObserver implements MaybeObserver<T> {
 
         @Override
-        public void onSubscribe(Disposable disposable) {
+        public void onSubscribe(@NonNull Disposable disposable) {
             LogWrapper.showLog(Log.INFO, getLogTag(), "ApiMaybeObserver - onSubscribe - Tid: " + Thread.currentThread().getId());
             setDisposable(disposable);
         }
 
         @Override
-        public void onSuccess(T result) {
+        public void onSuccess(@NonNull T result) {
             LogWrapper.showLog(Log.INFO, getLogTag(), "ApiMaybeObserver - onSuccess - Tid: " + Thread.currentThread().getId());
             rxDisposeIfPossible();
             notifyCallbackOnSuccess(result);
         }
 
         @Override
-        public void onError(Throwable cause) {
+        public void onError(@NonNull Throwable cause) {
             LogWrapper.showLog(Log.ERROR, getLogTag(), "ApiMaybeObserver - onError - Tid: " + Thread.currentThread().getId(), cause);
             rxDisposeIfPossible();
             notifyCallbackOnError(cause);
