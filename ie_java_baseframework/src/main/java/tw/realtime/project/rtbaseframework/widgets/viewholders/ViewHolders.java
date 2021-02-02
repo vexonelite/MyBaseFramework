@@ -61,7 +61,7 @@ public final class ViewHolders {
     }
     // [end] added in 2020/12/02
 
-    static abstract class AbsActionsDialog<T> {
+    public static abstract class AbsActionsDialog<T> {
 
         private DialogDecisionDelegate2<T> dialogCallback;
 
@@ -179,7 +179,7 @@ public final class ViewHolders {
 
     public static final class IeTwinActionsDialog<T> extends AbsActionsDialog<T> {
 
-        public BaseDialogTwinActionsV2Binding dialogTwinActionsBinding;
+        private BaseDialogTwinActionsV2Binding dialogTwinActionsBinding;
 
         public AbsActionsDialog<T> setViewBinding(@Nullable final BaseDialogTwinActionsV2Binding viewBinding) {
             this.dialogTwinActionsBinding = viewBinding;
@@ -210,7 +210,7 @@ public final class ViewHolders {
 
     public static final class IeSingleActionDialog<T> extends AbsActionsDialog<T> {
 
-        public BaseDialogSingleActionV2Binding dialogSingleActionBinding;
+        private BaseDialogSingleActionV2Binding dialogSingleActionBinding;
 
         public AbsActionsDialog<T> setViewBinding(@Nullable final BaseDialogSingleActionV2Binding viewBinding) {
             this.dialogSingleActionBinding = viewBinding;
