@@ -4,13 +4,13 @@ import android.view.View;
 
 public final class IeOnClickCallbacks {
 
-    public final class DoNothing implements View.OnClickListener {
+    public static final class DoNothing implements View.OnClickListener {
         @Override
         public void onClick(View view) { }
     }
 
 
-    public final class ViewVisibility implements View.OnClickListener {
+    public static final class ViewVisibility implements View.OnClickListener {
 
         private final int visibility;
 
