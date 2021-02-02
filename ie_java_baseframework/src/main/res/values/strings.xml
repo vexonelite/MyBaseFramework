@@ -25,6 +25,10 @@
 
     <string name="base_network_is_unavailable">請檢查網路連線</string>
 
+    <string name="base_digit_alphabet_001">
+        0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_
+    </string>
+
     <string name="base_test_string_1">Update existing item</string>
     <string name="base_test_string_2">
 		The previously saved programs will be restored.\n\nAre you sure to restore full data?
