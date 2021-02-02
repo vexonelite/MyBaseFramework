@@ -11,10 +11,14 @@ import tw.realtime.project.rtbaseframework.R;
 
 public final class DialogDataBuilder {
 
+    private boolean titleVisibility = true;
+
     private String title = "";
     private String message = "";
     private String cancelButtonTitle = "";
     private String confirmButtonTitle = "";
+
+    private int titlePaddingBottom = 8;
 
     @ColorInt
     private int dividerColor;
@@ -24,10 +28,24 @@ public final class DialogDataBuilder {
     private int confirmButtonColor;
 
 
+    public DialogDataBuilder setTitleVisibility(boolean visibility) {
+        this.titleVisibility = visibility;
+        return this;
+    }
+
+    public boolean theTitleVisibility() { return titleVisibility; }
+
     public DialogDataBuilder setTitle(@NonNull String title) {
         this.title = title;
         return this;
     }
+
+    public DialogDataBuilder setTitlePaddingBottom(final int paddingBottom) {
+        this.titlePaddingBottom = paddingBottom;
+        return this;
+    }
+
+    public int theTitlePaddingBottom() { return titlePaddingBottom; }
 
     public DialogDataBuilder setMessage(@NonNull String message) {
         this.message = message;
