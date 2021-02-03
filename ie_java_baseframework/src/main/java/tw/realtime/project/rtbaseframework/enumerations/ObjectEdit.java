@@ -6,6 +6,7 @@ package tw.realtime.project.rtbaseframework.enumerations;
 
 public enum ObjectEdit {
     CREATED,
+    RETRIEVE,
     UPDATED,
     DELETED
 }
