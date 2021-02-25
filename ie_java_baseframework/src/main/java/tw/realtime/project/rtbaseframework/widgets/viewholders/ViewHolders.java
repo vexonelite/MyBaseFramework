@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.R;
 import tw.realtime.project.rtbaseframework.apis.filters.IFilterFunction;
+import tw.realtime.project.rtbaseframework.databinding.BaseAdapterImageTitleDescriptionItemBinding;
 import tw.realtime.project.rtbaseframework.databinding.BaseDialogSingleActionV2Binding;
 import tw.realtime.project.rtbaseframework.databinding.BaseDialogTitleTextInputBinding;
 import tw.realtime.project.rtbaseframework.databinding.BaseDialogTwinActionsV2Binding;
@@ -49,17 +51,43 @@ public final class ViewHolders {
         public MatchParentUnavailable(View itemView) { super(itemView); }
     }
 
-    // [start] added in 2020/12/02
+    // [start] added in 2020/12/02, revision in 2021/02/25
     public static final class IeSingleText extends RecyclerView.ViewHolder {
-        public IeSingleText(View itemView) { super(itemView); }
+
+        public final TextView textView;
+
+        public IeSingleText(@NonNull final View itemView) {
+            super(itemView);
+            textView = itemView.findViewById(R.id.title);
+        }
 
         public void onBind(@NonNull final DescriptionDelegate delegate, final int position) {
-            if (itemView instanceof TextView) {
-                ((TextView) itemView).setText(delegate.theDescription());
-            }
+            textView.setText(delegate.theDescription());
         }
     }
-    // [end] added in 2020/12/02
+
+    public static final class IeImageTitleDescription extends RecyclerView.ViewHolder {
+
+        public final ImageView imageView;
+        public final TextView titleView;
+        public final TextView descriptionView;
+
+        public IeImageTitleDescription(@NonNull final View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.image);
+            titleView = itemView.findViewById(R.id.title);
+            descriptionView = itemView.findViewById(R.id.description);
+        }
+
+        public IeImageTitleDescription(@NonNull final BaseAdapterImageTitleDescriptionItemBinding viewBinding) {
+            super(viewBinding.getRoot());
+            imageView = itemView.findViewById(R.id.image);
+            titleView = itemView.findViewById(R.id.title);
+            descriptionView = itemView.findViewById(R.id.description);
+        }
+    }
+
+    // [end] added in 2020/12/02, revision in 2021/02/25
 
     public static abstract class AbsActionsDialog<T> {
 
