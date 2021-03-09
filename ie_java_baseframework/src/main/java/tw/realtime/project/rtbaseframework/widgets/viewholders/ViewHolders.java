@@ -27,6 +27,7 @@ import tw.realtime.project.rtbaseframework.delegates.ui.view.DialogDecisionDeleg
 import tw.realtime.project.rtbaseframework.dialogs.DialogDataBuilder;
 import tw.realtime.project.rtbaseframework.enumerations.DialogAction;
 import tw.realtime.project.rtbaseframework.widgets.CommonItemWrapper;
+import tw.realtime.project.rtbaseframework.widgets.IeOnClickCallbacks;
 
 /**
  * Default ViewHolder for the default ViewType
@@ -211,6 +212,9 @@ public final class ViewHolders {
 
         public AbsActionsDialog<T> setViewBinding(@Nullable final BaseDialogTwinActionsV2Binding viewBinding) {
             this.dialogTwinActionsBinding = viewBinding;
+            if (null != viewBinding) {
+                this.dialogTwinActionsBinding.getRoot().setOnClickListener(new IeOnClickCallbacks.DoNothing());
+            }
             return this;
         }
 
@@ -242,6 +246,9 @@ public final class ViewHolders {
 
         public AbsActionsDialog<T> setViewBinding(@Nullable final BaseDialogSingleActionV2Binding viewBinding) {
             this.dialogSingleActionBinding = viewBinding;
+            if (null != viewBinding) {
+                this.dialogSingleActionBinding.getRoot().setOnClickListener(new IeOnClickCallbacks.DoNothing());
+            }
             return this;
         }
 
