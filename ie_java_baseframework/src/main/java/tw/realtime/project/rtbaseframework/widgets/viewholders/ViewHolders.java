@@ -238,6 +238,11 @@ public final class ViewHolders {
             }
             uiInitializationExt(dialogTwinActionsBinding.cancelButton, dialogTwinActionsBinding.dividerVertical);
         }
+
+        public void hideOrShow(final boolean visible) {
+            if (null == dialogTwinActionsBinding) { return; }
+            dialogTwinActionsBinding.getRoot().setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        }
     }
 
     public static final class IeSingleActionDialog<T> extends AbsActionsDialog<T> {
@@ -262,6 +267,11 @@ public final class ViewHolders {
                     dialogSingleActionBinding.message,
                     dialogSingleActionBinding.confirmButton,
                     dialogSingleActionBinding.dividerHorizontal);
+        }
+
+        public void hideOrShow(final boolean visible) {
+            if (null == dialogSingleActionBinding) { return; }
+            dialogSingleActionBinding.getRoot().setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
         }
     }
 
