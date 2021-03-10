@@ -251,11 +251,21 @@ public final class IeSocketManager {
     ///
 
     public static final class SocketHelperFactory {
+
         @NonNull
         public SocketHelper<IdentifierDelegate> create(
                 @Nullable final IdentifierDelegate item,
                 @NonNull final String ipAddress,
                 final int portNumber) throws IeRuntimeException {
+            return this.create(item, ipAddress, portNumber, 10000);
+        }
+
+        @NonNull
+        public SocketHelper<IdentifierDelegate> create(
+                @Nullable final IdentifierDelegate item,
+                @NonNull final String ipAddress,
+                final int portNumber,
+                final int connectTimeout) throws IeRuntimeException {
 
             if (null == item) {
                 LogWrapper.showLog(Log.ERROR, "IeSocketManager", "createConnectedSocket - item is null!! " +
@@ -264,7 +274,6 @@ public final class IeSocketManager {
             }
 
             try {
-                final int connectTimeout = 10000;
                 final InetSocketAddress socketAddress = new InetSocketAddress(ipAddress, portNumber);
                 final Socket socket = new ConnectivityUtils.IeSocketFactory().createViaDefaultFactory();
                 LogWrapper.showLog(Log.INFO, "IeSocketManager", "createConnectedSocket - create a new socket for [" +
