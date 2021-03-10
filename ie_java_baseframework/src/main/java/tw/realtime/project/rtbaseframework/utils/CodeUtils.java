@@ -30,6 +30,9 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
@@ -600,28 +603,80 @@ public final class CodeUtils {
     @NonNull
     public static <T> String elementsToString(@NonNull List<T> itemList, @Nullable String newLine) {
         final String theNewLine = (null != newLine) ? newLine : "\n";
-        String message = "";
+        //String message = "";
+        final StringBuilder builder = new StringBuilder();
         for (int i = 0; i < itemList.size(); i++) {
-            message += itemList.get(i).toString();
+            //message += itemList.get(i).toString();
+            builder.append(itemList.get(i).toString());
             if (i < (itemList.size() - 1)) {
-                message += ", " + theNewLine;
+                //message += ", " + theNewLine;
+                builder.append(", ").append(theNewLine);
             }
         }
-        return "[" + message + "]";
+        //return "[" + message + "]";
+        return "[" + builder.toString() + "]";
     }
-
 
     @NonNull
     public static String intItemsToString(@NonNull List<Integer> itemList, @Nullable String newLine) {
         final String theNewLine = (null != newLine) ? newLine : "";
-        String message = "";
+        //String message = "";
+        final StringBuilder builder = new StringBuilder();
         for (int i = 0; i < itemList.size(); i++) {
-            message += integerToDigitFormat(itemList.get(i), 4);
+            //message += integerToDigitFormat(itemList.get(i), 4);
+            builder.append(integerToDigitFormat(itemList.get(i), 4));
             if (i < (itemList.size() - 1)) {
-                message += ", " + theNewLine;
+                //message += ", " + theNewLine;
+                builder.append(", ").append(theNewLine);
             }
         }
-        return "[" + message + "]";
+
+        //return "[" + message + "]";
+        return "[" + builder.toString() + "]";
+    }
+
+    @NonNull
+    public static List<String> stringSplitByDelimiter(@Nullable final String input, @Nullable final String delimiter) {
+        final List<String> itemList = new ArrayList<>();
+        if ( (null == input) || (itemList.isEmpty()) ) {
+            java.util.logging.Logger.getLogger("IeUtils").log(Level.SEVERE, "stringSplitByDelimiter - input is either null or empty!!");
+            return itemList;
+
+        }
+        if (null == delimiter) {
+            java.util.logging.Logger.getLogger("IeUtils").log(Level.SEVERE, "stringSplitByDelimiter - delimiter is null!!");
+            return itemList;
+        }
+
+        try {
+            final String[] stringArray = input.split(delimiter);
+            return Arrays.asList(stringArray);
+        }
+        catch (Exception cause) {
+            java.util.logging.Logger.getLogger("IeUtils").log(Level.SEVERE, "stringSplitByDelimiter - error on String.split(): " + cause.getLocalizedMessage());
+            return itemList;
+        }
+    }
+
+    @NonNull
+    public static <T> String itemListToString(@Nullable final List<T> itemList, @Nullable final String delimiter) {
+        if ( (null == itemList) || (itemList.isEmpty()) ) {
+            java.util.logging.Logger.getLogger("IeUtils").log(Level.SEVERE, "itemListToString - itemList is either null or empty!!");
+            return "";
+
+        }
+        if (null == delimiter) {
+            java.util.logging.Logger.getLogger("IeUtils").log(Level.SEVERE, "itemListToString - delimiter is null!!");
+            return "";
+        }
+        final StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < itemList.size(); i++) {
+            builder.append(itemList.get(i).toString());
+            if (i < (itemList.size() - 1)) {
+                builder.append(delimiter);
+            }
+        }
+        return builder.toString();
     }
 
     @NonNull
