@@ -638,7 +638,7 @@ public final class CodeUtils {
     @NonNull
     public static List<String> stringSplitByDelimiter(@Nullable final String input, @Nullable final String delimiter) {
         final List<String> itemList = new ArrayList<>();
-        if ( (null == input) || (itemList.isEmpty()) ) {
+        if ( (null == input) || (input.isEmpty()) ) {
             java.util.logging.Logger.getLogger("IeUtils").log(Level.SEVERE, "stringSplitByDelimiter - input is either null or empty!!");
             return itemList;
 
