@@ -68,6 +68,7 @@ public final class ErrorCodes {
         String UPDATE_FAILURE = "99693";
         String CURSOR_CONVERSION_ERROR = "99692";
         String HAS_EXISTED_IN_SQL = "99691";
+        String DROP_TABLE_FAILURE = "99690";
     }
 
 

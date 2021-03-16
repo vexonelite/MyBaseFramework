@@ -31,7 +31,7 @@ versions.dataStore = '1.0.0-alpha05'    // added in 2020/12/09
 versions.protobuf = '3.14.0'            // added in 2020/12/09
 
 versions.activityX = "1.2.0"            // added in 2021/03/02
-versions.fragmentX = "1.3.0"            // updated in 2020/03/02
+versions.fragmentX = "1.3.1"            // updated in 2020/03/16
 versions.lifecycleX = "2.3.0"           // updated in 2021/02/18
 versions.roomX = "2.2.6"                // updated in 2021/01/20
 versions.architecture = "2.1.0"         // updated in 2021/01/20
@@ -50,22 +50,22 @@ versions.mlkitImageLabelingCustom = "16.2.1"    // added in 2020/10/20
 versions.mlkitPoseDetection = "17.0.0"          // added in 2020/10/20
 versions.mlkitPoseDetectionAccurate = "17.0.0"  // added in 2020/10/20
 
-versions.workManager = "2.3.4"
+versions.workManager = "2.5.0"              // updated in 2020/11/09
 
 versions.flexbox = "1.1.1"
 versions.flexbox2 = "2.0.1"
 
-versions.firebaseCore = "18.0.0"            // updated in 2020/11/09
-versions.firebaseAuth = "20.0.0"            // updated in 2020/11/09
+versions.firebaseCore = "18.0.2"            // updated in 2021/03/16
+versions.firebaseAuth = "20.0.3"            // updated in 2021/03/16
 versions.firebaseMessaging = "17.5.0"
 versions.firebaseAnalytics = "17.4.0"       // added in 2020/04/28
-versions.firebaseCrashlytics = "17.3.0"     // updated in 2020/12/02
+versions.firebaseCrashlytics = "17.4.0"     // updated in 2021/03/16
 
 //https://developers.google.com/android/guides/setup
-versions.googlePlayCore = "1.8.3"           // added in 2020/08/27, updated in 2020/11/09
+versions.googlePlayCore = "1.10.0"          // updated in 2021/03/16
 versions.googleMobileAds = "16.0.0"
 versions.googleAnalytics = "16.0.4"
-versions.googleAuth = "18.1.0"              // added in 2020/08/31
+versions.googleAuth = "19.0.0"              // updated in 2021/03/16
 versions.googleLocation = "17.0.0"          // added in 2020/08/31
 versions.googleCloudMessaging = "17.0.0"    // added in 2020/08/31
 
@@ -90,10 +90,11 @@ versions.seancfoleyIpaddress4 = "4.3.3"     // added in 2020/07/15
 
 versions.glide = "4.10.0"
 
-versions.gson = "2.8.5"
+versions.gson = "2.8.6"                     // updated in 2021/03/16
 versions.moshi = "1.9.3"                    // updated in 2020/11/10
 
 versions.facebook8 = "8.0.0"                // added in 2020/10/14
+versions.facebook9 = "9.0.0"                // added in 2021/03/16
 
 versions.twitter = "3.3.0"
 
