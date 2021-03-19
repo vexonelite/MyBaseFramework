@@ -209,6 +209,7 @@ public final class ViewHolders {
     public static final class IeTwinActionsDialog<T> extends AbsActionsDialog<T> {
 
         private BaseDialogTwinActionsV2Binding dialogTwinActionsBinding;
+        private boolean currentVisibility = false;
 
         public AbsActionsDialog<T> setViewBinding(@Nullable final BaseDialogTwinActionsV2Binding viewBinding) {
             this.dialogTwinActionsBinding = viewBinding;
@@ -243,11 +244,14 @@ public final class ViewHolders {
             if (null == dialogTwinActionsBinding) { return; }
             dialogTwinActionsBinding.getRoot().setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
         }
+
+        public boolean getCurrentVisibility() { return currentVisibility; }
     }
 
     public static final class IeSingleActionDialog<T> extends AbsActionsDialog<T> {
 
         private BaseDialogSingleActionV2Binding dialogSingleActionBinding;
+        private boolean currentVisibility = false;
 
         public AbsActionsDialog<T> setViewBinding(@Nullable final BaseDialogSingleActionV2Binding viewBinding) {
             this.dialogSingleActionBinding = viewBinding;
@@ -271,8 +275,45 @@ public final class ViewHolders {
 
         public void hideOrShow(final boolean visible) {
             if (null == dialogSingleActionBinding) { return; }
+            currentVisibility = visible;
             dialogSingleActionBinding.getRoot().setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
         }
+
+        public boolean getCurrentVisibility() { return currentVisibility; }
+    }
+
+    public static final class IeProgressBarDialog {
+
+        private tw.realtime.project.rtbaseframework.databinding.BaseDialogProgressBarMaskBinding dialogProgressBarMaskBinding;
+        private boolean currentVisibility = false;
+
+        public IeProgressBarDialog setViewBinding(@Nullable final tw.realtime.project.rtbaseframework.databinding.BaseDialogProgressBarMaskBinding viewBinding) {
+            this.dialogProgressBarMaskBinding = viewBinding;
+            if (null != dialogProgressBarMaskBinding) {
+                this.dialogProgressBarMaskBinding.getRoot().setOnClickListener(new IeOnClickCallbacks.DoNothing());
+            }
+            return this;
+        }
+
+        public void setCaption(@Nullable final String caption) {
+            if (null == dialogProgressBarMaskBinding) { return; }
+            if (null == caption) { return; }
+            dialogProgressBarMaskBinding.progressBarDescription.setText(caption);
+        }
+
+        public void setCaptionVisibility(final boolean visible) {
+            if (null == dialogProgressBarMaskBinding) { return; }
+            dialogProgressBarMaskBinding.progressBarDescription.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        }
+
+        public void hideOrShow(final boolean visible) {
+            if (null == dialogProgressBarMaskBinding) { return; }
+            currentVisibility = visible;
+            dialogProgressBarMaskBinding.getRoot().setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+            //LogWrapper.showLog(Log.INFO, "IeProgressBarDialog", "hideOrShow: " + visible);
+        }
+
+        public boolean getCurrentVisibility() { return currentVisibility; }
     }
 
     ///
