@@ -10,9 +10,12 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
@@ -639,12 +642,12 @@ public final class CodeUtils {
     public static List<String> stringSplitByDelimiter(@Nullable final String input, @Nullable final String delimiter) {
         final List<String> itemList = new ArrayList<>();
         if ( (null == input) || (input.isEmpty()) ) {
-            java.util.logging.Logger.getLogger("IeUtils").log(Level.SEVERE, "stringSplitByDelimiter - input is either null or empty!!");
+            java.util.logging.Logger.getLogger("CodeUtils").log(Level.SEVERE, "stringSplitByDelimiter - input is either null or empty!!");
             return itemList;
 
         }
         if (null == delimiter) {
-            java.util.logging.Logger.getLogger("IeUtils").log(Level.SEVERE, "stringSplitByDelimiter - delimiter is null!!");
+            java.util.logging.Logger.getLogger("CodeUtils").log(Level.SEVERE, "stringSplitByDelimiter - delimiter is null!!");
             return itemList;
         }
 
@@ -653,7 +656,7 @@ public final class CodeUtils {
             return Arrays.asList(stringArray);
         }
         catch (Exception cause) {
-            java.util.logging.Logger.getLogger("IeUtils").log(Level.SEVERE, "stringSplitByDelimiter - error on String.split(): " + cause.getLocalizedMessage());
+            java.util.logging.Logger.getLogger("CodeUtils").log(Level.SEVERE, "stringSplitByDelimiter - error on String.split(): " + cause.getLocalizedMessage());
             return itemList;
         }
     }
@@ -661,12 +664,12 @@ public final class CodeUtils {
     @NonNull
     public static <T> String itemListToString(@Nullable final List<T> itemList, @Nullable final String delimiter) {
         if ( (null == itemList) || (itemList.isEmpty()) ) {
-            java.util.logging.Logger.getLogger("IeUtils").log(Level.SEVERE, "itemListToString - itemList is either null or empty!!");
+            java.util.logging.Logger.getLogger("CodeUtils").log(Level.SEVERE, "itemListToString - itemList is either null or empty!!");
             return "";
 
         }
         if (null == delimiter) {
-            java.util.logging.Logger.getLogger("IeUtils").log(Level.SEVERE, "itemListToString - delimiter is null!!");
+            java.util.logging.Logger.getLogger("CodeUtils").log(Level.SEVERE, "itemListToString - delimiter is null!!");
             return "";
         }
         final StringBuilder builder = new StringBuilder();
@@ -741,28 +744,42 @@ public final class CodeUtils {
          * https://github.com/codepath/android_guides/wiki/Working-with-the-Soft-Keyboard
          */
         if (view.requestFocus()) {
-            final InputMethodManager inputMethodManager = (InputMethodManager) activity.getApplicationContext().getSystemService(INPUT_METHOD_SERVICE);
-            if (null != inputMethodManager) {
-                inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
-                //LogWrapper.showLog(Log.WARN, getLogTag(), "showSoftKeyboard - done!!");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - >= Android 11!!");
+                final WindowInsetsController windowInsetsController = view.getWindowInsetsController();
+                if (null != windowInsetsController) {
+                    windowInsetsController.show(WindowInsets.Type.ime());
+                    LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - done!!");
+                }
+                else {
+                    LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - windowInsetsController is null!!");
+                }
             }
-            else { LogWrapper.showLog(Log.WARN, "IeUtils", "showSoftKeyboard - InputMethodManager is null!!"); }
+            else {
+                LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - < Android 11!!");
+                final InputMethodManager inputMethodManager = (InputMethodManager) activity.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (null != inputMethodManager) {
+                    inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+                    LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - done!!");
+                }
+                else { LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - InputMethodManager is null!!"); }
+            }
         }
-        else { LogWrapper.showLog(Log.WARN, "IeUtils", "showSoftKeyboard - Fail to view.requestFocus()!!"); }
+        else { LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - Fail to view.requestFocus()!!"); }
     }
 
     public static void hideSoftKeyboard(@NonNull Activity activity) {
         if (null == activity.getCurrentFocus()) { return; }
         final InputMethodManager inputMethodManager = (InputMethodManager) activity.getApplicationContext().getSystemService(INPUT_METHOD_SERVICE);
         if (null == inputMethodManager) {
-            LogWrapper.showLog(Log.WARN, "IeUtils", "hideSoftKeyboard - InputMethodManager is null!!");
+            LogWrapper.showLog(Log.WARN, "CodeUtils", "hideSoftKeyboard - InputMethodManager is null!!");
             return;
         }
         final View currentFocus = activity.getCurrentFocus();
         if (null != currentFocus) {
             inputMethodManager.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
             currentFocus.clearFocus();
-            //LogWrapper.showLog(Log.INFO, "IeUtils", "hideSoftKeyboard - done!!");
+            //LogWrapper.showLog(Log.INFO, "CodeUtils", "hideSoftKeyboard - done!!");
         }
     }
 }
