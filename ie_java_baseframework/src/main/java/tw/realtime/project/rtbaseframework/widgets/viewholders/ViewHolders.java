@@ -65,6 +65,8 @@ public final class ViewHolders {
         public void onBind(@NonNull final DescriptionDelegate delegate, final int position) {
             textView.setText(delegate.theDescription());
         }
+
+        public void onBind(@NonNull final String text, final int position) { textView.setText(text); }
     }
 
     public static final class IeImageTitleDescription extends RecyclerView.ViewHolder {
