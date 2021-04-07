@@ -236,6 +236,21 @@ public final class IeSocketManager {
         }
     }
 
+    public void destroySocketWith(@Nullable final IdentifierDelegate item) {
+        if (null == item) {
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "destroySocketWith - item is null!!");
+            return;
+        }
+        final SocketHelper<IdentifierDelegate> socketHelper = socketInstanceMap.remove(item.theIdentifier());
+        if (null != socketHelper) {
+            socketHelper.releaseIfNeeded();
+            LogWrapper.showLog(Log.INFO, getLogTag(), "destroySocketWith - for: [" + item.theIdentifier() + "]");
+        }
+        else {
+            LogWrapper.showLog(Log.WARN, getLogTag(), "destroySocketWith - socketHelper is null for: [" + item.theIdentifier() + "]");
+        }
+    }
+
     public void destroyAllSockets() {
         synchronized (dataLock) {
             final Set<String> keySet = socketInstanceMap.keySet();
