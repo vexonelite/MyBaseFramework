@@ -743,29 +743,42 @@ public final class CodeUtils {
          * Ref:
          * https://github.com/codepath/android_guides/wiki/Working-with-the-Soft-Keyboard
          */
+//        if (view.requestFocus()) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//                LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - >= Android 11!!");
+//                final WindowInsetsController windowInsetsController = view.getWindowInsetsController();
+//                if (null != windowInsetsController) {
+//                    windowInsetsController.show(WindowInsets.Type.ime());
+//                    LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - done!!");
+//                }
+//                else {
+//                    LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - windowInsetsController is null!!");
+//                }
+//            }
+//            else {
+//                LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - < Android 11!!");
+//                final InputMethodManager inputMethodManager = (InputMethodManager) activity.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                if (null != inputMethodManager) {
+//                    inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+//                    LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - done!!");
+//                }
+//                else { LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - InputMethodManager is null!!"); }
+//            }
+//        }
+//        else { LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - Fail to view.requestFocus()!!"); }
+
         if (view.requestFocus()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - >= Android 11!!");
-                final WindowInsetsController windowInsetsController = view.getWindowInsetsController();
-                if (null != windowInsetsController) {
-                    windowInsetsController.show(WindowInsets.Type.ime());
-                    LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - done!!");
-                }
-                else {
-                    LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - windowInsetsController is null!!");
-                }
+            final InputMethodManager inputMethodManager = (InputMethodManager) activity.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (null != inputMethodManager) {
+                //inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT); // --> does not work out on Android 11
+
+                inputMethodManager.toggleSoftInputFromWindow(view.getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+                //inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+                LogWrapper.showLog(Log.INFO, "IeUtils", "showSoftKeyboard - done!!");
             }
-            else {
-                LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - < Android 11!!");
-                final InputMethodManager inputMethodManager = (InputMethodManager) activity.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (null != inputMethodManager) {
-                    inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
-                    LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - done!!");
-                }
-                else { LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - InputMethodManager is null!!"); }
-            }
+            else { LogWrapper.showLog(Log.WARN, "IeUtils", "showSoftKeyboard - InputMethodManager is null!!"); }
         }
-        else { LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - Fail to view.requestFocus()!!"); }
+        else { LogWrapper.showLog(Log.WARN, "IeUtils", "showSoftKeyboard - Fail to view.requestFocus()!!"); }
     }
 
     public static void hideSoftKeyboard(@NonNull Activity activity) {
@@ -782,4 +795,37 @@ public final class CodeUtils {
             //LogWrapper.showLog(Log.INFO, "CodeUtils", "hideSoftKeyboard - done!!");
         }
     }
+
+    // [start] added by elite_lin - 2021/03/25
+    public static void showSoftKeyboard(@NonNull final View view, @NonNull final Context context) {
+        if (view.requestFocus()) {
+            final InputMethodManager inputMethodManager = (InputMethodManager) context.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (null != inputMethodManager) {
+                //inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT); // --> does not work out on Android 11
+
+                inputMethodManager.toggleSoftInputFromWindow(view.getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+                //inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+                LogWrapper.showLog(Log.INFO, "IeUtils", "showSoftKeyboard - done!!");
+            }
+            else { LogWrapper.showLog(Log.WARN, "IeUtils", "showSoftKeyboard - InputMethodManager is null!!"); }
+        }
+        else { LogWrapper.showLog(Log.WARN, "IeUtils", "showSoftKeyboard - Fail to view.requestFocus()!!"); }
+    }
+
+    public static void hideSoftKeyboard(@NonNull final View view, @NonNull final Context context) {
+        final InputMethodManager inputMethodManager = (InputMethodManager) context.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (null == inputMethodManager) {
+            LogWrapper.showLog(Log.WARN, "IeUtils", "hideSoftKeyboard - InputMethodManager is null!!");
+            return;
+        }
+        if (view.hasFocus()) {
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            view.clearFocus();
+            LogWrapper.showLog(Log.INFO, "IeUtils", "hideSoftKeyboard - done!!");
+        }
+        else {
+            LogWrapper.showLog(Log.WARN, "IeUtils", "hideSoftKeyboard - view does not has Focus!!");
+        }
+    }
+    // [end] added by elite_lin - 2021/03/25
 }
