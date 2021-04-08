@@ -55,11 +55,18 @@ versions.workManager = "2.5.0"              // updated in 2020/11/09
 versions.flexbox = "1.1.1"
 versions.flexbox2 = "2.0.1"
 
-versions.firebaseCore = "18.0.2"            // updated in 2021/03/16
+// 2021/04/08
+// https://firebase.google.com/docs/android/setup#next_steps
+// The Firebase Android library firebase-core is no longer needed.
+// This SDK included the Firebase SDK for Google Analytics.
+// Now, to use Analytics or a product that recommends adding Analytics (see table below),
+// you need to explicitly declare the Analytics dependency:
+// com.google.firebase:firebase-analytics or com.google.firebase:firebase-analytics-ktx.
+versions.firebaseBoM = "26.8.0"             // added in 2021/04/08
 versions.firebaseAuth = "20.0.3"            // updated in 2021/03/16
-versions.firebaseMessaging = "17.5.0"
-versions.firebaseAnalytics = "17.4.0"       // added in 2020/04/28
-versions.firebaseCrashlytics = "17.4.0"     // updated in 2021/03/16
+versions.firebaseMessaging = "21.0.1"       // updated in 2021/04/08
+versions.firebaseAnalytics = "18.0.2"       // updated in 2021/04/08
+versions.firebaseCrashlytics = "17.4.1"     // updated in 2021/04/08
 
 //https://developers.google.com/android/guides/setup
 versions.googlePlayCore = "1.10.0"          // updated in 2021/03/16
