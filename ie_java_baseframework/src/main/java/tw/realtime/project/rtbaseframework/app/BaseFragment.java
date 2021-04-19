@@ -244,6 +244,15 @@ public abstract class BaseFragment extends Fragment implements ActionBarDelegate
         activity.alterStatusBarTextColor(isLight);
     }
 
+    // [start] added by elite_lin - 2021_04/19
+    // need to add dependency: implementation "com.google.android.material:material:x.y.z"
+//    protected final void showSnackbar(@NonNull final Fragment fragment, @NonNull final String text) {
+//        if(!fragment.isAdded()) { return; }
+//        final Activity activity = fragment.getActivity();
+//        if (!(activity instanceof AppCompatActivity)) { return; }
+//        Snackbar.make(activity.findViewById(android.R.id.content), text, Snackbar.LENGTH_SHORT).show();
+//    }
+    // [end] added by elite_lin - 2021_04/19
 
     protected final boolean isAllowedToCommitFragmentTransaction () {
         if (!isAdded()) { return false; }
