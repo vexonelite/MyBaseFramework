@@ -236,12 +236,22 @@ public final class IeSocketManager {
         }
     }
 
+    @Nullable
+    public SocketHelper<IdentifierDelegate> removeSocketInstanceFromMap(@Nullable final IdentifierDelegate item) {
+        if (null == item) {
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "removeSocketInstanceFromMap - item is null!!");
+            return null;
+        }
+        return socketInstanceMap.remove(item.theIdentifier());
+    }
+
     public void destroySocketWith(@Nullable final IdentifierDelegate item) {
         if (null == item) {
             LogWrapper.showLog(Log.ERROR, getLogTag(), "destroySocketWith - item is null!!");
             return;
         }
-        final SocketHelper<IdentifierDelegate> socketHelper = socketInstanceMap.remove(item.theIdentifier());
+
+        final SocketHelper<IdentifierDelegate> socketHelper = removeSocketInstanceFromMap(item);
         if (null != socketHelper) {
             socketHelper.releaseIfNeeded();
             LogWrapper.showLog(Log.INFO, getLogTag(), "destroySocketWith - for: [" + item.theIdentifier() + "]");
