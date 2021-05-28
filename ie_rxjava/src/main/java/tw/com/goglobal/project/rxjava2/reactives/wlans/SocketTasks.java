@@ -6,11 +6,11 @@ import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InterfaceAddress;
 import java.net.SocketException;
 
 import inet.ipaddr.IPAddress;
@@ -44,6 +44,7 @@ public class SocketTasks {
                 final DatagramSocket udpSocket = this.udpConfiguration.createUdpSocket();
                 return new IeApiResponse<>(udpSocket, null);
             } catch (IeSocketException cause) {
+                LogWrapper.showLog(Log.ERROR, "SocketTasks_CreateUdpSocketTask", "error on DatagramSocket.close(): " + cause.getLocalizedMessage());
                 return new IeApiResponse<>(null, cause);
             }
         }
@@ -64,13 +65,12 @@ public class SocketTasks {
                 udpSocket.close();
                 return new IeApiResponse<>(true, null);
             } catch (Exception cause) {
-                LogWrapper.showLog(Log.ERROR, "SocketDefinitions_CloseUdpSocketTask", "error on DatagramSocket.close(): " + cause.getLocalizedMessage());
+                LogWrapper.showLog(Log.ERROR, "SocketTasks_CloseUdpSocketTask", "error on DatagramSocket.close(): " + cause.getLocalizedMessage());
                 return new IeApiResponse<>(false, new IeSocketException(cause, ErrorCodes.Socket.CLOSE_FAILURE));
             }
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     public static final class SendUdpBroadcast extends AppRxTask.WithRxIo<IeApiResponse<Boolean>> {
 
         private final Context context;
@@ -98,33 +98,56 @@ public class SocketTasks {
                 return new IeApiResponse<>(false, error);
             }
 
-            final IPAddress netIPAddress;
-            try {
-                netIPAddress = new SeancfoleyIPAddress.ContextToIPAddress().convertIntoData(context);
-            } catch (IeRuntimeException cause) {
-                LogWrapper.showLog(Log.ERROR, getLogTag(), "error on getAllHostsViaDhcpInfo: " + cause.getLocalizedMessage());
-                return new IeApiResponse<>(false, cause);
-            }
+            // [start] revision by elite_lin - 2021/05/28
+            // version 1
+//            final IPAddress netIPAddress;
+//            try {
+//                netIPAddress = new SeancfoleyIPAddress.ContextToIPAddress().convertIntoData(context);
+//            } catch (IeRuntimeException cause) {
+//                LogWrapper.showLog(Log.ERROR, getLogTag(), "error on getAllHostsViaDhcpInfo: " + cause.getLocalizedMessage());
+//                return new IeApiResponse<>(false, cause);
+//            }
+//
+//            final InetAddress broadcastAddress;
+//            try {
+//                final String hostMax = netIPAddress.getUpper().toAddressString().getHostAddress().toString();
+//                broadcastAddress = InetAddress.getByName(hostMax);
+//            } catch (Exception cause) {
+//                LogWrapper.showLog(Log.ERROR, getLogTag(), "error on InetAddress.getByName(): " + cause.getLocalizedMessage());
+//                final IeRuntimeException error = new IeRuntimeException("error on InetAddress.getByName()!!", ErrorCodes.Base.ILLEGAL_ARGUMENT_ERROR);
+//                return new IeApiResponse<>(false, error);
+//            }
 
+            // version 2
             final InetAddress broadcastAddress;
             try {
-                final String hostMax = netIPAddress.getUpper().toAddressString().getHostAddress().toString();
-                broadcastAddress = InetAddress.getByName(hostMax);
-            } catch (Exception cause) {
-                LogWrapper.showLog(Log.ERROR, getLogTag(), "error on InetAddress.getByName(): " + cause.getLocalizedMessage());
-                final IeRuntimeException error = new IeRuntimeException("error on InetAddress.getByName()!!", ErrorCodes.Base.ILLEGAL_ARGUMENT_ERROR);
+                final InterfaceAddress hostInterfaceAddress = ConnectivityUtils.getHostInterfaceAddressFrom(dhcpInfo);
+                if (null != hostInterfaceAddress) {
+                    broadcastAddress = hostInterfaceAddress.getBroadcast();
+                    //LogWrapper.showLog(Log.INFO, getLogTag(), "SendUdpBroadcast - broadcastAddress: [" + broadcastAddress + "]");
+                }
+                else {
+                    LogWrapper.showLog(Log.ERROR, getLogTag(), "SendUdpBroadcast - ConnectivityUtils.getHostInterfaceAddressFrom() returns null!!");
+                    final IeRuntimeException error = new IeRuntimeException("ConnectivityUtils.getHostInterfaceAddressFrom() returns null!!", ErrorCodes.Base.ILLEGAL_ARGUMENT_ERROR);
+                    return new IeApiResponse<>(false, error);
+                }
+            }
+            catch (Exception cause) {
+                LogWrapper.showLog(Log.ERROR, getLogTag(), "SendUdpBroadcast - Error on ConnectivityUtils.getHostInterfaceAddressFrom()!!");
+                final IeRuntimeException error = new IeRuntimeException("Error on ConnectivityUtils.getHostInterfaceAddressFrom()!!", ErrorCodes.Base.ILLEGAL_ARGUMENT_ERROR);
                 return new IeApiResponse<>(false, error);
             }
 
+            // [end] revision by elite_lin - 2021/05/28
+
             try {
-                LogWrapper.showLog(Log.INFO, getLogTag(), "request: " + request.length()
-                        + ", request.length(): " + request.length() + ", broadcastAddress: [" + broadcastAddress + "], port #: " + udpSocket.getPort());
+                LogWrapper.showLog(Log.INFO, getLogTag(), "SendUdpBroadcast - request: [" + request + "], request.length(): [" + request.length() + "], broadcastAddress: [" + broadcastAddress + "], port #: " + udpSocket.getPort());
 
                 final DatagramPacket udpPacket = new DatagramPacket(request.getBytes(), request.length(), broadcastAddress, udpConfig.portNumber);
                 udpSocket.send(udpPacket);
                 return new IeApiResponse<>(true, null);
             } catch (Exception cause) {
-                LogWrapper.showLog(Log.ERROR, getLogTag(), "error on DatagramSocket.send(): " + cause.getLocalizedMessage());
+                LogWrapper.showLog(Log.ERROR, getLogTag(), "SendUdpBroadcast - error on DatagramSocket.send(): " + cause.getLocalizedMessage());
                 final IeSocketException error = new IeSocketException("error on DatagramSocket.send()!!", ErrorCodes.Socket.FAIL_TO_SEND_OUT_PACKET);
                 return new IeApiResponse<>(false, error);
             }
