@@ -89,4 +89,11 @@ public class SocketDefinitions {
             }
         }
     }
+
+    /** Indicate the state of a {@link DatagramSocket} */
+    public enum State {
+        DEFAULT,
+        CREATED,
+        CLOSED
+    }
 }
