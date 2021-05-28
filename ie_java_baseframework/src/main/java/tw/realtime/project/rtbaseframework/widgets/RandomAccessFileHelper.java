@@ -46,35 +46,27 @@ public final class RandomAccessFileHelper {
             return CodeUtils.byteArrayToString(byteArray, true, defaultValue);
         }
         else {
-            LogWrapper.showLog(Log.ERROR, getLogTag(), "convertIntoString - byteArray is nul!!");
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "convertIntoString - byteArray is null!!");
             return defaultValue;
         }
     }
 
     public int convertIntoInteger(@NonNull final ByteOrder byteOrder, final int defaultValue) {
         if (null != byteArray) {
-            try { return CodeUtils.byteArrayToIntegerWithOrder(byteArray, byteOrder, defaultValue); }
-            catch (Exception cause) {
-                LogWrapper.showLog(Log.ERROR, getLogTag(), "error on convertIntoInteger", cause.fillInStackTrace());
-                return defaultValue;
-            }
+            return CodeUtils.byteArrayToIntegerWithOrder(byteArray, byteOrder, defaultValue);
         }
         else {
-            LogWrapper.showLog(Log.ERROR, getLogTag(), "convertIntoInteger - byteArray is nul!!");
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "convertIntoInteger - byteArray is null!!");
             return defaultValue;
         }
     }
 
     public long convertIntoLong(@NonNull final ByteOrder byteOrder, final long defaultValue) {
         if (null != byteArray) {
-            try { return CodeUtils.byteArrayToLongWithOrder(byteArray, byteOrder, defaultValue); }
-            catch (Exception cause) {
-                LogWrapper.showLog(Log.ERROR, getLogTag(), "error on convertIntoLong", cause.fillInStackTrace());
-                return defaultValue;
-            }
+            return CodeUtils.byteArrayToLongWithOrder(byteArray, byteOrder, defaultValue);
         }
         else {
-            LogWrapper.showLog(Log.ERROR, getLogTag(), "convertIntoLong - byteArray is nul!!");
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "convertIntoLong - byteArray is null!!");
             return defaultValue;
         }
     }

@@ -589,7 +589,10 @@ public final class CodeUtils {
             java.util.logging.Logger.getLogger("CodeUtil").log(Level.INFO, "byteArrayToIntegerWithOrder - int value: " + value);
             return value;
         }
-        catch (Exception cause) { return defaultValue; }
+        catch (Exception cause) {
+            java.util.logging.Logger.getLogger("CodeUtil").log(Level.SEVERE, "error on byteArrayToIntegerWithOrder: " + cause.getLocalizedMessage());
+            return defaultValue;
+        }
     }
 
     public static long byteArrayToLongWithOrder(
@@ -600,7 +603,10 @@ public final class CodeUtils {
             //java.util.logging.Logger.getLogger("IeUtils").log(Level.INFO, "byteArrayToLongWithOrder - long value: " + value);
             return value;
         }
-        catch (Exception cause) { return defaultValue; }
+        catch (Exception cause) {
+            java.util.logging.Logger.getLogger("CodeUtil").log(Level.SEVERE, "error on byteArrayToLongWithOrder: " + cause.getLocalizedMessage());
+            return defaultValue;
+        }
     }
 
     @NonNull
