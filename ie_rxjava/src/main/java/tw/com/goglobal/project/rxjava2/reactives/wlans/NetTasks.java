@@ -197,7 +197,7 @@ public final class NetTasks {
 
             if (wifiManager.isWifiEnabled()) {
                 final String currentSSID = ConnectivityUtils.getSsidViaWifiInfo(context);
-                LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - startConnectToSSID - " + currentSSID + " =? " + ConnectivityUtils.UNKNOWN_SSID);
+                LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - startConnectToSSID - [" + currentSSID + "] =? " + WifiManager.UNKNOWN_SSID);
                 if (currentSSID.equals(WifiManager.UNKNOWN_SSID)) {
                     LogWrapper.showLog(Log.INFO, "NetTasks", getLogTag() + " - startConnectToSSID -> Wi-Fi is enabled but has not yet connected to any SSID --> connectToSSID");
                     connectToSSID();

@@ -184,6 +184,9 @@ public final class ConnectivityUtils {
                     else { return ssid; }
                     // [end] revision in 2020/11/23
                 }
+                case DISCONNECTED: {
+                    return WifiManager.UNKNOWN_SSID;
+                }
                 default: { return wifiInfo.getSSID(); }
             }
         }
