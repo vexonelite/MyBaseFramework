@@ -77,6 +77,12 @@ public final class ApacheFtp {
         /** used for delete */
         public final List<String> deleteFileNameList = new ArrayList<>();
 
+        /**
+         * used for download
+         * In order to save different filename on the local storage
+         */
+        public final Map<String, String> explicitFileNameMap = new HashMap<>();
+
         public Configuration(
                 @NonNull String hostName,
                 int portNumber,
@@ -97,8 +103,35 @@ public final class ApacheFtp {
             this.localPath = localPath;
         }
 
-        @NonNull
-        public Configuration setFileNameList(@NonNull List<String> fileNameList) {
+        @NonNull public Configuration setExplicitFileNameList(
+                @NonNull final List<String> fileNameList, @NonNull final List<String> explicitFileNameList) {
+            if (fileNameList.isEmpty()) {
+                LogWrapper.showLog(Log.ERROR, "ApacheFtp", "Configuration - setExplicitFileNameList - fileNameList is empty!!");
+                return this;
+            }
+            if (explicitFileNameList.isEmpty()) {
+                LogWrapper.showLog(Log.ERROR, "ApacheFtp", "Configuration - setExplicitFileNameList - explicitFileNameList is empty!!");
+                return this;
+            }
+            if (explicitFileNameList.size() != fileNameList.size()) {
+                LogWrapper.showLog(Log.ERROR, "ApacheFtp", "Configuration - setExplicitFileNameList - explicitFileNameList.size != fileNameList.size!!");
+                return this;
+            }
+
+            final Map<String, String> fileNameMap = new HashMap<>();
+            for(int i = 0; i < fileNameList.size(); i++) {
+                final String fileName1 = fileNameList.get(i);
+                final String fileName2 = explicitFileNameList.get(i);
+                fileNameMap.put(fileName1, fileName2);
+                LogWrapper.showLog(Log.INFO, "ApacheFtp", "Configuration - setExplicitFileNameList - put [" + fileName2 + "] for [" + fileName1 + "]");
+            }
+
+            this.explicitFileNameMap.clear();
+            this.explicitFileNameMap.putAll(fileNameMap);
+            return this;
+        }
+
+        @NonNull public Configuration setFileNameList(@NonNull List<String> fileNameList) {
             if (!fileNameList.isEmpty()) {
                 this.fileNameList.clear();
                 this.fileNameList.addAll(fileNameList);
@@ -106,8 +139,7 @@ public final class ApacheFtp {
             return this;
         }
 
-        @NonNull
-        public Configuration setFileMap(@NonNull Map<String, File> fileMap) {
+        @NonNull public Configuration setFileMap(@NonNull Map<String, File> fileMap) {
             if (!fileMap.isEmpty()) {
                 this.fileMap.clear();
                 this.fileMap.putAll(fileMap);
@@ -115,8 +147,7 @@ public final class ApacheFtp {
             return this;
         }
 
-        @NonNull
-        public Configuration setDeleteFileNameList(@NonNull final List<String> deleteFileNameList) {
+        @NonNull public Configuration setDeleteFileNameList(@NonNull final List<String> deleteFileNameList) {
             if (!deleteFileNameList.isEmpty()) {
                 this.deleteFileNameList.clear();
                 this.deleteFileNameList.addAll(deleteFileNameList);
@@ -124,8 +155,7 @@ public final class ApacheFtp {
             return this;
         }
 
-        @NonNull
-        public String getWorkingDirectory() throws IeRuntimeException {
+        @NonNull public String getWorkingDirectory() throws IeRuntimeException {
             try {
                 return new String(remotePath.getBytes(controlEncoding), StandardCharsets.ISO_8859_1);
             }
