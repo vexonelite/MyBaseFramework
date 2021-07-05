@@ -20,6 +20,8 @@ import tw.realtime.project.rtbaseframework.apis.errors.ErrorCodes;
 import tw.realtime.project.rtbaseframework.apis.errors.IeRuntimeException;
 import tw.realtime.project.rtbaseframework.apis.errors.IeSocketException;
 import tw.realtime.project.rtbaseframework.delegates.apis.IeApiResponse;
+import tw.realtime.project.rtbaseframework.delegates.ui.view.IdentifierDelegate;
+import tw.realtime.project.rtbaseframework.widgets.IeSocketManager;
 import tw.realtime.project.rtbaseframework.widgets.networks.wlan.ConnectivityUtils;
 import tw.realtime.project.rtbaseframework.widgets.networks.wlan.SocketDefinitions;
 
@@ -153,4 +155,55 @@ public class SocketTasks {
             }
         }
     }
+
+    // [start] added by elite_lin in 2021/07/05
+    public static final class CreateSocketHelperTask extends AppRxTask.WithRxIo<IeApiResponse<IeSocketManager.SocketHelper<IdentifierDelegate>>> {
+
+        private final IdentifierDelegate theDelegate;
+        private final String ipAddress;
+        private final int portNumber;
+
+        public CreateSocketHelperTask(
+                @NonNull final IdentifierDelegate idDelegate, @NonNull final String ipAddress, final int portNumber) {
+            this.theDelegate = idDelegate;
+            this.ipAddress = ipAddress;
+            this.portNumber = portNumber;
+        }
+
+        @NonNull
+        @Override
+        public IeApiResponse<IeSocketManager.SocketHelper<IdentifierDelegate>> call() throws IeRuntimeException {
+            try {
+                final IeSocketManager.SocketHelper<IdentifierDelegate> socketInstance =
+                        new IeSocketManager.SocketHelperFactory().create(theDelegate, ipAddress, portNumber);
+                LogWrapper.showLog(Log.INFO, "SocketDefinitions", "CreateSocketHelperTask - create Socket Instance for [" + theDelegate.theIdentifier() + ", " + ipAddress + ", " + portNumber + "]");
+                return new IeApiResponse<>(socketInstance, null);
+            } catch (IeSocketException cause) {
+                LogWrapper.showLog(Log.ERROR, "SocketDefinitions", "error on create Socket Instance: " + cause.getLocalizedMessage());
+                return new IeApiResponse<>(null, cause);
+            }
+        }
+    }
+
+    public static final class ReleaseSocketHelperTask extends AppRxTask.WithRxIo<IeApiResponse<Boolean>> {
+
+        private final IeSocketManager.SocketHelper<IdentifierDelegate> socketHelper;
+
+        public ReleaseSocketHelperTask(@NonNull final IeSocketManager.SocketHelper<IdentifierDelegate> socketHelper) {
+            this.socketHelper = socketHelper;
+        }
+
+        @NonNull
+        @Override
+        public IeApiResponse<Boolean> call() throws IeRuntimeException {
+            try {
+                socketHelper.releaseIfNeeded();
+                return new IeApiResponse<>(true, null);
+            } catch (Exception cause) {
+                LogWrapper.showLog(Log.ERROR, "SocketDefinitions", "ReleaseSocketHelperTask - error on socketHelper.releaseIfNeeded(): " + cause.getLocalizedMessage());
+                return new IeApiResponse<>(false, new IeSocketException(cause, ErrorCodes.Socket.CLOSE_FAILURE));
+            }
+        }
+    }
+    // [end] added by elite_lin in 2021/07/05
 }
