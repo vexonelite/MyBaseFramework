@@ -7,8 +7,8 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
-import io.reactivex.annotations.NonNull;
-import io.reactivex.annotations.Nullable;
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.annotations.Nullable;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.enumerations.SwipeDirection;
 import tw.realtime.project.rtbaseframework.delegates.ui.nestedscroll.TakeOverTouchEventDelegate;

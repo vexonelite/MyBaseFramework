@@ -53,10 +53,16 @@ dependencies {
 
     implementation "com.google.code.gson:gson:${deps.versions.gson}"
 
+    // [start] revision by elite_lin - 2021/07/28
     // RxJava 2.X
-    implementation "io.reactivex.rxjava2:rxjava:${deps.versions.rxJava2}"
+    //implementation "io.reactivex.rxjava2:rxjava:${deps.versions.rxJava2}"
     // RxAndroid 2.X
-    implementation "io.reactivex.rxjava2:rxandroid:${deps.versions.rxAndroid2}"
+    //implementation "io.reactivex.rxjava2:rxandroid:${deps.versions.rxAndroid2}"
+    // RxJava 3.X
+    implementation "io.reactivex.rxjava3:rxjava:${deps.versions.rxJava3}"
+    // RxAndroid 3.X
+    implementation "io.reactivex.rxjava3:rxandroid:${deps.versions.rxAndroid3}"
+    // [end] revision by elite_lin - 2021/07/28
 
     // IP Address - may be I should add an additional module - added in 2020/07/08
     //implementation "com.github.seancfoley:ipaddress:${deps.versions.seancfoleyIpaddress4}"

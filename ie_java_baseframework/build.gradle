@@ -82,10 +82,16 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:${deps.versions.okHttp3}"
 //    implementation "com.squareup.okhttp3:okhttp-urlconnection:${deps.versions.okHttp}"
 
+    // [start] revision by elite_lin - 2021/07/28
     // RxJava 2.X
-    implementation "io.reactivex.rxjava2:rxjava:${deps.versions.rxJava2}"
+    //implementation "io.reactivex.rxjava2:rxjava:${deps.versions.rxJava2}"
     // RxAndroid 2.X
-    implementation "io.reactivex.rxjava2:rxandroid:${deps.versions.rxAndroid2}"
+    //implementation "io.reactivex.rxjava2:rxandroid:${deps.versions.rxAndroid2}"
+    // RxJava 3.X
+    implementation "io.reactivex.rxjava3:rxjava:${deps.versions.rxJava3}"
+    // RxAndroid 3.X
+    implementation "io.reactivex.rxjava3:rxandroid:${deps.versions.rxAndroid3}"
+    // [end] revision by elite_lin - 2021/07/28
 
     implementation "com.squareup.retrofit2:retrofit:${deps.versions.retrofit2}"
 //    implementation "com.squareup.retrofit2:converter-scalars:${deps.versions.retrofit2}"
