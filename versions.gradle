@@ -27,7 +27,7 @@ versions.cardviewX = "1.0.0"
 versions.swiperefreshlayout = "1.1.0"   // added in 2020/08/11
 versions.vectorDrawableX = "1.1.0"
 
-versions.dataStore = '1.0.0-alpha05'    // added in 2020/12/09
+versions.dataStore = '1.0.0-rc02'       // updated in 2021/07/28
 versions.protobuf = '3.14.0'            // added in 2020/12/09
 
 versions.activityX = "1.2.0"            // added in 2021/03/02
@@ -76,8 +76,10 @@ versions.googleAuth = "19.0.0"              // updated in 2021/03/16
 versions.googleLocation = "17.0.0"          // added in 2020/08/31
 versions.googleCloudMessaging = "17.0.0"    // added in 2020/08/31
 
-versions.rxJava2 = "2.2.19"                 // updated in 2021/01/26
+versions.rxJava2 = "2.2.21"                 // updated in 2021/07/28
 versions.rxAndroid2 = "2.1.1"
+versions.rxJava3 = "3.0.13"                 // added in 2021/07/28
+versions.rxAndroid3 = "3.0.0"               // added in 2021/07/28
 versions.rxJava3Extensions = "3.0.1"        // added in 2020/08/24
 
 versions.okHttp3 = "3.14.2"
