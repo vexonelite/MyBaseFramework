@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import java.util.concurrent.ExecutorService;
 
-import io.reactivex.functions.Action;
+import io.reactivex.rxjava3.functions.Action;
 
 /**
  * Implementation of Rx Action interface.

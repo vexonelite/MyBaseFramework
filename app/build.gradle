@@ -4,7 +4,7 @@ plugins {
 
 android {
     compileSdkVersion deps.versions.compileSdk
-    //buildToolsVersion deps.versions.buildTools
+    buildToolsVersion deps.versions.buildTools
 
     // Enable Java 1.8
     compileOptions {

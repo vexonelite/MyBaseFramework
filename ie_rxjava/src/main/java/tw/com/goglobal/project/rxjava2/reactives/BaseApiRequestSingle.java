@@ -2,7 +2,7 @@ package tw.com.goglobal.project.rxjava2.reactives;
 
 import androidx.annotation.NonNull;
 
-import io.reactivex.SingleOnSubscribe;
+import io.reactivex.rxjava3.core.SingleOnSubscribe;
 import okhttp3.Response;
 import tw.realtime.project.rtbaseframework.parameters.ApiDataDelegate;
 import tw.realtime.project.rtbaseframework.parameters.ApiParameterDelegate;

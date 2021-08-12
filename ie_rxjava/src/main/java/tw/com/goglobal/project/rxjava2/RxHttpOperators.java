@@ -5,8 +5,8 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Function;
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.functions.Function;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import tw.realtime.project.rtbaseframework.LogWrapper;

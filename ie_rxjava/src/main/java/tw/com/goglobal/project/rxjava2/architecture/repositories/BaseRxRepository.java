@@ -4,8 +4,8 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.disposables.Disposable;
 import tw.com.goglobal.project.rxjava2.RxDisposeDelegate;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.delegates.apis.AppRepository;

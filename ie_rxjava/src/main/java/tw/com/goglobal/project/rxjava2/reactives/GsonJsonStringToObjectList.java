@@ -10,7 +10,7 @@ import com.google.gson.JsonParser;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.functions.Function;
+import io.reactivex.rxjava3.functions.Function;
 import tw.realtime.project.rtbaseframework.apis.converters.IeBaseConverter;
 import tw.realtime.project.rtbaseframework.apis.errors.IeRuntimeException;
 

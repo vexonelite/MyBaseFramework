@@ -11,8 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Consumer;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.apis.errors.IeRuntimeException;
 import tw.realtime.project.rtbaseframework.enumerations.TaskState;
@@ -72,7 +72,7 @@ public abstract class BaseObjectViewModel<T> extends BaseRxViewModel {
 
     public final class DoOnSubscriber implements Consumer<Disposable> {
         @Override
-        public void accept(@io.reactivex.annotations.NonNull Disposable disposable) throws Exception {
+        public void accept(@io.reactivex.rxjava3.annotations.NonNull Disposable disposable) throws Exception {
             LogWrapper.showLog(Log.INFO, getLogTag(), "DoOnSubscriber - accept - Tid: " + Thread.currentThread().getId());
             new Handler(Looper.getMainLooper()).post(
                     () -> {setTaskState(TaskState.LOADING_BEGIN); } );

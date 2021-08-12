@@ -2,10 +2,10 @@ package tw.com.goglobal.project.rxjava2;
 
 import androidx.annotation.NonNull;
 
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
-import io.reactivex.Observable;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.rxjava3.core.BackpressureStrategy;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
 /**
  * @see <a href="https://blog.mindorks.com/implementing-eventbus-with-rxjava-rxbus-e6c940a94bd8">Reference</a>

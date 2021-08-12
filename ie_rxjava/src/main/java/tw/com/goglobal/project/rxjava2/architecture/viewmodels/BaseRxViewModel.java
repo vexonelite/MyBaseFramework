@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 import tw.com.goglobal.project.rxjava2.RxDisposeDelegate;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 

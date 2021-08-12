@@ -4,8 +4,8 @@ import android.util.Log;
 
 import java.io.IOException;
 
-import io.reactivex.annotations.NonNull;
-import io.reactivex.annotations.Nullable;
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.annotations.Nullable;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.apis.errors.ErrorCodes;
 import tw.realtime.project.rtbaseframework.apis.errors.IeHttpException;

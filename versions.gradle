@@ -145,6 +145,7 @@ versions.compileSdk = 30 //updated in 2020/07/15
 versions.targetSdk = 30 //updated in 2020/07/15
 //versions.buildTools = "29.0.3"
 versions.buildTools = "30.0.3" //updated in 2020/12/09
+//versions.buildTools = "31.0.0" //updated in 2021/07/28
 
 deps.versions = versions
 

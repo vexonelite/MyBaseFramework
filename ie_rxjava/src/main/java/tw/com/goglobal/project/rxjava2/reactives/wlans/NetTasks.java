@@ -20,19 +20,18 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observable;
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import tw.com.goglobal.project.rxjava2.AbstractRxTask;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.apis.errors.ErrorCodes;
 import tw.realtime.project.rtbaseframework.apis.errors.IeRuntimeException;
 import tw.realtime.project.rtbaseframework.delegates.apis.IeApiResult;
-import tw.realtime.project.rtbaseframework.utils.CodeUtils;
 import tw.realtime.project.rtbaseframework.widgets.networks.wlan.ConnectivityUtils;
 import tw.realtime.project.rtbaseframework.widgets.networks.wlan.WiFiScans;
 

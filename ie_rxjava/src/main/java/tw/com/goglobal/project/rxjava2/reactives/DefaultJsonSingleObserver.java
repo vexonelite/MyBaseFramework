@@ -4,8 +4,8 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
-import io.reactivex.annotations.NonNull;
-import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.observers.DisposableSingleObserver;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 import tw.realtime.project.rtbaseframework.apis.errors.IeHttpException;
 

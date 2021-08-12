@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 
 import java.lang.reflect.Type;
 
-import io.reactivex.functions.Function;
+import io.reactivex.rxjava3.functions.Function;
 import tw.realtime.project.rtbaseframework.apis.converters.IeBaseConverter;
 import tw.realtime.project.rtbaseframework.apis.errors.ErrorCodes;
 import tw.realtime.project.rtbaseframework.apis.errors.IeRuntimeException;

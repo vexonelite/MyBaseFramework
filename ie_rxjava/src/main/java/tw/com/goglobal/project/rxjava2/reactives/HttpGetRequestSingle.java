@@ -2,8 +2,8 @@ package tw.com.goglobal.project.rxjava2.reactives;
 
 import java.io.IOException;
 
-import io.reactivex.SingleEmitter;
-import io.reactivex.annotations.NonNull;
+import io.reactivex.rxjava3.core.SingleEmitter;
+import io.reactivex.rxjava3.annotations.NonNull;
 import okhttp3.Response;
 import tw.com.goglobal.project.httpstuff.OkHttpUtil;
 import tw.realtime.project.rtbaseframework.apis.errors.ErrorCodes;

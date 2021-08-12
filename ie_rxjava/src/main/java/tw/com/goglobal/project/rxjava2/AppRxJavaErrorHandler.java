@@ -5,9 +5,9 @@ import android.util.Log;
 import java.io.IOException;
 import java.net.SocketException;
 
-import io.reactivex.annotations.NonNull;
-import io.reactivex.exceptions.UndeliverableException;
-import io.reactivex.functions.Consumer;
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.exceptions.UndeliverableException;
+import io.reactivex.rxjava3.functions.Consumer;
 import tw.realtime.project.rtbaseframework.LogWrapper;
 
 

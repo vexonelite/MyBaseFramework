@@ -2,7 +2,7 @@ package tw.com.goglobal.project.rxjava2;
 
 import androidx.annotation.NonNull;
 
-import io.reactivex.functions.Function;
+import io.reactivex.rxjava3.functions.Function;
 import tw.realtime.project.rtbaseframework.apis.converters.IeBaseConverter;
 import tw.realtime.project.rtbaseframework.apis.errors.IeRuntimeException;
 

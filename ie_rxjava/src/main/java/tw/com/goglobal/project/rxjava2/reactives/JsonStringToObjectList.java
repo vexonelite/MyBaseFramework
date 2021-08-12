@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import io.reactivex.functions.Function;
+import io.reactivex.rxjava3.functions.Function;
 import tw.com.goglobal.project.httpstuff.MoshiUtil;
 import tw.realtime.project.rtbaseframework.apis.converters.IeBaseConverter;
 import tw.realtime.project.rtbaseframework.apis.errors.ErrorCodes;
