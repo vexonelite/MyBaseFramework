@@ -27,6 +27,7 @@ public final class AdapterMultiSelectionHelper<T extends IdentifierDelegate> {
     public void clearSelectionMap() throws InterruptedException {
         this.mutex.acquire();
         this.selectionMap.clear();
+        this.selectionIndexMap.clear();
         this.mutex.release();
     }
 
@@ -63,7 +64,7 @@ public final class AdapterMultiSelectionHelper<T extends IdentifierDelegate> {
             final T removedItem = selectionMap.remove(delegate.theIdentifier());
             this.mutex.release();
             if ( (null != removedIndex) && (null != removedItem) ) {
-                LogWrapper.showLog(Log.INFO, getLogTag(), "updateSelectionMapForMultipleSelection - removedIndex -> " + removedIndex);
+                LogWrapper.showLog(Log.INFO, getLogTag(), "updateSelectionMapForMultipleSelection - removedIndex: [" + removedIndex + "]");
                 return removedIndex;
             }
             else { return -1; }
@@ -72,7 +73,7 @@ public final class AdapterMultiSelectionHelper<T extends IdentifierDelegate> {
             selectionMap.put(delegate.theIdentifier(), delegate);
             selectionIndexMap.put(delegate.theIdentifier(), selectedIndex);
             this.mutex.release();
-            LogWrapper.showLog(Log.INFO, getLogTag(), "updateSelectionMapForMultipleSelection - addedIndex -> " + selectedIndex);
+            LogWrapper.showLog(Log.INFO, getLogTag(), "updateSelectionMapForMultipleSelection - addedIndex: [" + selectedIndex + "]");
             return selectedIndex;
         }
     }
@@ -80,17 +81,17 @@ public final class AdapterMultiSelectionHelper<T extends IdentifierDelegate> {
     public int updateSelectionMapForSingleSelection(@NonNull final T delegate, final int selectedIndex) throws InterruptedException {
 
         final int previousSelectedIndex = getCurrentSelectedIndexSingleSelection();
-        //LogWrapper.showLog(Log.INFO, getLogTag(), "updateSelectionMapForSingleSelection - previousSelectedIndex: " + previousSelectedIndex);
+        LogWrapper.showLog(Log.INFO, getLogTag(), "updateSelectionMapForSingleSelection - previousSelectedIndex: [" + previousSelectedIndex + "], selectedIndex: [" + selectedIndex + "]");
         if (previousSelectedIndex == selectedIndex) {
             return -1;
         }
         this.mutex.acquire();
         selectionMap.clear();
         selectionIndexMap.clear();
-        //LogWrapper.showLog(Log.INFO, getLogTag(), "updateSelectionMapForSingleSelection - clear -> " + selectionMap.size());
+        LogWrapper.showLog(Log.INFO, getLogTag(), "updateSelectionMapForSingleSelection - clear selectionMap -> selectionMap.size: [" + selectionMap.size() + "]");
         selectionMap.put(delegate.theIdentifier(), delegate);
         selectionIndexMap.put(delegate.theIdentifier(), selectedIndex);
-        //LogWrapper.showLog(Log.INFO, getLogTag(), "updateSelectionMapForSingleSelection - put -> " + selectionMap.size());
+        LogWrapper.showLog(Log.INFO, getLogTag(), "updateSelectionMapForSingleSelection - put [" + delegate + "] -> selectionMap.size:[ " + selectionMap.size() + "]");
         this.mutex.release();
 
         if (previousSelectedIndex >= 0) { return previousSelectedIndex; }
@@ -99,9 +100,9 @@ public final class AdapterMultiSelectionHelper<T extends IdentifierDelegate> {
 
     public int getCurrentSelectedIndexSingleSelection() {
         final List<String> list = getSelectedItemIdList();
-        //LogWrapper.showLog(Log.INFO, getLogTag(), "getCurrentSelectedIndexSingleSelection - list.size: " + list.size());
+        LogWrapper.showLog(Log.INFO, getLogTag(), "getCurrentSelectedIndexSingleSelection - list.size: [" + list.size() + "]");
         if (list.size() == 1) {
-            //LogWrapper.showLog(Log.INFO, getLogTag(), "getCurrentSelectedIndexSingleSelection - key: " + list.get(0));
+            LogWrapper.showLog(Log.INFO, getLogTag(), "getCurrentSelectedIndexSingleSelection - key: [" + list.get(0) + "]");
             final Integer result = selectionIndexMap.get(list.get(0));
             return (null != result) ? result : -1;
         }

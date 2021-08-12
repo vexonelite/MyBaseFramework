@@ -140,12 +140,13 @@ versions.versionCode = 1
 // next might be
 versions.versionName = "0.0.1"
 
-versions.minSdk = 24 //updated in 2020/07/15
-versions.compileSdk = 30 //updated in 2020/07/15
-versions.targetSdk = 30 //updated in 2020/07/15
-//versions.buildTools = "29.0.3"
-versions.buildTools = "30.0.3" //updated in 2020/12/09
-//versions.buildTools = "31.0.0" //updated in 2021/07/28
+versions.minSdk = 24            //updated in 2020/07/15
+versions.compileSdk = 30        //updated in 2020/07/15
+versions.targetSdk = 30         //updated in 2020/07/15
+versions.buildTools = "30.0.3"  //updated in 2020/12/09
+//versions.compileSdk = 31        //updated in 2021/07/28
+//versions.targetSdk = 31         //updated in 2021/07/28
+//versions.buildTools = "31.0.0"  //updated in 2021/07/28
 
 deps.versions = versions
 

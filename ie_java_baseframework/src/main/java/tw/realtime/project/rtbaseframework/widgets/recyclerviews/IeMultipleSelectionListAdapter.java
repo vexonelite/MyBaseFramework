@@ -34,8 +34,7 @@ public abstract class IeMultipleSelectionListAdapter<T extends IdentifierCellTyp
             super(delegate, action, position);
         }
 
-        @Override
-        public void onClick(View view) {
+        @Override public void onClick(View view) {
             if (null != holderCellClickCallback) {
                 holderCellClickCallback.onHolderCellClicked(getDataObject(), getAction(), getPosition());
             }
@@ -44,9 +43,16 @@ public abstract class IeMultipleSelectionListAdapter<T extends IdentifierCellTyp
 
     public final void setAdapterSelection(@NonNull final AdapterSelection selection) {
         this.adapterSelection = selection;
-        try { multiSelectionHelper.clearSelectionMap(); }
+        clearSelectionMap();
+    }
+
+    public final void clearSelectionMap() {
+        try {
+            multiSelectionHelper.clearSelectionMap();
+            LogWrapper.showLog(Log.INFO, "IeMultipleSelectionListAdapter", "clearSelectionMap - [done]");
+        }
         catch (InterruptedException cause) {
-            LogWrapper.showLog(Log.ERROR, "IeMultipleSelectionListAdapter", "InterruptedException on setBackupMode");
+            LogWrapper.showLog(Log.ERROR, "IeMultipleSelectionListAdapter", "error on clearSelectionMap: [" + cause.getLocalizedMessage() + "]");
         }
     }
 
