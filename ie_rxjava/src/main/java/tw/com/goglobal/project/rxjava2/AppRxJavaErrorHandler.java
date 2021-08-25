@@ -41,15 +41,21 @@ public final class AppRxJavaErrorHandler implements Consumer<Throwable> {
         if ((throwable instanceof NullPointerException) || (throwable instanceof IllegalArgumentException)) {
             // that's likely a bug in the application
             LogWrapper.showLog(Log.ERROR, logTag, "AppRxJavaErrorHandler - NullPointerException or IllegalArgumentException [that's likely a bug in the application]: " + throwable.getLocalizedMessage());
-            Thread.currentThread().getUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), throwable);
+            handleUncaughtException(throwable);
             return;
         }
         if (throwable instanceof IllegalStateException) {
             // that's a bug in RxJava or in a custom operator
             LogWrapper.showLog(Log.ERROR, logTag, "AppRxJavaErrorHandler - IllegalStateException [that's a bug in RxJava or in a custom operator]: " + throwable.getLocalizedMessage());
-            Thread.currentThread().getUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), throwable);
+            handleUncaughtException(throwable);
             return;
         }
         LogWrapper.showLog(Log.ERROR, logTag, "Undeliverable exception received, not sure what to do", throwable);
+    }
+
+    private void handleUncaughtException(@NonNull final Throwable throwable) {
+        final Thread.UncaughtExceptionHandler uncaughtExceptionHandler = Thread.currentThread().getUncaughtExceptionHandler();
+        if (null == uncaughtExceptionHandler) { return; }
+        uncaughtExceptionHandler.uncaughtException(Thread.currentThread(), throwable);
     }
 }
