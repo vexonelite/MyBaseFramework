@@ -136,7 +136,10 @@ public class SocketTasks {
             }
             catch (Exception cause) {
                 LogWrapper.showLog(Log.ERROR, getLogTag(), "SendUdpBroadcast - Error on ConnectivityUtils.getHostInterfaceAddressFrom()!!");
-                final IeRuntimeException error = new IeRuntimeException("Error on ConnectivityUtils.getHostInterfaceAddressFrom()!!", ErrorCodes.Base.ILLEGAL_ARGUMENT_ERROR);
+                // [start] revision by elite_lin - 2021/09/13
+                //final IeRuntimeException error = new IeRuntimeException("Error on ConnectivityUtils.getHostInterfaceAddressFrom()!!", ErrorCodes.Base.ILLEGAL_ARGUMENT_ERROR);
+                final IeRuntimeException error = new IeRuntimeException(cause, ErrorCodes.Base.ILLEGAL_ARGUMENT_ERROR);
+                // [end] revision by elite_lin - 2021/09/13
                 return new IeApiResponse<>(false, error);
             }
 
