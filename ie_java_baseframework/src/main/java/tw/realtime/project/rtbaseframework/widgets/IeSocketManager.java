@@ -125,6 +125,25 @@ public final class IeSocketManager {
         }
     }
 
+    // [start] added by elite_lin - 2021/10/08
+    public void removeExecutorServiceForItemIfPossible(@Nullable final IdentifierDelegate item) throws IeRuntimeException {
+        if (null == item) {
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "removeExecutorServiceForItem - item is null!! [On Thread: [" + Thread.currentThread().getName() + "]");
+            return;
+        }
+
+        if (!hasExecutorServiceExistedForItem(item)) { return; }
+
+        synchronized (executorLock) {
+            final ExecutorService executorService = executorServiceMap.remove(item.theIdentifier());
+            if (null != executorService) {
+                shutDownExecutor(executorService);
+            }
+            LogWrapper.showLog(Log.ERROR, getLogTag(), "removeExecutorServiceForItem - done!!");
+        }
+    }
+    // [end] added by elite_lin - 2021/10/08
+
     public boolean hasExecutorServiceExistedForItem(@Nullable final IdentifierDelegate item) throws IeRuntimeException {
         if (null == item) {
             LogWrapper.showLog(Log.ERROR, getLogTag(), "hasExecutorServiceExistedForItem - item is null!! " +
