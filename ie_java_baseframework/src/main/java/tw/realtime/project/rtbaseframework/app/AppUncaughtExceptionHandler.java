@@ -28,8 +28,8 @@ public final class AppUncaughtExceptionHandler<T> implements Thread.UncaughtExce
                 | Intent.FLAG_ACTIVITY_NEW_TASK);
         final PendingIntent pendingIntent = PendingIntent.getActivity(
                 // [start] revision by elite_lin - 2021/11/03
-                //activity.getBaseContext(), 0, intent, (PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT) );
-                activity.getBaseContext(), 0, intent, (PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT) );
+                //activity.getBaseContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
+                activity.getBaseContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
                 // [end] revision by elite_lin - 2021/11/03
         final AlarmManager mgr = (AlarmManager) activity.getBaseContext().getSystemService(Context.ALARM_SERVICE);
         mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent);
