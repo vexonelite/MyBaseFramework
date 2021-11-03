@@ -3,6 +3,7 @@ package tw.realtime.project.rtbaseframework.widgets;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -22,6 +23,9 @@ public class PendingIntentBuilder {
     private Bundle bBundle;
     private int bIntentFlag = Intent.FLAG_ACTIVITY_SINGLE_TOP;
     private int bPendingIntentFlag = PendingIntent.FLAG_CANCEL_CURRENT;
+    // [start] added by elite_lin - 2021/11/03
+    private int bPendingIntentMutabilityFlag = PendingIntent.FLAG_IMMUTABLE;
+    // [end] added by elite_lin - 2021/11/03
     private int bPendingRequestCode = 0;
     @Deprecated
     private boolean enableFlag;
@@ -117,10 +121,20 @@ public class PendingIntentBuilder {
      * If set, after send() is called on it, it will be automatically canceled for you
      * and any future attempt to send through it will fail.
      */
-    public PendingIntentBuilder setPendinIntentFlag (int flag) {
+    public PendingIntentBuilder setPendingIntentFlag (final int flag) {
         bPendingIntentFlag = flag;
         return this;
     }
+
+    // [start] added by elite_lin - 2021/11/03
+//    public PendingIntentBuilder setPendingIntentMutabilityFlag (final int mutabilityFlag) {
+//        if ((mutabilityFlag == PendingIntent.FLAG_IMMUTABLE) ||
+//                (mutabilityFlag == PendingIntent.FLAG_MUTABLE)) {
+//            bPendingIntentMutabilityFlag = mutabilityFlag;
+//        }
+//        return this;
+//    }
+    // [end] added by elite_lin - 2021/11/03
 
     public PendingIntentBuilder setEnableServiceFlag (boolean flag) {
         enableService = flag;
@@ -143,8 +157,13 @@ public class PendingIntentBuilder {
             intent.setAction(bAction);
             LogWrapper.showLog(Log.INFO, "*** PendingIntentBuilder", "build - bAction: " + bAction);
         }
+
+        // [start] revision by elite_lin - 2021/11/03
         return (enableService)
-                ? PendingIntent.getService(bContext, bPendingRequestCode, intent, bPendingIntentFlag)
-                : PendingIntent.getActivity(bContext, bPendingRequestCode, intent, bPendingIntentFlag);
+                //? PendingIntent.getService(bContext, bPendingRequestCode, intent, bPendingIntentFlag)
+                //: PendingIntent.getActivity(bContext, bPendingRequestCode, intent, bPendingIntentFlag);
+                ? PendingIntent.getService(bContext, bPendingRequestCode, intent, (bPendingIntentMutabilityFlag | bPendingIntentFlag) )
+                : PendingIntent.getActivity(bContext, bPendingRequestCode, intent, (bPendingIntentMutabilityFlag | bPendingIntentFlag) );
+        // [end] revision by elite_lin - 2021/11/03
     }
 }

@@ -20,15 +20,17 @@ public final class AppUncaughtExceptionHandler<T> implements Thread.UncaughtExce
         this.activityClass = activityClass;
     }
 
-    @Override
-    public void uncaughtException(@NonNull Thread thread, @NonNull Throwable ex) {
+    @Override public void uncaughtException(@NonNull Thread thread, @NonNull Throwable ex) {
         final Intent intent = new Intent(activity, activityClass);
         intent.putExtra("crash", true);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK
                 | Intent.FLAG_ACTIVITY_NEW_TASK);
         final PendingIntent pendingIntent = PendingIntent.getActivity(
-                activity.getBaseContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
+                // [start] revision by elite_lin - 2021/11/03
+                //activity.getBaseContext(), 0, intent, (PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT) );
+                activity.getBaseContext(), 0, intent, (PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT) );
+                // [end] revision by elite_lin - 2021/11/03
         final AlarmManager mgr = (AlarmManager) activity.getBaseContext().getSystemService(Context.ALARM_SERVICE);
         mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent);
         activity.finish();
