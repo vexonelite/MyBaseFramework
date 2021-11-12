@@ -780,11 +780,22 @@ public final class CodeUtils {
 
                 inputMethodManager.toggleSoftInputFromWindow(view.getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
                 //inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
-                LogWrapper.showLog(Log.INFO, "IeUtils", "showSoftKeyboard - done!!");
+                LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - done!!");
             }
-            else { LogWrapper.showLog(Log.WARN, "IeUtils", "showSoftKeyboard - InputMethodManager is null!!"); }
+            else { LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - InputMethodManager is null!!"); }
         }
-        else { LogWrapper.showLog(Log.WARN, "IeUtils", "showSoftKeyboard - Fail to view.requestFocus()!!"); }
+        else { LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - Fail to view.requestFocus()!!"); }
+    }
+
+    public static void showSoftKeyboard(@NonNull Activity activity) {
+        final InputMethodManager inputMethodManager = (InputMethodManager) activity.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (null != inputMethodManager) {
+            //inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT); // --> does not work out on Android 11
+            //inputMethodManager.toggleSoftInputFromWindow(view.getWindowToken(), InputMethodManager.SHOW_FORCED, 0); // --> does not work out on Android 11
+            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+            LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - done!!");
+        }
+        else { LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - InputMethodManager is null!!"); }
     }
 
     public static void hideSoftKeyboard(@NonNull Activity activity) {
