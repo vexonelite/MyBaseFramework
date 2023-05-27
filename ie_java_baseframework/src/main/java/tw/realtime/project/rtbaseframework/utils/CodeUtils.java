@@ -749,42 +749,42 @@ public final class CodeUtils {
          * Ref:
          * https://github.com/codepath/android_guides/wiki/Working-with-the-Soft-Keyboard
          */
-//        if (view.requestFocus()) {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//                LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - >= Android 11!!");
-//                final WindowInsetsController windowInsetsController = view.getWindowInsetsController();
-//                if (null != windowInsetsController) {
-//                    windowInsetsController.show(WindowInsets.Type.ime());
-//                    LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - done!!");
-//                }
-//                else {
-//                    LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - windowInsetsController is null!!");
-//                }
-//            }
-//            else {
-//                LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - < Android 11!!");
-//                final InputMethodManager inputMethodManager = (InputMethodManager) activity.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                if (null != inputMethodManager) {
-//                    inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
-//                    LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - done!!");
-//                }
-//                else { LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - InputMethodManager is null!!"); }
-//            }
-//        }
-//        else { LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - Fail to view.requestFocus()!!"); }
+       if (view.requestFocus()) {
+           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+               LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - >= Android 11!!");
+               final WindowInsetsController windowInsetsController = view.getWindowInsetsController();
+               if (null != windowInsetsController) {
+                   windowInsetsController.show(WindowInsets.Type.ime());
+                   LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - done!!");
+               }
+               else {
+                   LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - windowInsetsController is null!!");
+               }
+           }
+           else {
+               LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - < Android 11!!");
+               final InputMethodManager inputMethodManager = (InputMethodManager) activity.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+               if (null != inputMethodManager) {
+                   inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+                   LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - done!!");
+               }
+               else { LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - InputMethodManager is null!!"); }
+           }
+       }
+       else { LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - Fail to view.requestFocus()!!"); }
 
-        if (view.requestFocus()) {
-            final InputMethodManager inputMethodManager = (InputMethodManager) activity.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (null != inputMethodManager) {
-                //inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT); // --> does not work out on Android 11
+        // if (view.requestFocus()) {
+        //     final InputMethodManager inputMethodManager = (InputMethodManager) activity.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        //     if (null != inputMethodManager) {
+        //         //inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT); // --> does not work out on Android 11
 
-                inputMethodManager.toggleSoftInputFromWindow(view.getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
-                //inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
-                LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - done!!");
-            }
-            else { LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - InputMethodManager is null!!"); }
-        }
-        else { LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - Fail to view.requestFocus()!!"); }
+        //         inputMethodManager.toggleSoftInputFromWindow(view.getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+        //         //inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+        //         LogWrapper.showLog(Log.INFO, "CodeUtils", "showSoftKeyboard - done!!");
+        //     }
+        //     else { LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - InputMethodManager is null!!"); }
+        // }
+        // else { LogWrapper.showLog(Log.WARN, "CodeUtils", "showSoftKeyboard - Fail to view.requestFocus()!!"); }
     }
 
     public static void showSoftKeyboard(@NonNull Activity activity) {
